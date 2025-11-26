@@ -148,7 +148,8 @@ const SoftwareDownload = () => {
   );
 
   const handleShare = async (app: App) => {
-    const url = `${window.location.origin}?app=${encodeURIComponent(app.name)}`;
+    // 这里的路径增加了 /rj
+    const url = `${window.location.origin}/rj?app=${encodeURIComponent(app.name)}`;
     if (navigator.share) {
       try {
         await navigator.share({ title: app.name, text: app.description, url });
