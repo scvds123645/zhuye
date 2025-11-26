@@ -9,6 +9,7 @@ import Tools from "./pages/Tools";
 import CookieFilter from "./pages/CookieFilter";
 import DiscordFormatter from "./pages/DiscordFormatter";
 import NumberExtractor from "./pages/NumberExtractor";
+import SoftwareDownload from "./pages/SoftwareDownload";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/jh" element={<CookieFilter />} />
           <Route path="/discord" element={<DiscordFormatter />} />
           <Route path="/14" element={<NumberExtractor />} />
+          <Route path="/rj" element={<SoftwareDownload />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
