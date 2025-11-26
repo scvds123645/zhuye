@@ -30,6 +30,7 @@ const products = [
 
 // Refactored to Material Design 3 (Material You) Style
 const Products = () => {
+  // 注意：如果有多个商品，建议将 state 改为存储当前打开的商品ID，例如 const [openId, setOpenId] = useState(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
 
   return (
@@ -122,15 +123,20 @@ const Products = () => {
                   </Button>
                 </DialogTrigger>
                 
-                {/* Dialog styling updates */}
-                <DialogContent className="sm:max-w-sm sm:rounded-3xl p-6">
-                  <DialogHeader className="mb-4">
-                    <DialogTitle className="text-xl text-center font-normal text-slate-900">专业服务团队</DialogTitle>
-                    <DialogDescription className="text-center text-slate-500">
-                      我们的客服团队将为您提供一对一专业咨询服务
+                {/* Dialog: Material 3 Alert Dialog style (Extra rounded corners) - 同步后的代码 */}
+                <DialogContent className="sm:max-w-sm rounded-[28px] p-6 bg-white shadow-2xl border-0">
+                  <DialogHeader className="space-y-3 pb-4">
+                    <div className="mx-auto w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-2">
+                       <Sparkles className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <DialogTitle className="text-xl font-semibold text-center text-slate-800">
+                      专业服务团队
+                    </DialogTitle>
+                    <DialogDescription className="text-center text-slate-500 text-base">
+                      我们的客服团队将为您提供<br/>一对一专业咨询服务
                     </DialogDescription>
                   </DialogHeader>
-                  
+
                   <div className="space-y-3">
                     {[1, 2, 3].map((_, index) => (
                       <a
@@ -138,13 +144,13 @@ const Products = () => {
                         href="https://t.me/Facebookkf_bot"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 hover:bg-blue-50 transition-colors duration-200 group"
+                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-blue-50/80 border border-transparent hover:border-blue-100 transition-all duration-200 group"
                       >
-                        <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
                           <Send className="w-5 h-5" />
                         </div>
-                        <div className="flex-1">
-                          <div className="font-medium text-slate-900">Telegram Support</div>
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold text-slate-800">Telegram</div>
                           <div className="text-sm text-slate-500">@Facebookkf_bot</div>
                         </div>
                         <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors" />
@@ -170,7 +176,6 @@ const Products = () => {
               <p className="text-slate-500">所有账号均经过严格质量检测，请放心使用</p>
             </div>
           </div>
-
           {/* Secondary Action: Outlined/Tonal Pill Button */}
           <Button 
             variant="outline" 
