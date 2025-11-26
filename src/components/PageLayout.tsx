@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home } from "lucide-react";
@@ -26,6 +26,14 @@ const PageLayout = ({
   className = "",
 }: PageLayoutProps) => {
   const navigate = useNavigate();
+
+  // Set document title
+  useEffect(() => {
+    document.title = title;
+    return () => {
+      document.title = "联系我";
+    };
+  }, [title]);
 
   return (
     <main className={`min-h-screen bg-background relative overflow-hidden ${className}`}>

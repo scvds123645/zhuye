@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Hash, FileText, Cookie, UserCheck, ExternalLink, KeyRound, RefreshCw, ListFilter, AtSign, Sparkles } from "lucide-react";
 import PageLayout from "@/components/PageLayout";

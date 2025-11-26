@@ -1,13 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Zap, Sparkles, ArrowRight, Package, Wrench } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ParticleBackground from "@/components/ParticleBackground";
 
 const Index = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "联系我";
+  }, []);
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
