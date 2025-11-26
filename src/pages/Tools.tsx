@@ -81,7 +81,7 @@ const Tools = () => {
     },
   ];
 
-  // 统一处理延时跳转逻辑
+  // 工具卡片保持延时跳转逻辑
   const handleNavigation = (path, isExternal = false) => {
     setTimeout(() => {
       if (isExternal) {
@@ -100,8 +100,8 @@ const Tools = () => {
         <div className="max-w-4xl mx-auto mb-8 md:mb-12">
           <Button
             variant="ghost"
-            // 修改：使用延时跳转
-            onClick={() => handleNavigation("/")}
+            // 修改：直接使用 navigate 实现立即跳转
+            onClick={() => navigate("/")}
             // 手机端按钮边距更小，-ml-2 让图标在视觉上与左边缘对齐
             className="mb-4 md:mb-6 -ml-2 md:ml-0 px-2 md:px-4"
           >
@@ -135,7 +135,7 @@ const Tools = () => {
                   // 2. h-full: 确保 flex 布局下拉伸高度一致
                   // 3. active:scale-[0.98]: 增加手机端触摸反馈
                   className="flex flex-col h-full p-4 md:p-6 bg-card border-border hover:border-primary hover:shadow-xl active:scale-[0.98] transition-all duration-300 cursor-pointer group"
-                  // 修改：使用延时跳转函数
+                  // 卡片点击保持原有延时效果
                   onClick={() => handleNavigation(tool.path, tool.external)}
                 >
                   <div className="space-y-3 md:space-y-4 flex-1">
