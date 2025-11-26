@@ -97,38 +97,38 @@ const Tools = () => {
       backLabel="返回首页"
     >
       {/* Tools Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {tools.map((tool, index) => {
           const IconComponent = tool.icon;
           return (
             <Card
               key={tool.path}
               onClick={() => handleNavigation(tool.path, tool.external)}
-              className="relative overflow-hidden p-5 bg-card border-border hover:bg-secondary/30 cursor-pointer group card-shadow hover:card-shadow-hover fb-transition"
+              className="relative overflow-hidden p-4 hover:shadow-[0_2px_8px_rgba(0,0,0,0.15)] cursor-pointer group transition-all duration-200"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               <div className="relative space-y-3">
                 {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 fb-transition">
-                  <IconComponent className="w-6 h-6 text-primary" />
+                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center group-hover:bg-secondary/80 transition-all duration-200">
+                  <IconComponent className="w-5 h-5 text-primary" />
                 </div>
                 
                 {/* Content */}
-                <div className="space-y-1.5">
-                  <h3 className="font-semibold text-foreground text-base flex items-center gap-2">
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-foreground text-[15px] flex items-center gap-2">
                     {tool.title}
                     {tool.external && <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-[13px] text-muted-foreground leading-relaxed">
                     {tool.description}
                   </p>
                 </div>
                 
                 {/* Action link */}
                 <div className="pt-1">
-                  <span className="text-sm font-medium text-primary inline-flex items-center gap-1">
+                  <span className="text-[13px] font-semibold text-primary inline-flex items-center gap-1">
                     {tool.external ? '访问链接' : '立即使用'}
-                    <span className="group-hover:translate-x-1 fb-transition">→</span>
+                    <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
                   </span>
                 </div>
               </div>
@@ -138,14 +138,14 @@ const Tools = () => {
       </div>
 
       {/* Footer Info */}
-      <Card className="mt-8 p-5 bg-card border-border card-shadow">
+      <Card className="mt-6 p-4">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground mb-2">使用提示</h3>
-            <ul className="space-y-1.5 text-sm text-muted-foreground">
+            <h3 className="font-semibold text-[15px] text-foreground mb-2">使用提示</h3>
+            <ul className="space-y-1 text-[13px] text-muted-foreground">
               <li>• 所有工具均支持批量处理和快捷键操作</li>
               <li>• 数据处理完全在浏览器本地进行，不会上传到服务器</li>
               <li>• 支持一键复制结果，方便快捷使用</li>

@@ -38,57 +38,57 @@ const Products = () => {
       backLabel="返回首页"
     >
       {/* Floating promotion banner */}
-      <div className="mb-8 flex justify-center">
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+      <div className="mb-6 flex justify-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary">
           <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-          <span className="text-sm font-medium text-primary">限时优惠 · 批量购买享更多折扣</span>
+          <span className="text-[13px] font-semibold text-foreground">限时优惠 · 批量购买享更多折扣</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product, index) => (
           <Card 
             key={product.id} 
-            className="relative overflow-hidden border-border bg-card hover:bg-secondary/30 fb-transition card-shadow hover:shadow-elevated"
+            className="relative overflow-hidden hover:shadow-[0_2px_8px_rgba(0,0,0,0.15)] transition-all duration-200"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             
             <CardHeader className="relative">
               <div className="flex items-start justify-between mb-2">
-                <CardTitle className="text-xl font-bold">{product.name}</CardTitle>
+                <CardTitle>{product.name}</CardTitle>
                 {product.badge && (
-                  <Badge variant={product.badgeVariant} className="bg-primary/10 text-primary border-primary/20">
+                  <Badge variant={product.badgeVariant} className="bg-secondary text-foreground">
                     {product.badge}
                   </Badge>
                 )}
               </div>
-              <CardDescription className="text-muted-foreground">{product.description}</CardDescription>
+              <CardDescription>{product.description}</CardDescription>
             </CardHeader>
 
             <CardContent className="relative">
-              <div className="text-4xl font-black mb-6 text-primary">
+              <div className="text-3xl font-bold mb-4 text-primary">
                 {product.price}
               </div>
               
-              <ul className="space-y-3 mb-6">
+              <ul className="space-y-2.5 mb-4">
                 {product.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start text-sm text-muted-foreground">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary mr-3 mt-2 flex-shrink-0" />
+                  <li key={idx} className="flex items-start text-[15px] text-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2.5 mt-1.5 flex-shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
               
               {/* Trust badges */}
-              <div className="border-t border-border pt-4">
+              <div className="border-t border-border pt-3 mt-4">
                 <div className="grid grid-cols-3 gap-2 text-center">
                   {product.trustBadges?.map((badge, idx) => {
                     const Icon = badge.icon;
                     return (
-                      <div key={idx} className="space-y-1 p-2 rounded-lg bg-secondary hover:bg-secondary/80 fb-transition">
+                      <div key={idx} className="space-y-1 p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-all duration-200">
                         <Icon className="w-4 h-4 mx-auto text-primary" />
-                        <div className="text-lg font-bold text-foreground">{badge.value}</div>
-                        <div className="text-xs text-muted-foreground">{badge.label}</div>
+                        <div className="text-[15px] font-semibold text-foreground">{badge.value}</div>
+                        <div className="text-[13px] text-muted-foreground">{badge.label}</div>
                       </div>
                     );
                   })}
@@ -99,40 +99,40 @@ const Products = () => {
             <CardFooter>
               <Dialog open={isContactOpen} onOpenChange={setIsContactOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 rounded-lg fb-transition">
-                    <ShoppingCart className="w-5 h-5 mr-2" />
+                  <Button variant="fb" className="w-full">
+                    <ShoppingCart className="w-4 h-4" />
                     咨询购买
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    <ArrowRight className="w-4 h-4" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md card-shadow">
+                <DialogContent>
                   <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-foreground">
+                    <DialogTitle>
                       专业服务团队
                     </DialogTitle>
                     <DialogDescription>
                       我们的客服团队将为您提供一对一专业咨询服务
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="space-y-3 py-4">
+                  <div className="space-y-2 py-2">
                     {[1, 2, 3].map((_, index) => (
                       <a
                         key={index}
                         href="https://t.me/Facebookkf_bot"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-4 p-4 rounded-lg border border-border hover:bg-secondary fb-transition"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-all duration-200 group"
                       >
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 fb-transition">
-                          <svg className="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                          <svg className="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
                           </svg>
                         </div>
                         <div className="flex-1">
-                          <div className="font-semibold text-foreground">Telegram</div>
-                          <div className="text-sm text-muted-foreground">@Facebookkf_bot</div>
+                          <div className="font-semibold text-[15px] text-foreground">Telegram</div>
+                          <div className="text-[13px] text-muted-foreground">@Facebookkf_bot</div>
                         </div>
-                        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all" />
                       </a>
                     ))}
                   </div>
@@ -144,20 +144,20 @@ const Products = () => {
       </div>
 
       {/* Bottom info card */}
-      <Card className="mt-10 p-6 bg-card border-border card-shadow">
+      <Card className="mt-8 p-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <Shield className="w-6 h-6 text-primary" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+              <Shield className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">安全保障</h3>
-              <p className="text-sm text-muted-foreground">所有账号均经过严格质量检测</p>
+              <h3 className="font-semibold text-[15px] text-foreground">安全保障</h3>
+              <p className="text-[13px] text-muted-foreground">所有账号均经过严格质量检测</p>
             </div>
           </div>
-          <Button variant="outline" onClick={() => window.open('https://t.me/Facebookkf_bot', '_blank')} className="border-2 border-border hover:bg-secondary fb-transition">
+          <Button variant="secondary" onClick={() => window.open('https://t.me/Facebookkf_bot', '_blank')}>
             了解更多
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
       </Card>

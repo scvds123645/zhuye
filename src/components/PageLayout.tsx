@@ -38,27 +38,26 @@ const PageLayout = ({
   return (
     <main className={`min-h-screen bg-background relative overflow-hidden ${className}`}>
       
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-10">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 py-4 sm:py-6">
         {/* Header */}
-        <div className="max-w-6xl mx-auto mb-6 sm:mb-8">
+        <div className="max-w-[680px] mx-auto mb-4">
           {showBack && (
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={() => navigate(backTo)}
-              className="mb-3 sm:mb-4 -ml-2 text-muted-foreground hover:text-foreground group text-sm"
+              className="mb-3 -ml-2 text-muted-foreground hover:text-foreground hover:bg-secondary group rounded-full"
             >
-              <ArrowLeft className="mr-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:-translate-x-1 transition-transform" />
-              {backLabel}
+              <ArrowLeft className="h-5 w-5 group-hover:-translate-x-0.5 transition-transform" />
             </Button>
           )}
           
-          <div className="space-y-2">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+          <div className="space-y-1">
+            <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
               {title}
             </h1>
             {description && (
-              <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl">
+              <p className="text-muted-foreground text-[15px] max-w-2xl">
                 {description}
               </p>
             )}
@@ -66,7 +65,7 @@ const PageLayout = ({
         </div>
 
         {/* Content */}
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-[680px] mx-auto">
           {children}
         </div>
       </div>
