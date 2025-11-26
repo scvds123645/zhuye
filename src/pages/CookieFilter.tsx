@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
-import { Copy, Eraser, CheckCircle2 } from "lucide-react";
+import { Copy, Eraser, CheckCircle2, Settings2, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/PageLayout";
 
@@ -90,44 +90,59 @@ const CookieFilter = () => {
       backTo="/tools"
       backLabel="返回工具列表"
     >
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        
         {/* Input Section */}
-        <div className="space-y-4">
-          <Card className="p-5 bg-card border-border card-shadow">
-            <Label htmlFor="input" className="text-base font-semibold mb-3 block">
-              输入 Cookie 字符串
-            </Label>
-            <Textarea
-              id="input"
-              placeholder="粘贴cookie字符串，支持多行输入..."
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              className="min-h-[350px] font-mono text-sm bg-background border-border focus:border-primary fb-transition"
-            />
+        <div className="space-y-6">
+          <Card className="p-6 rounded-3xl bg-white shadow-md border-transparent hover:shadow-lg transition-shadow duration-300">
+            <div className="flex items-center gap-2 mb-4">
+                <FileText className="w-5 h-5 text-blue-600" />
+                <Label htmlFor="input" className="text-lg font-medium text-slate-800">
+                输入 Cookie
+                </Label>
+            </div>
+            
+            <div className="relative group">
+                <Textarea
+                id="input"
+                placeholder="粘贴cookie字符串，支持多行输入..."
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                className="min-h-[350px] w-full rounded-2xl bg-slate-50 border-transparent p-4 font-mono text-sm text-slate-700 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 resize-none shadow-inner"
+                />
+            </div>
           </Card>
 
-          <Card className="p-5 bg-card border-border card-shadow">
-            <Label className="text-base font-semibold mb-3 block">筛选字段</Label>
-            <div className="flex flex-col gap-3">
+          <Card className="p-6 rounded-3xl bg-white shadow-md border-transparent hover:shadow-lg transition-shadow duration-300">
+            <div className="flex items-center gap-2 mb-4">
+                <Settings2 className="w-5 h-5 text-blue-600" />
+                <Label className="text-lg font-medium text-slate-800">筛选字段</Label>
+            </div>
+            
+            <div className="flex flex-col gap-2">
               {[
                 { id: "c_user", label: "c_user" },
                 { id: "xs", label: "xs" },
               ].map((field) => (
-                <div key={field.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary fb-transition">
-                  <Checkbox
-                    id={field.id}
-                    checked={selectedFields[field.id as keyof typeof selectedFields]}
-                    onCheckedChange={() =>
+                <div
+                  key={field.id}
+                  className="flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 transition-colors cursor-pointer group"
+                  onClick={() =>
                       setSelectedFields((prev) => ({
                         ...prev,
                         [field.id]: !prev[field.id as keyof typeof selectedFields],
                       }))
                     }
-                    className="border-primary data-[state=checked]:bg-primary"
-                  />
-                  <Label htmlFor={field.id} className="text-sm font-mono cursor-pointer">
+                >
+                  <Label htmlFor={field.id} className="text-base text-slate-700 font-mono cursor-pointer">
                     {field.label}
                   </Label>
+                  <Checkbox
+                    id={field.id}
+                    checked={selectedFields[field.id as keyof typeof selectedFields]}
+                    onCheckedChange={() => {}} // Handled by parent div click for better UX
+                    className="w-5 h-5 rounded-md border-slate-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 transition-all"
+                  />
                 </div>
               ))}
             </div>
@@ -135,37 +150,62 @@ const CookieFilter = () => {
         </div>
 
         {/* Output Section */}
-        <div className="space-y-4">
-          <Card className="p-5 bg-card border-border card-shadow">
-            <div className="flex items-center justify-between mb-3">
-              <Label className="text-base font-semibold">筛选结果</Label>
-              <span className="text-sm text-muted-foreground px-3 py-1 rounded-full bg-secondary">
+        <div className="space-y-6">
+          <Card className="p-6 rounded-3xl bg-white shadow-md border-transparent hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <Label className="text-lg font-medium text-slate-800">筛选结果</Label>
+              <span className="px-4 py-1.5 rounded-full bg-blue-50 text-blue-700 text-sm font-semibold">
                 {resultCount} 条结果
               </span>
             </div>
-            <ScrollArea className="h-[350px] w-full rounded-lg border border-border bg-background">
-              <div className="p-4">
-                {outputText ? (
-                  <pre className="font-mono text-sm whitespace-pre-wrap break-all text-foreground">
-                    {outputText}
-                  </pre>
-                ) : (
-                  <p className="text-muted-foreground text-sm">筛选结果将显示在这里...</p>
-                )}
-              </div>
-            </ScrollArea>
-          </Card>
 
-          <div className="flex gap-3">
-            <Button onClick={handleCopy} className="flex-1 py-6 bg-primary hover:bg-primary/90 fb-transition" disabled={!outputText}>
-              {copied ? <CheckCircle2 className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
-              {copied ? "已复制" : "复制结果"}
-            </Button>
-            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-2 border-border hover:bg-secondary fb-transition">
-              <Eraser className="mr-2 h-4 w-4" />
-              清空
-            </Button>
-          </div>
+            <div className="flex-grow relative rounded-2xl bg-slate-900 overflow-hidden border border-slate-800 shadow-inner">
+                <ScrollArea className="h-[450px] w-full">
+                <div className="p-6">
+                    {outputText ? (
+                    <pre className="font-mono text-sm whitespace-pre-wrap break-all text-slate-300 leading-relaxed">
+                        {outputText}
+                    </pre>
+                    ) : (
+                    <div className="h-full flex flex-col items-center justify-center text-slate-500 mt-20">
+                        <div className="p-4 rounded-full bg-slate-800/50 mb-3">
+                            <FileText className="w-8 h-8 opacity-50" />
+                        </div>
+                        <p>结果将显示在这里...</p>
+                    </div>
+                    )}
+                </div>
+                </ScrollArea>
+            </div>
+
+            <div className="flex gap-4 mt-6">
+                <Button
+                    onClick={handleCopy}
+                    disabled={!outputText}
+                    className={`flex-1 py-6 rounded-full text-base font-medium shadow-sm transition-all duration-300 ${
+                        copied 
+                        ? "bg-green-600 hover:bg-green-700 text-white" 
+                        : "bg-blue-600 hover:bg-blue-700 text-white hover:shadow-blue-200"
+                    }`}
+                >
+                    {copied ? (
+                        <CheckCircle2 className="mr-2 h-5 w-5" />
+                    ) : (
+                        <Copy className="mr-2 h-5 w-5" />
+                    )}
+                    {copied ? "已复制" : "复制结果"}
+                </Button>
+
+                <Button
+                    onClick={handleClear}
+                    variant="outline"
+                    className="flex-1 py-6 rounded-full border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300"
+                >
+                    <Eraser className="mr-2 h-5 w-5" />
+                    清空
+                </Button>
+            </div>
+          </Card>
         </div>
       </div>
     </PageLayout>
