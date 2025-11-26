@@ -67,6 +67,7 @@ const CookieFilter = () => {
       toast({ title: "没有内容可复制", variant: "destructive" });
       return;
     }
+
     try {
       await navigator.clipboard.writeText(outputText);
       setCopied(true);
@@ -140,7 +141,7 @@ const CookieFilter = () => {
                   <Checkbox
                     id={field.id}
                     checked={selectedFields[field.id as keyof typeof selectedFields]}
-                    onCheckedChange={() => {}} // Handled by parent div click for better UX
+                    onCheckedChange={() => {}} 
                     className="w-5 h-5 rounded-md border-slate-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 transition-all"
                   />
                 </div>
@@ -158,17 +159,20 @@ const CookieFilter = () => {
                 {resultCount} 条结果
               </span>
             </div>
-
-            <div className="flex-grow relative rounded-2xl bg-slate-900 overflow-hidden border border-slate-800 shadow-inner">
+            
+            {/* Modified container: bg-slate-50 instead of bg-slate-900, transparent border */}
+            <div className="flex-grow relative rounded-2xl bg-slate-50 overflow-hidden border border-transparent shadow-inner">
                 <ScrollArea className="h-[450px] w-full">
                 <div className="p-6">
                     {outputText ? (
-                    <pre className="font-mono text-sm whitespace-pre-wrap break-all text-slate-300 leading-relaxed">
+                    /* Modified text color: text-slate-700 instead of text-slate-300 */
+                    <pre className="font-mono text-sm whitespace-pre-wrap break-all text-slate-700 leading-relaxed">
                         {outputText}
                     </pre>
                     ) : (
                     <div className="h-full flex flex-col items-center justify-center text-slate-500 mt-20">
-                        <div className="p-4 rounded-full bg-slate-800/50 mb-3">
+                        {/* Modified icon background: bg-slate-200 instead of bg-slate-800/50 */}
+                        <div className="p-4 rounded-full bg-slate-200 mb-3">
                             <FileText className="w-8 h-8 opacity-50" />
                         </div>
                         <p>结果将显示在这里...</p>
@@ -195,7 +199,6 @@ const CookieFilter = () => {
                     )}
                     {copied ? "已复制" : "复制结果"}
                 </Button>
-
                 <Button
                     onClick={handleClear}
                     variant="outline"
