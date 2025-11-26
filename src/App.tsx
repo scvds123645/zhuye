@@ -7,6 +7,9 @@ import Index from "./pages/Index";
 import Products from "./pages/Products";
 import Tools from "./pages/Tools";
 import CookieFilter from "./pages/CookieFilter";
+import CookieConverter from "./pages/CookieConverter";
+import TextDeduplicator from "./pages/TextDeduplicator";
+import EmailDomainFormatter from "./pages/EmailDomainFormatter";
 import DiscordFormatter from "./pages/DiscordFormatter";
 import NumberExtractor from "./pages/NumberExtractor";
 import SoftwareDownload from "./pages/SoftwareDownload";
@@ -25,6 +28,9 @@ const App = () => (
           <Route path="/products" element={<Products />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/jh" element={<CookieFilter />} />
+          <Route path="/cookie" element={<CookieConverter />} />
+          <Route path="/qc" element={<TextDeduplicator />} />
+          <Route path="/yopmail" element={<EmailDomainFormatter />} />
           <Route path="/discord" element={<DiscordFormatter />} />
           <Route path="/14" element={<NumberExtractor />} />
           <Route path="/rj" element={<SoftwareDownload />} />

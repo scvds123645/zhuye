@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Hash, FileText, Cookie, ArrowLeft, UserCheck, ExternalLink, KeyRound } from "lucide-react";
+import { Hash, FileText, Cookie, ArrowLeft, UserCheck, ExternalLink, KeyRound, RefreshCw, ListFilter, AtSign } from "lucide-react";
 
 const Tools = () => {
   const navigate = useNavigate();
@@ -32,6 +32,33 @@ const Tools = () => {
       description: "快速筛选指定的Cookie字段",
       color: "bg-purple-500/10 group-hover:bg-purple-500/20",
       iconColor: "text-purple-500",
+      external: false,
+    },
+    {
+      path: "/cookie",
+      icon: RefreshCw,
+      title: "Cookie 格式转换工具",
+      description: "提取c_user并转换为指定格式",
+      color: "bg-cyan-500/10 group-hover:bg-cyan-500/20",
+      iconColor: "text-cyan-500",
+      external: false,
+    },
+    {
+      path: "/qc",
+      icon: ListFilter,
+      title: "文本去重工具",
+      description: "快速去除文本中的重复行",
+      color: "bg-indigo-500/10 group-hover:bg-indigo-500/20",
+      iconColor: "text-indigo-500",
+      external: false,
+    },
+    {
+      path: "/yopmail",
+      icon: AtSign,
+      title: "域名转邮箱后缀工具",
+      description: "批量格式化域名为邮箱后缀",
+      color: "bg-teal-500/10 group-hover:bg-teal-500/20",
+      iconColor: "text-teal-500",
       external: false,
     },
     {
