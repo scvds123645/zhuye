@@ -152,7 +152,7 @@ const SoftwareDownload = () => {
   );
 
   const handleShare = async (app: App) => {
-    const url = `${window.location.origin}/rj?app=${encodeURIComponent(app.name)}`;
+    const url = `${window.location.origin}?app=${encodeURIComponent(app.name)}`;
     
     if (navigator.share) {
       try {
@@ -162,7 +162,6 @@ const SoftwareDownload = () => {
           url: url,
         });
       } catch (err) {
-        // User cancelled or error occurred, fallback to clipboard
         copyToClipboard(url);
       }
     } else {
@@ -196,100 +195,101 @@ const SoftwareDownload = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#1e88e5] shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-            <div className="flex items-center gap-2 justify-between sm:justify-start">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header - 优化移动端高度和间距 */}
+      <header className="sticky top-0 z-50 bg-[#1e88e5] shadow-lg">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3">
+          <div className="flex flex-col gap-3">
+            {/* Logo 和标题 */}
+            <div className="flex items-center gap-3">
               <div className="flex gap-1">
-                <div className="w-1.5 sm:w-2 h-7 sm:h-8 bg-blue-600 rounded"></div>
-                <div className="w-1.5 sm:w-2 h-7 sm:h-8 bg-red-500 rounded"></div>
-                <div className="w-1.5 sm:w-2 h-7 sm:h-8 bg-yellow-500 rounded"></div>
-                <div className="w-1.5 sm:w-2 h-7 sm:h-8 bg-green-500 rounded"></div>
+                <div className="w-1 h-7 bg-blue-600 rounded-sm"></div>
+                <div className="w-1 h-7 bg-red-500 rounded-sm"></div>
+                <div className="w-1 h-7 bg-yellow-500 rounded-sm"></div>
+                <div className="w-1 h-7 bg-green-500 rounded-sm"></div>
               </div>
-              <h1 className="text-white text-lg sm:text-xl font-semibold ml-2">软件商店</h1>
+              <h1 className="text-white text-xl font-bold">软件商店</h1>
             </div>
-            <div className="flex-1 w-full sm:max-w-2xl">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
-                <Input
-                  type="text"
-                  placeholder="搜索应用..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 h-11 sm:h-10 bg-white/90 border-0 focus-visible:ring-white/50 text-base"
-                />
-              </div>
+            
+            {/* 搜索框 */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+              <Input
+                type="text"
+                placeholder="搜索应用..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 h-11 bg-white/95 border-0 focus-visible:ring-2 focus-visible:ring-white/50 text-base rounded-lg shadow-sm"
+              />
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 pb-6 sm:pb-8">
+      {/* Main Content - 优化移动端间距 */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 py-4 pb-6">
         {filteredApps.length === 0 ? (
-          <div className="text-center py-12 sm:py-16">
-            <p className="text-muted-foreground text-base sm:text-lg">未找到匹配的应用</p>
+          <div className="text-center py-16">
+            <p className="text-gray-500 text-lg">未找到匹配的应用</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="space-y-3">
             {filteredApps.map((app) => (
               <div
                 key={app.id}
                 id={app.name}
-                className={`bg-card rounded-xl sm:rounded-lg shadow-md hover:shadow-lg active:shadow-xl transition-all duration-300 overflow-hidden ${
-                  highlightedApp === app.name ? 'ring-4 ring-[#1e88e5] animate-pulse-slow' : ''
+                className={`bg-white rounded-2xl shadow-sm hover:shadow-md active:shadow-lg transition-all duration-200 overflow-hidden ${
+                  highlightedApp === app.name ? 'ring-4 ring-[#1e88e5] shadow-lg' : ''
                 }`}
               >
-                <div className="p-5 sm:p-6">
-                  {/* App Header */}
-                  <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-4">
+                <div className="p-4">
+                  {/* App Header - 优化图标大小和布局 */}
+                  <div className="flex items-start gap-3 mb-3">
                     <img
                       src={app.icon}
                       alt={app.name}
-                      className="w-18 h-18 sm:w-16 sm:h-16 rounded-2xl sm:rounded-lg object-cover flex-shrink-0 shadow-sm"
+                      className="w-16 h-16 rounded-2xl object-cover flex-shrink-0 shadow-md"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23e0e0e0' width='100' height='100'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%239e9e9e' font-size='40'%3E?%3C/text%3E%3C/svg%3E";
                       }}
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-base sm:text-lg text-foreground truncate mb-1.5 sm:mb-1">
+                      <h3 className="font-bold text-lg text-gray-900 truncate mb-0.5">
                         {app.name}
                       </h3>
-                      <p className="text-sm sm:text-sm text-muted-foreground truncate mb-1.5 sm:mb-1">{app.publisher}</p>
-                      <div className="flex items-center gap-2 mt-1">
+                      <p className="text-sm text-gray-600 truncate mb-2">{app.publisher}</p>
+                      <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1">
-                          <span className="text-sm font-medium">{app.rating}</span>
+                          <span className="text-sm font-semibold text-gray-900">{app.rating}</span>
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                         </div>
-                        <span className="text-xs text-muted-foreground">
-                          {formatReviews(app.reviews)}
+                        <span className="text-xs text-gray-500">
+                          {formatReviews(app.reviews)}条评论
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* App Info */}
-                  <div className="flex gap-6 sm:gap-4 mb-4 text-sm text-muted-foreground">
+                  {/* App Info - 优化移动端布局 */}
+                  <div className="flex gap-8 mb-3 text-sm">
                     <div>
-                      <div className="text-xs mb-1">下载量</div>
-                      <div className="font-medium text-foreground text-sm">{app.downloads}</div>
+                      <div className="text-xs text-gray-500 mb-0.5">下载量</div>
+                      <div className="font-semibold text-gray-900">{app.downloads}</div>
                     </div>
                     <div>
-                      <div className="text-xs mb-1">年龄</div>
-                      <div className="font-medium text-foreground text-sm">{app.ageRating}</div>
+                      <div className="text-xs text-gray-500 mb-0.5">年龄分级</div>
+                      <div className="font-semibold text-gray-900">{app.ageRating}</div>
                     </div>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-sm sm:text-sm text-muted-foreground line-clamp-2 mb-5 sm:mb-4 leading-relaxed">
+                  {/* Description - 优化移动端行高 */}
+                  <p className="text-sm text-gray-600 line-clamp-2 mb-4 leading-relaxed">
                     {app.description}
                   </p>
 
-                  {/* Actions */}
-                  <div className="flex gap-2.5 sm:gap-2">
+                  {/* Actions - 优化按钮大小和间距 */}
+                  <div className="flex gap-2">
                     {app.url ? (
                       <a
                         href={app.url}
@@ -298,15 +298,15 @@ const SoftwareDownload = () => {
                         className="flex-1"
                       >
                         <Button 
-                          className="w-full h-12 sm:h-10 bg-[#1e88e5] hover:bg-[#1976d2] active:bg-[#1565c0] text-white font-medium text-base sm:text-sm rounded-full sm:rounded-md transition-all"
+                          className="w-full h-12 bg-[#1e88e5] hover:bg-[#1976d2] active:bg-[#1565c0] text-white font-semibold text-base rounded-full shadow-md active:shadow-lg transition-all"
                         >
-                          <Download className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
+                          <Download className="w-5 h-5 mr-2" />
                           下载
                         </Button>
                       </a>
                     ) : (
                       <Button 
-                        className="flex-1 h-12 sm:h-10 bg-[#1e88e5] hover:bg-[#1976d2] active:bg-[#1565c0] text-white font-medium text-base sm:text-sm rounded-full sm:rounded-md transition-all"
+                        className="flex-1 h-12 bg-[#1e88e5] hover:bg-[#1976d2] active:bg-[#1565c0] text-white font-semibold text-base rounded-full shadow-md active:shadow-lg transition-all"
                         onClick={() => {
                           toast({
                             title: "开始下载",
@@ -314,16 +314,16 @@ const SoftwareDownload = () => {
                           });
                         }}
                       >
-                        <Download className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
+                        <Download className="w-5 h-5 mr-2" />
                         安装
                       </Button>
                     )}
                     <Button
                       variant="outline"
-                      className="h-12 w-12 sm:h-10 sm:w-10 rounded-full sm:rounded-md border-2 sm:border active:scale-95 transition-all"
+                      className="h-12 w-12 rounded-full border-2 border-gray-300 hover:border-[#1e88e5] hover:bg-blue-50 active:scale-95 transition-all shadow-sm"
                       onClick={() => handleShare(app)}
                     >
-                      <Share2 className="w-5 h-5 sm:w-4 sm:h-4" />
+                      <Share2 className="w-5 h-5 text-gray-700" />
                     </Button>
                   </div>
                 </div>
@@ -332,6 +332,16 @@ const SoftwareDownload = () => {
           </div>
         )}
       </main>
+
+      <style>{`
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 2s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 };
