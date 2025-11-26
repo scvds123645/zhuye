@@ -148,7 +148,6 @@ const SoftwareDownload = () => {
   );
 
   const handleShare = async (app: App) => {
-    // 这里的路径增加了 /rj
     const url = `${window.location.origin}/rj?app=${encodeURIComponent(app.name)}`;
     if (navigator.share) {
       try {
@@ -187,92 +186,105 @@ const SoftwareDownload = () => {
       backLabel="返回首页"
       showParticles={false}
     >
-      {/* Search */}
-      <Card className="p-4 bg-card border-border card-shadow mb-6">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 pointer-events-none" />
+      {/* Search Bar: Material Design 3 Floating Search */}
+      <div className="mb-8 px-2">
+        <div className="relative max-w-2xl mx-auto">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 w-6 h-6 pointer-events-none z-10" />
           <Input
             type="text"
             placeholder="搜索应用..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-12 h-12 bg-background border-border focus:border-primary text-base rounded-lg fb-transition"
+            className="pl-14 pr-6 h-14 w-full rounded-full border-none bg-white text-lg text-slate-800 shadow-md hover:shadow-lg transition-shadow duration-300 focus-visible:ring-0 placeholder:text-slate-400"
           />
         </div>
-      </Card>
+      </div>
 
       {/* Apps Grid */}
       {filteredApps.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="text-muted-foreground text-lg">未找到匹配的应用</p>
+        <div className="text-center py-24">
+          <div className="inline-block p-4 rounded-full bg-slate-50 mb-4">
+            <Search className="w-8 h-8 text-slate-300" />
+          </div>
+          <p className="text-slate-500 text-lg font-medium">未找到匹配的应用</p>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredApps.map((app) => (
             <Card
               key={app.id}
               id={app.name}
-              className={`p-5 bg-card border-border card-shadow hover:bg-secondary/30 fb-transition ${
-                highlightedApp === app.name ? 'ring-2 ring-primary shadow-elevated' : ''
+              className={`group relative p-6 border-none bg-white transition-all duration-300 rounded-3xl ${
+                highlightedApp === app.name 
+                  ? 'ring-2 ring-blue-400 shadow-xl scale-[1.02]' 
+                  : 'shadow-sm hover:shadow-lg hover:-translate-y-0.5'
               }`}
             >
               {/* App Header */}
-              <div className="flex items-start gap-4 mb-4">
-                <img
-                  src={app.icon}
-                  alt={app.name}
-                  className="w-16 h-16 rounded-2xl object-cover flex-shrink-0 shadow-lg"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23334155' width='100' height='100'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%2394a3b8' font-size='40'%3E?%3C/text%3E%3C/svg%3E";
-                  }}
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-lg text-foreground truncate">{app.name}</h3>
-                  <p className="text-sm text-muted-foreground truncate mb-2">{app.publisher}</p>
-                  <div className="flex items-center gap-3">
+              <div className="flex items-start gap-5 mb-5">
+                <div className="relative">
+                  <img
+                    src={app.icon}
+                    alt={app.name}
+                    className="w-[72px] h-[72px] rounded-[18px] object-cover shadow-sm group-hover:shadow transition-shadow"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23e2e8f0' width='100' height='100'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%2394a3b8' font-size='40'%3E?%3C/text%3E%3C/svg%3E";
+                    }}
+                  />
+                </div>
+                
+                <div className="flex-1 min-w-0 pt-1">
+                  <h3 className="font-bold text-xl text-slate-900 truncate leading-tight mb-1">{app.name}</h3>
+                  <p className="text-sm text-blue-600 font-medium truncate mb-2">{app.publisher}</p>
+                  <div className="flex items-center gap-3 text-sm">
                     <div className="flex items-center gap-1">
-                      <span className="text-sm font-semibold text-foreground">{app.rating}</span>
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium text-slate-700">{app.rating}</span>
+                      <Star className="w-3.5 h-3.5 fill-slate-900 text-slate-900" />
                     </div>
-                    <span className="text-xs text-muted-foreground">{formatReviews(app.reviews)}评</span>
+                    <span className="w-1 h-1 rounded-full bg-slate-300" />
+                    <span className="text-slate-500">{formatReviews(app.reviews)} 评</span>
                   </div>
                 </div>
               </div>
 
-              {/* App Info */}
-              <div className="flex gap-6 mb-3 text-sm">
+              {/* App Stats */}
+              <div className="flex gap-8 mb-5 text-sm px-1">
                 <div>
-                  <div className="text-xs text-muted-foreground">下载量</div>
-                  <div className="font-semibold text-foreground">{app.downloads}</div>
+                  <div className="text-xs text-slate-500 mb-0.5">下载量</div>
+                  <div className="font-semibold text-slate-700">{app.downloads}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-muted-foreground">年龄</div>
-                  <div className="font-semibold text-foreground">{app.ageRating}</div>
+                  <div className="text-xs text-slate-500 mb-0.5">年龄分级</div>
+                  <div className="font-semibold text-slate-700">{app.ageRating}</div>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-4 leading-relaxed">{app.description}</p>
+              <p className="text-sm text-slate-600 line-clamp-2 mb-6 leading-relaxed h-10">
+                {app.description}
+              </p>
 
               {/* Actions */}
-              <div className="flex gap-2">
+              <div className="flex items-center gap-3">
                 {app.url ? (
                   <a href={app.url} target="_blank" rel="noopener noreferrer" className="flex-1">
-                    <Button className="w-full py-5 bg-primary hover:bg-primary/90 font-semibold rounded-lg fb-transition">
+                    <Button className="w-full h-11 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-none hover:shadow-md transition-all font-medium text-[15px]">
                       <Download className="w-5 h-5 mr-2" />
                       下载
                     </Button>
                   </a>
                 ) : (
-                  <Button className="flex-1 py-5 bg-primary hover:bg-primary/90 font-semibold rounded-lg fb-transition">
+                  <Button className="flex-1 h-11 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-none hover:shadow-md transition-all font-medium text-[15px]">
                     <Download className="w-5 h-5 mr-2" />
                     安装
                   </Button>
                 )}
+                
                 <Button
-                  variant="outline"
-                  className="py-5 px-4 rounded-lg border-2 border-border hover:bg-secondary fb-transition"
+                  variant="ghost"
+                  size="icon"
+                  className="h-11 w-11 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors"
                   onClick={() => handleShare(app)}
                 >
                   <Share2 className="w-5 h-5" />
@@ -283,20 +295,20 @@ const SoftwareDownload = () => {
         </div>
       )}
 
-      {/* Tip Card */}
-      <Card className="mt-8 p-5 bg-card border-border card-shadow">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <Sparkles className="w-5 h-5 text-primary" />
+      {/* Material You Style Tip Card */}
+      <div className="mt-10">
+        <Card className="p-5 border-none bg-blue-50 rounded-3xl flex items-center gap-4 max-w-3xl mx-auto">
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 text-blue-600">
+            <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground mb-1">温馨提示</h3>
-            <p className="text-sm text-muted-foreground">
-              所有应用均来自官方或可信渠道，请放心下载使用。如遇问题请联系客服。
+            <p className="text-sm text-slate-700 leading-relaxed">
+              <span className="font-semibold text-slate-900 block mb-0.5">安全认证</span>
+              所有应用均来自官方或可信渠道，请放心下载使用。
             </p>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </PageLayout>
   );
 };
