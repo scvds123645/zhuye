@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { Hash, FileText, Cookie, UserCheck, ExternalLink, KeyRound, RefreshCw, ListFilter, AtSign, Sparkles } from "lucide-react";
+import { Hash, FileText, Cookie, UserCheck, ExternalLink, KeyRound, RefreshCw, ListFilter, AtSign, Sparkles, Store } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 
 const Tools = () => {
@@ -54,6 +54,14 @@ const Tools = () => {
       title: "域名转邮箱后缀工具",
       description: "批量格式化域名为邮箱后缀",
       gradient: "from-teal-500 to-cyan-500",
+      external: false,
+    },
+    {
+      path: "/rj",
+      icon: Store,
+      title: "软件商店",
+      description: "浏览并下载常用软件工具",
+      gradient: "from-emerald-500 to-teal-500",
       external: false,
     },
     {
