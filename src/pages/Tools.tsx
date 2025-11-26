@@ -89,7 +89,7 @@ const Tools = () => {
       } else {
         navigate(path);
       }
-    }, 200);
+    }, 100);
   };
 
   return (
