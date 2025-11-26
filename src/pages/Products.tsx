@@ -30,15 +30,25 @@ const products = [
 
 // Refactored to Material Design 3 (Material You) Style
 const Products = () => {
-  // 注意：如果有多个商品，建议将 state 改为存储当前打开的商品ID，例如 const [openId, setOpenId] = useState(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
 
   return (
     <PageLayout
-      title="专业服务商"
-      description="提供高质量Facebook白号，严格质量把控，完善售后保障体系，助力您的业务拓展"
+      // 1. 移除了 title 和 description 属性，改用下方自定义头部
       backLabel="返回首页"
     >
+      {/* === 优化后的自定义头部区域 (Start) === */}
+      <div className="relative z-10 mx-auto max-w-2xl text-center pt-8 pb-10 px-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight mb-4">
+          专业服务商
+        </h1>
+        <p className="text-lg text-slate-600 leading-relaxed">
+          提供高质量Facebook白号，严格质量把控，<br className="hidden sm:block" />
+          完善售后保障体系，助力您的业务拓展
+        </p>
+      </div>
+      {/* === 优化后的自定义头部区域 (End) === */}
+
       {/* Material 3 Style Promotion Chip */}
       <div className="mb-10 flex justify-center">
         <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50 text-blue-900 shadow-sm border border-blue-100">
@@ -69,7 +79,6 @@ const Products = () => {
                 {product.description}
               </CardDescription>
             </CardHeader>
-
             <CardContent className="p-6 pt-4">
               <div className="flex items-end justify-between mb-6">
                 <div className="flex items-baseline gap-1">
@@ -112,7 +121,6 @@ const Products = () => {
                 </div>
               </div>
             </CardContent>
-
             <CardFooter className="p-6 pt-0">
               <Dialog open={isContactOpen} onOpenChange={setIsContactOpen}>
                 <DialogTrigger asChild>
@@ -123,7 +131,7 @@ const Products = () => {
                   </Button>
                 </DialogTrigger>
                 
-                {/* Dialog: Material 3 Alert Dialog style (Extra rounded corners) - 同步后的代码 */}
+                {/* Dialog: Material 3 Alert Dialog style */}
                 <DialogContent className="sm:max-w-sm rounded-[28px] p-6 bg-white shadow-2xl border-0">
                   <DialogHeader className="space-y-3 pb-4">
                     <div className="mx-auto w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-2">
@@ -136,7 +144,6 @@ const Products = () => {
                       我们的客服团队将为您提供<br/>一对一专业咨询服务
                     </DialogDescription>
                   </DialogHeader>
-
                   <div className="space-y-3">
                     {[1, 2, 3].map((_, index) => (
                       <a
@@ -176,7 +183,6 @@ const Products = () => {
               <p className="text-slate-500">所有账号均经过严格质量检测，请放心使用</p>
             </div>
           </div>
-          {/* Secondary Action: Outlined/Tonal Pill Button */}
           <Button 
             variant="outline" 
             onClick={() => window.open('https://t.me/Facebookkf_bot', '_blank')} 
