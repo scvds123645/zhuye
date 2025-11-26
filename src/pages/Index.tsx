@@ -112,7 +112,17 @@ const Index = () => {
             >
               查看商品
             </Button>
+
+            <Button 
+              size="lg"
+              variant="outline"
+              onClick={() => navigate('/tools')}
+              className="border-2 border-accent/50 hover:border-accent hover:bg-accent/10 text-foreground font-semibold px-8 py-6 text-lg transition-all duration-300"
+            >
+              实用工具
+            </Button>
           </div>
+          
           
           {/* Decorative dots */}
           <div className="flex items-center justify-center gap-3 pt-8">
