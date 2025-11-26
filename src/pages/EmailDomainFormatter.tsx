@@ -81,9 +81,9 @@ const EmailDomainFormatter = () => {
       backLabel="返回工具列表"
     >
       {/* Statistics */}
-      <Card className="p-4 bg-card/50 border-border/50 mb-6">
+      <Card className="p-4 bg-card border-border card-shadow mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
             <AtSign className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -96,7 +96,7 @@ const EmailDomainFormatter = () => {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Input Section */}
         <div className="space-y-4">
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <Label htmlFor="input" className="text-base font-semibold mb-3 block">
               输入域名列表
             </Label>
@@ -105,18 +105,18 @@ const EmailDomainFormatter = () => {
               placeholder="输入域名，支持逗号或换行分隔&#10;例如：&#10;gmail.com&#10;outlook.com, yahoo.com"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              className="min-h-[300px] font-mono text-sm bg-background/50 border-border/50 focus:border-primary/50"
+              className="min-h-[300px] font-mono text-sm bg-background border-border focus:border-primary fb-transition"
             />
           </Card>
 
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <Label className="text-base font-semibold mb-3 block">格式选项</Label>
             <div className="space-y-3">
               {[
                 { id: "at-symbol", label: "添加 @ 前缀", checked: addAtSymbol, onChange: setAddAtSymbol },
                 { id: "quotes", label: '添加引号包裹 ""', checked: addQuotes, onChange: setAddQuotes },
               ].map((option) => (
-                <div key={option.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary/50 transition-colors">
+                <div key={option.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary fb-transition">
                   <Checkbox
                     id={option.id}
                     checked={option.checked}
@@ -129,7 +129,7 @@ const EmailDomainFormatter = () => {
             </div>
 
             {/* Preview */}
-            <div className="mt-4 p-3 rounded-lg bg-secondary/30 border border-border/50">
+            <div className="mt-4 p-3 rounded-lg bg-secondary border border-border">
               <p className="text-xs text-muted-foreground mb-1">预览示例：</p>
               <p className="text-sm font-mono text-primary">
                 {addQuotes && '"'}{addAtSymbol && '@'}example.com{addQuotes && '"'}, {addQuotes && '"'}{addAtSymbol && '@'}domain.com{addQuotes && '"'}
@@ -140,16 +140,16 @@ const EmailDomainFormatter = () => {
 
         {/* Output Section */}
         <div className="space-y-4">
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <div className="flex items-center justify-between mb-3">
               <Label className="text-base font-semibold">格式化结果</Label>
               {domainCount > 0 && (
-                <span className="text-sm text-muted-foreground px-3 py-1 rounded-full bg-secondary/50">
+                <span className="text-sm text-muted-foreground px-3 py-1 rounded-full bg-secondary">
                   {domainCount} 个域名
                 </span>
               )}
             </div>
-            <ScrollArea className="h-[350px] w-full rounded-lg border border-border/50 bg-background/30">
+            <ScrollArea className="h-[350px] w-full rounded-lg border border-border bg-background">
               <div className="p-4">
                 {outputText ? (
                   <pre className="font-mono text-sm whitespace-pre-wrap break-all text-foreground">{outputText}</pre>
@@ -161,11 +161,11 @@ const EmailDomainFormatter = () => {
           </Card>
 
           <div className="flex gap-3">
-            <Button onClick={handleCopy} className="flex-1 py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90" disabled={!outputText}>
+            <Button onClick={handleCopy} className="flex-1 py-6 bg-primary hover:bg-primary/90 fb-transition" disabled={!outputText}>
               {copied ? <CheckCircle2 className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
               {copied ? "已复制" : "复制结果"}
             </Button>
-            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-border/50 hover:border-primary/50">
+            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-2 border-border hover:bg-secondary fb-transition">
               <Eraser className="mr-2 h-4 w-4" />
               清空
             </Button>
@@ -174,7 +174,7 @@ const EmailDomainFormatter = () => {
       </div>
 
       {/* Usage Tips */}
-      <Card className="mt-6 p-5 bg-card/30 border-border/50">
+      <Card className="mt-6 p-5 bg-card border-border card-shadow">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-5 h-5 text-primary" />

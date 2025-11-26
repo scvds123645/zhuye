@@ -82,9 +82,9 @@ const TextDeduplicator = () => {
       {/* Statistics Cards */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         {stats.map((stat) => (
-          <Card key={stat.label} className="p-4 bg-card/50 border-border/50 hover:border-primary/30 transition-colors">
+          <Card key={stat.label} className="p-4 bg-card border-border card-shadow hover:bg-secondary/30 fb-transition">
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg bg-secondary/50 flex items-center justify-center`}>
+              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
                 <stat.icon className={`w-5 h-5 ${stat.color}`} />
               </div>
               <div>
@@ -98,7 +98,7 @@ const TextDeduplicator = () => {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Input Section */}
-        <Card className="p-5 bg-card/50 border-border/50">
+        <Card className="p-5 bg-card border-border card-shadow">
           <Label htmlFor="input" className="text-base font-semibold mb-3 block">
             输入文本
           </Label>
@@ -107,13 +107,13 @@ const TextDeduplicator = () => {
             placeholder="粘贴文本内容，每行一条数据..."
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            className="min-h-[400px] font-mono text-sm bg-background/50 border-border/50 focus:border-primary/50"
+            className="min-h-[400px] font-mono text-sm bg-background border-border focus:border-primary fb-transition"
           />
         </Card>
 
         {/* Output Section */}
         <div className="space-y-4">
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <div className="flex items-center justify-between mb-3">
               <Label className="text-base font-semibold">去重结果</Label>
               {removedCount > 0 && (
@@ -122,7 +122,7 @@ const TextDeduplicator = () => {
                 </span>
               )}
             </div>
-            <ScrollArea className="h-[400px] w-full rounded-lg border border-border/50 bg-background/30">
+            <ScrollArea className="h-[400px] w-full rounded-lg border border-border bg-background">
               <div className="p-4">
                 {outputText ? (
                   <pre className="font-mono text-sm whitespace-pre-wrap break-all text-foreground">{outputText}</pre>
@@ -134,11 +134,11 @@ const TextDeduplicator = () => {
           </Card>
 
           <div className="flex gap-3">
-            <Button onClick={handleCopy} className="flex-1 py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90" disabled={!outputText}>
+            <Button onClick={handleCopy} className="flex-1 py-6 bg-primary hover:bg-primary/90 fb-transition" disabled={!outputText}>
               {copied ? <CheckCircle2 className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
               {copied ? "已复制" : "复制结果"}
             </Button>
-            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-border/50 hover:border-primary/50">
+            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-2 border-border hover:bg-secondary fb-transition">
               <Eraser className="mr-2 h-4 w-4" />
               清空
             </Button>
@@ -147,7 +147,7 @@ const TextDeduplicator = () => {
       </div>
 
       {/* Usage Tips */}
-      <Card className="mt-6 p-5 bg-card/30 border-border/50">
+      <Card className="mt-6 p-5 bg-card border-border card-shadow">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-5 h-5 text-primary" />

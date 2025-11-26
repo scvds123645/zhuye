@@ -187,7 +187,7 @@ const SoftwareDownload = () => {
       showParticles={false}
     >
       {/* Search */}
-      <Card className="p-4 bg-card/50 border-border/50 mb-6">
+      <Card className="p-4 bg-card border-border card-shadow mb-6">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 pointer-events-none" />
           <Input
@@ -195,7 +195,7 @@ const SoftwareDownload = () => {
             placeholder="搜索应用..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-12 h-12 bg-background/50 border-border/50 focus:border-primary/50 text-base rounded-xl"
+            className="pl-12 h-12 bg-background border-border focus:border-primary text-base rounded-lg fb-transition"
           />
         </div>
       </Card>
@@ -211,8 +211,8 @@ const SoftwareDownload = () => {
             <Card
               key={app.id}
               id={app.name}
-              className={`p-5 bg-card/50 border-border/50 hover:border-primary/30 transition-all duration-300 ${
-                highlightedApp === app.name ? 'ring-2 ring-primary shadow-[0_0_30px_hsl(var(--primary)/0.3)]' : ''
+              className={`p-5 bg-card border-border card-shadow hover:bg-secondary/30 fb-transition ${
+                highlightedApp === app.name ? 'ring-2 ring-primary shadow-elevated' : ''
               }`}
             >
               {/* App Header */}
@@ -258,20 +258,20 @@ const SoftwareDownload = () => {
               <div className="flex gap-2">
                 {app.url ? (
                   <a href={app.url} target="_blank" rel="noopener noreferrer" className="flex-1">
-                    <Button className="w-full py-5 bg-gradient-to-r from-primary to-accent hover:opacity-90 font-semibold rounded-xl">
+                    <Button className="w-full py-5 bg-primary hover:bg-primary/90 font-semibold rounded-lg fb-transition">
                       <Download className="w-5 h-5 mr-2" />
                       下载
                     </Button>
                   </a>
                 ) : (
-                  <Button className="flex-1 py-5 bg-gradient-to-r from-primary to-accent hover:opacity-90 font-semibold rounded-xl">
+                  <Button className="flex-1 py-5 bg-primary hover:bg-primary/90 font-semibold rounded-lg fb-transition">
                     <Download className="w-5 h-5 mr-2" />
                     安装
                   </Button>
                 )}
                 <Button
                   variant="outline"
-                  className="py-5 px-4 rounded-xl border-border/50 hover:border-primary/50"
+                  className="py-5 px-4 rounded-lg border-2 border-border hover:bg-secondary fb-transition"
                   onClick={() => handleShare(app)}
                 >
                   <Share2 className="w-5 h-5" />
@@ -283,7 +283,7 @@ const SoftwareDownload = () => {
       )}
 
       {/* Tip Card */}
-      <Card className="mt-8 p-5 bg-card/30 border-border/50">
+      <Card className="mt-8 p-5 bg-card border-border card-shadow">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-5 h-5 text-primary" />

@@ -93,7 +93,7 @@ const CookieFilter = () => {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Input Section */}
         <div className="space-y-4">
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <Label htmlFor="input" className="text-base font-semibold mb-3 block">
               输入 Cookie 字符串
             </Label>
@@ -102,18 +102,18 @@ const CookieFilter = () => {
               placeholder="粘贴cookie字符串，支持多行输入..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              className="min-h-[350px] font-mono text-sm bg-background/50 border-border/50 focus:border-primary/50"
+              className="min-h-[350px] font-mono text-sm bg-background border-border focus:border-primary fb-transition"
             />
           </Card>
 
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <Label className="text-base font-semibold mb-3 block">筛选字段</Label>
             <div className="flex flex-col gap-3">
               {[
                 { id: "c_user", label: "c_user" },
                 { id: "xs", label: "xs" },
               ].map((field) => (
-                <div key={field.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary/50 transition-colors">
+                <div key={field.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary fb-transition">
                   <Checkbox
                     id={field.id}
                     checked={selectedFields[field.id as keyof typeof selectedFields]}
@@ -136,14 +136,14 @@ const CookieFilter = () => {
 
         {/* Output Section */}
         <div className="space-y-4">
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <div className="flex items-center justify-between mb-3">
               <Label className="text-base font-semibold">筛选结果</Label>
-              <span className="text-sm text-muted-foreground px-3 py-1 rounded-full bg-secondary/50">
+              <span className="text-sm text-muted-foreground px-3 py-1 rounded-full bg-secondary">
                 {resultCount} 条结果
               </span>
             </div>
-            <ScrollArea className="h-[350px] w-full rounded-lg border border-border/50 bg-background/30">
+            <ScrollArea className="h-[350px] w-full rounded-lg border border-border bg-background">
               <div className="p-4">
                 {outputText ? (
                   <pre className="font-mono text-sm whitespace-pre-wrap break-all text-foreground">
@@ -157,11 +157,11 @@ const CookieFilter = () => {
           </Card>
 
           <div className="flex gap-3">
-            <Button onClick={handleCopy} className="flex-1 py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90" disabled={!outputText}>
+            <Button onClick={handleCopy} className="flex-1 py-6 bg-primary hover:bg-primary/90 fb-transition" disabled={!outputText}>
               {copied ? <CheckCircle2 className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
               {copied ? "已复制" : "复制结果"}
             </Button>
-            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-border/50 hover:border-primary/50">
+            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-2 border-border hover:bg-secondary fb-transition">
               <Eraser className="mr-2 h-4 w-4" />
               清空
             </Button>

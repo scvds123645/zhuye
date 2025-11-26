@@ -95,23 +95,20 @@ const Tools = () => {
             <Card
               key={tool.path}
               onClick={() => handleNavigation(tool.path, tool.external)}
-              className="relative overflow-hidden p-5 bg-card/50 border-border/50 hover:border-primary/50 hover:shadow-[0_0_25px_hsl(var(--primary)/0.15)] active:scale-[0.98] transition-all duration-300 cursor-pointer group"
+              className="relative overflow-hidden p-5 bg-card border-border hover:bg-secondary/30 cursor-pointer group card-shadow hover:card-shadow-hover fb-transition"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
-              {/* Hover gradient overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-              
-              <div className="relative space-y-4">
+              <div className="relative space-y-3">
                 {/* Icon */}
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(0,0,0,0.3)] transition-all duration-300`}>
-                  <IconComponent className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 fb-transition">
+                  <IconComponent className="w-6 h-6 text-primary" />
                 </div>
                 
                 {/* Content */}
-                <div className="space-y-2">
-                  <h3 className="font-bold text-foreground text-lg group-hover:text-primary transition-colors flex items-center gap-2">
+                <div className="space-y-1.5">
+                  <h3 className="font-semibold text-foreground text-base flex items-center gap-2">
                     {tool.title}
-                    {tool.external && <ExternalLink className="w-4 h-4 text-muted-foreground" />}
+                    {tool.external && <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />}
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {tool.description}
@@ -119,10 +116,10 @@ const Tools = () => {
                 </div>
                 
                 {/* Action link */}
-                <div className="pt-2">
-                  <span className="text-sm font-medium text-primary group-hover:underline inline-flex items-center gap-1">
+                <div className="pt-1">
+                  <span className="text-sm font-medium text-primary inline-flex items-center gap-1">
                     {tool.external ? '访问链接' : '立即使用'}
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    <span className="group-hover:translate-x-1 fb-transition">→</span>
                   </span>
                 </div>
               </div>
@@ -132,7 +129,7 @@ const Tools = () => {
       </div>
 
       {/* Footer Info */}
-      <Card className="mt-10 p-5 bg-card/30 border-border/50 backdrop-blur-sm">
+      <Card className="mt-8 p-5 bg-card border-border card-shadow">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-5 h-5 text-primary" />

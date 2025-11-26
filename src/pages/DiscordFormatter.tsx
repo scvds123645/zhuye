@@ -83,7 +83,7 @@ const DiscordFormatter = () => {
     >
       <div className="space-y-6">
         {/* Input Section */}
-        <Card className="p-5 bg-card/50 border-border/50">
+        <Card className="p-5 bg-card border-border card-shadow">
           <label className="text-base font-semibold text-foreground block mb-3">
             输入账号信息
             <span className="text-muted-foreground ml-2 font-normal text-sm">
@@ -95,9 +95,9 @@ const DiscordFormatter = () => {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="min-h-[200px] font-mono text-sm bg-background/50 border-border/50 focus:border-primary/50"
+            className="min-h-[200px] font-mono text-sm bg-background border-border focus:border-primary fb-transition"
           />
-          <Button onClick={handleFormat} className="w-full mt-4 py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90 font-semibold" size="lg">
+          <Button onClick={handleFormat} className="w-full mt-4 py-6 bg-primary hover:bg-primary/90 font-semibold fb-transition" size="lg">
             <Wand2 className="mr-2 h-5 w-5" />
             格式化
           </Button>
@@ -110,7 +110,7 @@ const DiscordFormatter = () => {
               <h2 className="text-xl font-semibold text-foreground">
                 格式化结果 <span className="text-primary">({results.length} 条)</span>
               </h2>
-              <Button onClick={handleCopyAll} variant="outline" className="border-primary/30 hover:border-primary hover:bg-primary/10">
+              <Button onClick={handleCopyAll} variant="outline" className="border-2 border-border hover:bg-secondary fb-transition">
                 {showCopySuccess ? <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" /> : <Copy className="mr-2 h-4 w-4" />}
                 {showCopySuccess ? "已复制" : "复制全部"}
               </Button>
@@ -118,7 +118,7 @@ const DiscordFormatter = () => {
 
             {/* Copy Success Message */}
             {showCopySuccess && (
-              <div className="bg-green-500/10 border border-green-500/30 text-green-500 px-4 py-3 rounded-xl text-center font-medium animate-fade-in">
+              <div className="bg-green-500/10 border border-green-500/30 text-green-500 px-4 py-3 rounded-lg text-center font-medium animate-fade-in">
                 已复制到剪贴板！
               </div>
             )}
@@ -126,7 +126,7 @@ const DiscordFormatter = () => {
             {/* Results Cards */}
             <div className="space-y-3">
               {results.map((result, index) => (
-                <Card key={index} className="p-4 bg-card/50 border-border/50 hover:border-primary/30 transition-colors">
+                <Card key={index} className="p-4 bg-card border-border card-shadow hover:bg-secondary/30 fb-transition">
                   <pre className="font-mono text-sm whitespace-pre-wrap break-all text-foreground">
                     {result.formatted}
                   </pre>
@@ -137,7 +137,7 @@ const DiscordFormatter = () => {
         )}
 
         {/* Instructions */}
-        <Card className="p-5 bg-card/30 border-border/50">
+        <Card className="p-5 bg-card border-border card-shadow">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
               <Sparkles className="w-5 h-5 text-primary" />

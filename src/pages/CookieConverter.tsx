@@ -110,7 +110,7 @@ const CookieConverter = () => {
       <div className="grid md:grid-cols-2 gap-6">
         {/* Input Section */}
         <div className="space-y-4">
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <Label htmlFor="cookies" className="text-base font-semibold mb-3 block">
               输入 Cookie 字符串 <span className="text-destructive">*</span>
             </Label>
@@ -119,11 +119,11 @@ const CookieConverter = () => {
               placeholder="粘贴cookie字符串，支持多行输入..."
               value={inputCookies}
               onChange={(e) => setInputCookies(e.target.value)}
-              className="min-h-[250px] font-mono text-sm bg-background/50 border-border/50 focus:border-primary/50"
+              className="min-h-[250px] font-mono text-sm bg-background border-border focus:border-primary fb-transition"
             />
           </Card>
 
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <Label htmlFor="password" className="text-base font-semibold mb-3 block">
               密码 <span className="text-destructive">*</span>
             </Label>
@@ -133,18 +133,18 @@ const CookieConverter = () => {
               placeholder="请输入密码"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="font-mono bg-background/50 border-border/50 focus:border-primary/50"
+              className="font-mono bg-background border-border focus:border-primary fb-transition"
             />
           </Card>
 
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <Label className="text-base font-semibold mb-3 block">输出格式</Label>
             <RadioGroup value={formatType} onValueChange={(value) => setFormatType(value as FormatType)}>
               {[
                 { value: "format1", label: "格式1：c_user值--密码--原cookie字符串" },
                 { value: "format2", label: "格式2：c_user值---密码" },
               ].map((format) => (
-                <div key={format.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary/50 transition-colors">
+                <div key={format.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary fb-transition">
                   <RadioGroupItem value={format.value} id={format.value} />
                   <Label htmlFor={format.value} className="text-sm cursor-pointer">{format.label}</Label>
                 </div>
@@ -155,7 +155,7 @@ const CookieConverter = () => {
 
         {/* Output Section */}
         <div className="space-y-4">
-          <Card className="p-5 bg-card/50 border-border/50">
+          <Card className="p-5 bg-card border-border card-shadow">
             <div className="flex items-center justify-between mb-3">
               <Label className="text-base font-semibold">转换结果</Label>
               <div className="flex gap-3 text-sm">
@@ -163,7 +163,7 @@ const CookieConverter = () => {
                 {errorCount > 0 && <span className="text-destructive px-2 py-0.5 rounded-full bg-destructive/10">{errorCount} 错误</span>}
               </div>
             </div>
-            <ScrollArea className="h-[350px] w-full rounded-lg border border-border/50 bg-background/30">
+            <ScrollArea className="h-[350px] w-full rounded-lg border border-border bg-background">
               <div className="p-4">
                 {outputText ? (
                   <pre className="font-mono text-sm whitespace-pre-wrap break-all">
@@ -181,11 +181,11 @@ const CookieConverter = () => {
           </Card>
 
           <div className="flex gap-3">
-            <Button onClick={handleCopy} className="flex-1 py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90" disabled={!outputText || showError}>
+            <Button onClick={handleCopy} className="flex-1 py-6 bg-primary hover:bg-primary/90 fb-transition" disabled={!outputText || showError}>
               {copied ? <CheckCircle2 className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
               {copied ? "已复制" : "复制结果"}
             </Button>
-            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-border/50 hover:border-primary/50">
+            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-2 border-border hover:bg-secondary fb-transition">
               <Eraser className="mr-2 h-4 w-4" />
               清空
             </Button>

@@ -57,9 +57,8 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        'fb-blue': 'hsl(214, 89%, 52%)',
+        'fb-hover': 'hsl(214, 89%, 45%)',
       },
       borderRadius: {
         lg: "var(--radius)",
