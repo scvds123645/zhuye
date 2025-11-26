@@ -117,10 +117,15 @@ const Index = () => {
           
           
           {/* Decorative dots */}
-          <div className="flex items-center justify-center gap-3 pt-8">
-            <div className="w-3 h-3 rounded-full bg-primary animate-pulse" style={{ animationDelay: '0s' }}></div>
-            <div className="w-3 h-3 rounded-full bg-accent animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-            <div className="w-3 h-3 rounded-full bg-primary animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+          <div 
+            className="flex items-center justify-center gap-3 pt-8 cursor-pointer group/dots"
+            onClick={() => navigate('/tools')}
+            role="button"
+            aria-label="进入工具页面"
+          >
+            <div className="w-3 h-3 rounded-full bg-primary animate-pulse group-hover/dots:scale-150 transition-transform duration-300" style={{ animationDelay: '0s' }}></div>
+            <div className="w-3 h-3 rounded-full bg-accent animate-pulse group-hover/dots:scale-150 transition-transform duration-300" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-3 h-3 rounded-full bg-primary animate-pulse group-hover/dots:scale-150 transition-transform duration-300" style={{ animationDelay: '0.4s' }}></div>
           </div>
         </div>
       </div>

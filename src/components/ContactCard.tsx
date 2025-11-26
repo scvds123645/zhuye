@@ -140,10 +140,15 @@ const ContactCard = () => {
           </Button>
           </div>
 
-          <div className="flex justify-center gap-2 pt-6">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse-slow"></div>
-            <div className="w-2 h-2 rounded-full bg-accent animate-pulse-slow" style={{ animationDelay: '0.5s' }}></div>
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+          <div 
+            className="flex justify-center gap-2 pt-6 cursor-pointer group/dots"
+            onClick={() => navigate('/tools')}
+            role="button"
+            aria-label="进入工具页面"
+          >
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse-slow group-hover/dots:scale-150 transition-transform duration-300"></div>
+            <div className="w-2 h-2 rounded-full bg-accent animate-pulse-slow group-hover/dots:scale-150 transition-transform duration-300" style={{ animationDelay: '0.5s' }}></div>
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse-slow group-hover/dots:scale-150 transition-transform duration-300" style={{ animationDelay: '1s' }}></div>
           </div>
         </div>
       </div>
