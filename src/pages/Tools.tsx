@@ -83,47 +83,59 @@ const Tools = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12">
+      {/* Container: 调整 padding，手机端更紧凑 px-4，py也相应减小 */}
+      <div className="container mx-auto px-4 md:px-6 py-8 md:py-12">
         {/* Header */}
-        <div className="max-w-4xl mx-auto mb-12">
+        <div className="max-w-4xl mx-auto mb-8 md:mb-12">
           <Button
             variant="ghost"
             onClick={() => navigate("/")}
-            className="mb-6"
+            // 手机端按钮边距更小，-ml-2 让图标在视觉上与左边缘对齐
+            className="mb-4 md:mb-6 -ml-2 md:ml-0 px-2 md:px-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             返回首页
           </Button>
 
-          <div className="text-center space-y-3">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+          <div className="text-center space-y-2 md:space-y-3">
+            {/* Title: 字体响应式调整 text-3xl -> text-5xl */}
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
               实用工具
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
               选择下方工具，快速完成各种数据处理任务
             </p>
           </div>
         </div>
 
         {/* Tools Grid */}
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 放宽 max-w 以适应4列布局 */}
+        <div className="max-w-7xl mx-auto">
+          {/* Grid Layout: 手机1列 -> 平板2列 -> 笔记本3列 -> 大屏4列 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {tools.map((tool) => {
               const IconComponent = tool.icon;
               return (
                 <Card
                   key={tool.path}
-                  className="p-6 bg-card border-border hover:border-primary hover:shadow-xl transition-all duration-300 cursor-pointer group"
+                  // Card 优化:
+                  // 1. p-4 md:p-6: 手机端减少内边距
+                  // 2. h-full: 确保 flex 布局下拉伸高度一致
+                  // 3. active:scale-[0.98]: 增加手机端触摸反馈
+                  className="flex flex-col h-full p-4 md:p-6 bg-card border-border hover:border-primary hover:shadow-xl active:scale-[0.98] transition-all duration-300 cursor-pointer group"
                   onClick={() => tool.external ? window.open(tool.path, '_blank') : navigate(tool.path)}
                 >
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4 flex-1">
+                    {/* Icon: 手机端 w-12，桌面端 w-14 */}
                     <div
-                      className={`w-14 h-14 rounded-xl ${tool.color} flex items-center justify-center transition-colors`}
+                      className={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${tool.color} flex items-center justify-center transition-colors`}
                     >
-                      <IconComponent className={`w-7 h-7 ${tool.iconColor}`} />
+                      {/* Icon SVG: 手机端 w-6，桌面端 w-7 */}
+                      <IconComponent className={`w-6 h-6 md:w-7 md:h-7 ${tool.iconColor}`} />
                     </div>
-                    <div className="space-y-2">
-                      <h3 className="font-bold text-foreground text-xl group-hover:text-primary transition-colors flex items-center gap-2">
+                    <div className="space-y-1.5 md:space-y-2">
+                      {/* Title: 手机端 text-lg，桌面端 text-xl */}
+                      <h3 className="font-bold text-foreground text-lg md:text-xl group-hover:text-primary transition-colors flex items-center gap-2">
                         {tool.title}
                         {tool.external && <ExternalLink className="w-4 h-4 text-muted-foreground" />}
                       </h3>
@@ -131,11 +143,12 @@ const Tools = () => {
                         {tool.description}
                       </p>
                     </div>
-                    <div className="pt-2">
-                      <span className="text-sm font-medium text-primary group-hover:underline">
-                        {tool.external ? '访问链接 →' : '立即使用 →'}
-                      </span>
-                    </div>
+                  </div>
+                  {/* Link: 增加上边距，并确保始终位于底部 */}
+                  <div className="pt-3 md:pt-4 mt-auto">
+                    <span className="text-sm font-medium text-primary group-hover:underline flex items-center">
+                      {tool.external ? '访问链接' : '立即使用'} <span className="ml-1">→</span>
+                    </span>
                   </div>
                 </Card>
               );
@@ -144,10 +157,10 @@ const Tools = () => {
         </div>
 
         {/* Footer Info */}
-        <div className="max-w-4xl mx-auto mt-16">
-          <Card className="p-6 bg-muted/50 border-border">
-            <h3 className="font-semibold text-foreground mb-3">使用提示</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+        <div className="max-w-4xl mx-auto mt-12 md:mt-16">
+          <Card className="p-4 md:p-6 bg-muted/50 border-border">
+            <h3 className="font-semibold text-foreground mb-2 md:mb-3">使用提示</h3>
+            <ul className="space-y-1.5 md:space-y-2 text-sm text-muted-foreground">
               <li>• 所有工具均支持批量处理和快捷键操作</li>
               <li>• 数据处理完全在浏览器本地进行，不会上传到服务器</li>
               <li>• 支持一键复制结果，方便快捷使用</li>
