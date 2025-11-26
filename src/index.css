@@ -161,6 +161,14 @@ All colors MUST be HSL.
   .animate-pulse-slow {
     animation: pulseSlow 3s ease-in-out infinite;
   }
+  
+  .animate-bounce-slow {
+    animation: bounceSlow 2s ease-in-out infinite;
+  }
+  
+  .animate-gradient {
+    animation: gradientShift 4s ease-in-out infinite;
+  }
 }
 
 @keyframes fadeIn {
@@ -202,5 +210,23 @@ All colors MUST be HSL.
   50% {
     opacity: 1;
     transform: scale(1.05);
+  }
+}
+
+@keyframes bounceSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
   }
 }

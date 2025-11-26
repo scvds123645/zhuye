@@ -117,7 +117,7 @@ const Navbar = () => {
   );
 };
 
-const NavTab = ({ Icon, active }) => (
+const NavTab = ({ Icon, active = false }: { Icon: any; active?: boolean }) => (
   <div className={`h-14 px-8 md:px-4 lg:px-8 xl:px-10 flex items-center justify-center cursor-pointer relative group`}>
     <Icon 
       className={`w-7 h-7 ${active ? 'text-[#0866FF]' : 'text-[#65676B] group-hover:text-black'} transition-colors`} 
@@ -132,7 +132,7 @@ const NavTab = ({ Icon, active }) => (
   </div>
 );
 
-const MobileNavTab = ({ Icon, active }) => (
+const MobileNavTab = ({ Icon, active = false }: { Icon: any; active?: boolean }) => (
   <div className="flex-1 flex justify-center py-2 relative cursor-pointer hover:bg-gray-50 rounded-lg">
     <Icon 
       className={`w-6 h-6 ${active ? 'text-[#0866FF]' : 'text-[#65676B]'} transition-colors`} 
@@ -142,7 +142,7 @@ const MobileNavTab = ({ Icon, active }) => (
   </div>
 );
 
-const IconButton = ({ Icon }) => (
+const IconButton = ({ Icon }: { Icon: any }) => (
   <div className="w-10 h-10 bg-[#E4E6EB] hover:bg-[#D8DADF] rounded-full flex items-center justify-center cursor-pointer transition-colors shrink-0">
     <Icon className="text-black w-5 h-5" />
   </div>
@@ -228,7 +228,7 @@ const Feed = () => {
 
 /* --- SUB-COMPONENTS --- */
 
-const SidebarRow = ({ src, Icon, title }) => (
+const SidebarRow = ({ src, Icon, title }: { src?: string; Icon?: any; title: string }) => (
   <div className="flex items-center gap-3 p-2 hover:bg-[#E4E6EB] rounded-lg cursor-pointer transition-colors">
     {src && <img src={src} alt="" className="w-9 h-9 rounded-full" />}
     {Icon && <Icon className="w-8 h-8 text-[#1B74E4]" />} 

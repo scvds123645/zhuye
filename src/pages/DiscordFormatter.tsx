@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Copy, Wand2, ArrowLeft } from "lucide-react";
+import { Copy, Wand2, CheckCircle2, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import PageLayout from "@/components/PageLayout";
 
 interface FormattedResult {
   email: string;
@@ -17,11 +17,10 @@ const DiscordFormatter = () => {
   const [results, setResults] = useState<FormattedResult[]>([]);
   const [showCopySuccess, setShowCopySuccess] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const handleFormat = () => {
     if (!inputText.trim()) {
-      alert("请输入账号信息！");
+      toast({ title: "请输入账号信息！", variant: "destructive" });
       return;
     }
 
@@ -32,31 +31,20 @@ const DiscordFormatter = () => {
       const line = lines[i].trim();
       const parts = line.split(/\s+/);
 
-      // 验证格式
       if (parts.length !== 2) {
-        alert(`第 ${i + 1} 行格式错误：应为 "账号@域名.xyz 密钥" 格式（用空格分隔）`);
+        toast({ title: `第 ${i + 1} 行格式错误`, description: '应为 "账号@域名.xyz 密钥" 格式', variant: "destructive" });
         return;
       }
 
       const [email, key] = parts;
 
-      // 验证邮箱格式
       if (!email.includes("@")) {
-        alert(`第 ${i + 1} 行格式错误：邮箱必须包含 @ 符号`);
+        toast({ title: `第 ${i + 1} 行格式错误`, description: "邮箱必须包含 @ 符号", variant: "destructive" });
         return;
       }
 
-      // 提取域名（@后面的部分）
-      const domain = email.split("@")[1];
-
-      // 生成格式化结果
       const formatted = `账号 ${email} 密码 ${email} 接码地址 https://2.584136.xyz/${key}`;
-
-      formattedResults.push({
-        email,
-        key,
-        formatted,
-      });
+      formattedResults.push({ email, key, formatted });
     }
 
     setResults(formattedResults);
@@ -64,10 +52,7 @@ const DiscordFormatter = () => {
 
   const handleCopyAll = async () => {
     if (results.length === 0) {
-      toast({
-        title: "没有内容可复制",
-        variant: "destructive",
-      });
+      toast({ title: "没有内容可复制", variant: "destructive" });
       return;
     }
 
@@ -77,11 +62,8 @@ const DiscordFormatter = () => {
       await navigator.clipboard.writeText(allText);
       setShowCopySuccess(true);
       setTimeout(() => setShowCopySuccess(false), 2000);
-    } catch (err) {
-      toast({
-        title: "复制失败",
-        variant: "destructive",
-      });
+    } catch {
+      toast({ title: "复制失败", variant: "destructive" });
     }
   };
 
@@ -93,66 +75,50 @@ const DiscordFormatter = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="space-y-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/tools')}
-            className="mb-2 -ml-2"
-          >
-            <ArrowLeft className="mr-1 h-4 w-4" />
-            返回工具列表
-          </Button>
-          <h1 className="text-3xl font-bold text-foreground">
-            账号信息格式化工具
-          </h1>
-          <p className="text-muted-foreground">
-            输入账号信息，自动格式化为标准格式
-          </p>
-        </div>
-
+    <PageLayout
+      title="账号信息格式化工具"
+      description="输入账号信息，自动格式化为标准格式"
+      backTo="/tools"
+      backLabel="返回工具列表"
+    >
+      <div className="space-y-6">
         {/* Input Section */}
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">
-              输入账号信息
-              <span className="text-muted-foreground ml-2">
-                （格式：账号@域名.xyz 密钥，每行一条）
-              </span>
-            </label>
-            <Textarea
-              placeholder="example@domain.xyz abc123&#10;user@site.com key456&#10;...&#10;&#10;提示：可以按 Ctrl+Enter 快速格式化"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="min-h-[200px] font-mono text-sm"
-            />
-          </div>
-
-          <Button onClick={handleFormat} className="w-full" size="lg">
+        <Card className="p-5 bg-card/50 border-border/50">
+          <label className="text-base font-semibold text-foreground block mb-3">
+            输入账号信息
+            <span className="text-muted-foreground ml-2 font-normal text-sm">
+              （格式：账号@域名.xyz 密钥，每行一条）
+            </span>
+          </label>
+          <Textarea
+            placeholder="example@domain.xyz abc123&#10;user@site.com key456&#10;...&#10;&#10;提示：可以按 Ctrl+Enter 快速格式化"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="min-h-[200px] font-mono text-sm bg-background/50 border-border/50 focus:border-primary/50"
+          />
+          <Button onClick={handleFormat} className="w-full mt-4 py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90 font-semibold" size="lg">
             <Wand2 className="mr-2 h-5 w-5" />
             格式化
           </Button>
-        </div>
+        </Card>
 
         {/* Results Section */}
         {results.length > 0 && (
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fade-in">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-foreground">
-                格式化结果 ({results.length} 条)
+                格式化结果 <span className="text-primary">({results.length} 条)</span>
               </h2>
-              <Button onClick={handleCopyAll} variant="outline">
-                <Copy className="mr-2 h-4 w-4" />
-                复制全部
+              <Button onClick={handleCopyAll} variant="outline" className="border-primary/30 hover:border-primary hover:bg-primary/10">
+                {showCopySuccess ? <CheckCircle2 className="mr-2 h-4 w-4 text-green-500" /> : <Copy className="mr-2 h-4 w-4" />}
+                {showCopySuccess ? "已复制" : "复制全部"}
               </Button>
             </div>
 
             {/* Copy Success Message */}
             {showCopySuccess && (
-              <div className="bg-primary text-primary-foreground px-4 py-3 rounded-md text-center font-medium animate-fade-in">
+              <div className="bg-green-500/10 border border-green-500/30 text-green-500 px-4 py-3 rounded-xl text-center font-medium animate-fade-in">
                 已复制到剪贴板！
               </div>
             )}
@@ -160,10 +126,7 @@ const DiscordFormatter = () => {
             {/* Results Cards */}
             <div className="space-y-3">
               {results.map((result, index) => (
-                <Card
-                  key={index}
-                  className="p-4 bg-card border border-border"
-                >
+                <Card key={index} className="p-4 bg-card/50 border-border/50 hover:border-primary/30 transition-colors">
                   <pre className="font-mono text-sm whitespace-pre-wrap break-all text-foreground">
                     {result.formatted}
                   </pre>
@@ -174,18 +137,25 @@ const DiscordFormatter = () => {
         )}
 
         {/* Instructions */}
-        <Card className="p-6 bg-muted/50 border-border">
-          <h3 className="font-semibold text-foreground mb-3">使用说明</h3>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>• 每行输入一条账号信息，格式为：账号@域名.xyz 密钥</li>
-            <li>• 账号和密钥之间用空格分隔</li>
-            <li>• 邮箱必须包含 @ 符号</li>
-            <li>• 支持批量处理多条记录</li>
-            <li>• 快捷键：Ctrl+Enter 快速格式化</li>
-          </ul>
+        <Card className="p-5 bg-card/30 border-border/50">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground mb-2">使用说明</h3>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li>• 每行输入一条账号信息，格式为：账号@域名.xyz 密钥</li>
+                <li>• 账号和密钥之间用空格分隔</li>
+                <li>• 邮箱必须包含 @ 符号</li>
+                <li>• 支持批量处理多条记录</li>
+                <li>• 快捷键：Ctrl+Enter 快速格式化</li>
+              </ul>
+            </div>
+          </div>
         </Card>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 
