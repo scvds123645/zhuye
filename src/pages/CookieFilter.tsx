@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Copy, Eraser } from "lucide-react";
+import { Copy, Eraser, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CookieFilter = () => {
@@ -17,6 +18,7 @@ const CookieFilter = () => {
   const [resultCount, setResultCount] = useState(0);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const processCookies = useCallback(() => {
     if (!inputText.trim()) {
@@ -102,6 +104,15 @@ const CookieFilter = () => {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="space-y-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/tools')}
+            className="mb-2 -ml-2"
+          >
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            返回工具列表
+          </Button>
           <h1 className="text-3xl font-bold text-foreground">Cookie 筛选工具</h1>
           <p className="text-muted-foreground">输入cookie字符串，选择要筛选的字段</p>
         </div>

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Copy, Search, Eraser, FileSearch } from "lucide-react";
+import { Copy, Search, Eraser, FileSearch, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const NumberExtractor = () => {
@@ -10,6 +11,7 @@ const NumberExtractor = () => {
   const [results, setResults] = useState<string[]>([]);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // 动态启用/禁用按钮
   useEffect(() => {
@@ -127,6 +129,15 @@ const NumberExtractor = () => {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="space-y-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/tools')}
+            className="mb-2 -ml-2"
+          >
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            返回工具列表
+          </Button>
           <h1 className="text-3xl font-bold text-foreground">
             14位数字提取工具
           </h1>

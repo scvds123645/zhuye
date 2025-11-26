@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Hash, FileText, Cookie, ArrowLeft } from "lucide-react";
+import { Hash, FileText, Cookie, ArrowLeft, UserCheck, ExternalLink, KeyRound } from "lucide-react";
 
 const Tools = () => {
   const navigate = useNavigate();
@@ -14,6 +14,7 @@ const Tools = () => {
       description: "自动从文本中提取并去重14位连续数字",
       color: "bg-blue-500/10 group-hover:bg-blue-500/20",
       iconColor: "text-blue-500",
+      external: false,
     },
     {
       path: "/discord",
@@ -22,6 +23,7 @@ const Tools = () => {
       description: "批量格式化账号信息为标准格式",
       color: "bg-green-500/10 group-hover:bg-green-500/20",
       iconColor: "text-green-500",
+      external: false,
     },
     {
       path: "/jh",
@@ -30,6 +32,25 @@ const Tools = () => {
       description: "快速筛选指定的Cookie字段",
       color: "bg-purple-500/10 group-hover:bg-purple-500/20",
       iconColor: "text-purple-500",
+      external: false,
+    },
+    {
+      path: "https://3.584136.xyz",
+      icon: UserCheck,
+      title: "账号状态检查器",
+      description: "Facebook 账号状态在线检测工具",
+      color: "bg-orange-500/10 group-hover:bg-orange-500/20",
+      iconColor: "text-orange-500",
+      external: true,
+    },
+    {
+      path: "https://1.584136.xyz",
+      icon: KeyRound,
+      title: "Cookie 注入器",
+      description: "Facebook Cookie 快速注入工具",
+      color: "bg-pink-500/10 group-hover:bg-pink-500/20",
+      iconColor: "text-pink-500",
+      external: true,
     },
   ];
 
@@ -59,14 +80,14 @@ const Tools = () => {
 
         {/* Tools Grid */}
         <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {tools.map((tool) => {
               const IconComponent = tool.icon;
               return (
                 <Card
                   key={tool.path}
                   className="p-6 bg-card border-border hover:border-primary hover:shadow-xl transition-all duration-300 cursor-pointer group"
-                  onClick={() => navigate(tool.path)}
+                  onClick={() => tool.external ? window.open(tool.path, '_blank') : navigate(tool.path)}
                 >
                   <div className="space-y-4">
                     <div
@@ -75,8 +96,9 @@ const Tools = () => {
                       <IconComponent className={`w-7 h-7 ${tool.iconColor}`} />
                     </div>
                     <div className="space-y-2">
-                      <h3 className="font-bold text-foreground text-xl group-hover:text-primary transition-colors">
+                      <h3 className="font-bold text-foreground text-xl group-hover:text-primary transition-colors flex items-center gap-2">
                         {tool.title}
+                        {tool.external && <ExternalLink className="w-4 h-4 text-muted-foreground" />}
                       </h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {tool.description}
@@ -84,7 +106,7 @@ const Tools = () => {
                     </div>
                     <div className="pt-2">
                       <span className="text-sm font-medium text-primary group-hover:underline">
-                        立即使用 →
+                        {tool.external ? '访问链接 →' : '立即使用 →'}
                       </span>
                     </div>
                   </div>
