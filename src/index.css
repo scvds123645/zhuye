@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 25% 97%;
+    --foreground: 220 15% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 20%;
+
+    --primary: 190 95% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 20% 95%;
+    --secondary-foreground: 220 15% 20%;
+
+    --muted: 220 20% 95%;
+    --muted-foreground: 220 10% 50%;
+
+    --accent: 280 85% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 90%;
+    --input: 220 20% 90%;
+    --ring: 190 95% 50%;
+
+    --radius: 0.75rem;
+    
+    /* Tech gradient colors - cyan to purple neon */
+    --gradient-start: 190 95% 50%;
+    --gradient-end: 280 85% 60%;
+    --gradient-accent: 240 100% 65%;
+    
+    /* Neon glow shadows */
+    --shadow-card: 0 0 30px hsl(190 95% 50% / 0.3), 0 10px 40px -10px hsl(190 95% 50% / 0.2);
+    --shadow-hover: 0 0 50px hsl(190 95% 50% / 0.5), 0 20px 50px -15px hsl(280 85% 60% / 0.4);
+    --shadow-neon: 0 0 20px hsl(190 95% 50% / 0.6), 0 0 40px hsl(190 95% 50% / 0.4);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 220 30% 8%;
+    --foreground: 190 100% 95%;
+
+    --card: 220 25% 12%;
+    --card-foreground: 190 100% 95%;
+
+    --popover: 220 25% 12%;
+    --popover-foreground: 190 100% 95%;
+
+    --primary: 190 95% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 25% 18%;
+    --secondary-foreground: 190 100% 95%;
+
+    --muted: 220 25% 18%;
+    --muted-foreground: 190 50% 70%;
+
+    --accent: 280 85% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 25% 20%;
+    --input: 220 25% 20%;
+    --ring: 190 95% 55%;
+    
+    /* Tech gradient colors for dark mode - enhanced neon */
+    --gradient-start: 190 95% 55%;
+    --gradient-end: 280 85% 65%;
+    --gradient-accent: 240 100% 70%;
+    
+    /* Enhanced neon glow shadows for dark mode */
+    --shadow-card: 0 0 40px hsl(190 95% 50% / 0.4), 0 10px 50px -10px hsl(190 95% 50% / 0.3);
+    --shadow-hover: 0 0 60px hsl(190 95% 50% / 0.6), 0 20px 60px -15px hsl(280 85% 60% / 0.5);
+    --shadow-neon: 0 0 30px hsl(190 95% 50% / 0.8), 0 0 60px hsl(190 95% 50% / 0.5);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .gradient-bg {
+    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-accent)), hsl(var(--gradient-end)));
+    position: relative;
+  }
+  
+  .tech-grid {
+    background-image: 
+      linear-gradient(hsl(190 95% 50% / 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(190 95% 50% / 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+  }
+  
+  .card-shadow {
+    box-shadow: var(--shadow-card);
+  }
+  
+  .card-shadow-hover {
+    box-shadow: var(--shadow-hover);
+  }
+  
+  .neon-glow {
+    box-shadow: var(--shadow-neon);
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulseSlow 3s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
