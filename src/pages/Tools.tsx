@@ -81,6 +81,17 @@ const Tools = () => {
     },
   ];
 
+  // 统一处理延时跳转逻辑
+  const handleNavigation = (path, isExternal = false) => {
+    setTimeout(() => {
+      if (isExternal) {
+        window.open(path, '_blank');
+      } else {
+        navigate(path);
+      }
+    }, 200);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Container: 调整 padding，手机端更紧凑 px-4，py也相应减小 */}
@@ -89,7 +100,8 @@ const Tools = () => {
         <div className="max-w-4xl mx-auto mb-8 md:mb-12">
           <Button
             variant="ghost"
-            onClick={() => navigate("/")}
+            // 修改：使用延时跳转
+            onClick={() => handleNavigation("/")}
             // 手机端按钮边距更小，-ml-2 让图标在视觉上与左边缘对齐
             className="mb-4 md:mb-6 -ml-2 md:ml-0 px-2 md:px-4"
           >
@@ -123,7 +135,8 @@ const Tools = () => {
                   // 2. h-full: 确保 flex 布局下拉伸高度一致
                   // 3. active:scale-[0.98]: 增加手机端触摸反馈
                   className="flex flex-col h-full p-4 md:p-6 bg-card border-border hover:border-primary hover:shadow-xl active:scale-[0.98] transition-all duration-300 cursor-pointer group"
-                  onClick={() => tool.external ? window.open(tool.path, '_blank') : navigate(tool.path)}
+                  // 修改：使用延时跳转函数
+                  onClick={() => handleNavigation(tool.path, tool.external)}
                 >
                   <div className="space-y-3 md:space-y-4 flex-1">
                     {/* Icon: 手机端 w-12，桌面端 w-14 */}
