@@ -31,8 +31,8 @@ const NumberExtractor = () => {
       setUniqueCount(0);
       return;
     }
-
     setValidationError(null);
+
     if (!inputText.trim()) {
       setOutputText("");
       setTotalCount(0);
@@ -85,6 +85,8 @@ const NumberExtractor = () => {
     { label: "已删除", value: totalCount - uniqueCount, icon: Eraser, color: "text-orange-600", bgColor: "bg-orange-50" },
   ];
 
+  const removedCount = totalCount - uniqueCount;
+
   return (
     <PageLayout
       title="14位数字提取工具"
@@ -113,14 +115,12 @@ const NumberExtractor = () => {
           </Card>
         ))}
       </div>
-
       <div className="grid gap-8 md:grid-cols-2">
         {/* --- 输入区域 --- */}
         <div className="space-y-4">
           <Label htmlFor="input" className="ml-1 text-sm font-semibold text-slate-700">
             输入文本
           </Label>
-          
           <div className="relative group">
             <Textarea
               id="input"
@@ -129,12 +129,10 @@ const NumberExtractor = () => {
               onChange={(e) => setInputText(e.target.value)}
               className="min-h-[420px] resize-none rounded-3xl border-0 bg-slate-100/80 p-6 font-mono text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-500 transition-all duration-300 shadow-inner"
             />
-            {/* Floating Character Count */}
             <div className="absolute bottom-4 right-6 text-xs font-medium text-slate-400 bg-white/50 px-2 py-1 rounded-md backdrop-blur-sm">
               {inputText.length.toLocaleString()} / 100,000
             </div>
           </div>
-
           {validationError && (
             <div className="ml-2 flex items-center gap-2 text-sm text-red-500 animate-in fade-in slide-in-from-top-1">
               <span className="block h-1.5 w-1.5 rounded-full bg-red-500" />
@@ -147,13 +145,13 @@ const NumberExtractor = () => {
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between px-1">
             <Label className="text-sm font-semibold text-slate-700">提取结果</Label>
-            {uniqueCount > 0 && (
-              <span className="rounded-full bg-blue-100 px-4 py-1 text-xs font-bold text-blue-700 shadow-sm">
-                {uniqueCount} 个号码
+            {/* --- ANIMATION ADDED HERE --- */}
+            {removedCount > 0 && (
+              <span className="animate-in fade-in zoom-in text-xs font-medium text-orange-700 px-4 py-1.5 rounded-full bg-orange-100 border border-orange-200">
+                已删除 {removedCount} 个
               </span>
             )}
           </div>
-
           <Card className="flex-1 overflow-hidden border-0 bg-slate-100/80 shadow-inner rounded-3xl">
             <ScrollArea className="h-[420px] w-full">
               <div className="p-6">
@@ -174,7 +172,6 @@ const NumberExtractor = () => {
           </Card>
 
           <div className="flex gap-4 pt-2">
-            {/* --- Primary Action (Google Blue, Fully Rounded) --- */}
             <Button 
               onClick={handleCopy} 
               disabled={!outputText}
@@ -183,8 +180,6 @@ const NumberExtractor = () => {
               {copied ? <CheckCircle2 className="mr-2 h-5 w-5" /> : <Copy className="mr-2 h-5 w-5" />}
               {copied ? "已复制" : "复制结果"}
             </Button>
-
-            {/* --- Secondary Action (Tonal/Outlined, Fully Rounded) --- */}
             <Button 
               onClick={handleClear} 
               variant="ghost" 
@@ -196,7 +191,7 @@ const NumberExtractor = () => {
           </div>
         </div>
       </div>
-
+      
       {/* --- 使用说明 (Surface Variant Card) --- */}
       <Card className="mt-8 border-none bg-slate-50 p-8 rounded-3xl">
         <div className="flex items-start gap-5">
@@ -231,3 +226,4 @@ const NumberExtractor = () => {
 };
 
 export default NumberExtractor;
+
