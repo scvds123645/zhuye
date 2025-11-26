@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
-import { Copy, Eraser, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Copy, Eraser, AlertCircle, CheckCircle2, KeyRound, Cookie } from "lucide-react"; // Added Icons for better UI
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import PageLayout from "@/components/PageLayout";
@@ -64,10 +64,12 @@ const CookieConverter = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      convertCookies();
+      if (inputCookies && password) {
+        convertCookies();
+      }
     }, 300);
     return () => clearTimeout(timer);
-  }, [convertCookies]);
+  }, [convertCookies, inputCookies, password]);
 
   const handleCopy = async () => {
     if (!outputText) {
@@ -100,95 +102,153 @@ const CookieConverter = () => {
       backTo="/tools"
       backLabel="返回工具列表"
     >
-      {showError && (
-        <Alert variant="destructive" className="mb-6 border-destructive/50 bg-destructive/10">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>请输入 Cookie 和密码后再进行转换</AlertDescription>
-        </Alert>
-      )}
+      {/* Material Design Container */}
+      <div className="max-w-6xl mx-auto font-sans text-slate-800">
+        
+        {showError && (
+          <Alert variant="destructive" className="mb-6 rounded-2xl border-none bg-red-50 text-red-900">
+            <AlertCircle className="h-5 w-5 text-red-600" />
+            <AlertDescription className="ml-2 font-medium">请输入 Cookie 和密码后再进行转换</AlertDescription>
+          </Alert>
+        )}
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Input Section */}
-        <div className="space-y-4">
-          <Card className="p-5 bg-card border-border card-shadow">
-            <Label htmlFor="cookies" className="text-base font-semibold mb-3 block">
-              输入 Cookie 字符串 <span className="text-destructive">*</span>
-            </Label>
-            <Textarea
-              id="cookies"
-              placeholder="粘贴cookie字符串，支持多行输入..."
-              value={inputCookies}
-              onChange={(e) => setInputCookies(e.target.value)}
-              className="min-h-[250px] font-mono text-sm bg-background border-border focus:border-primary fb-transition"
-            />
-          </Card>
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Input Section */}
+          <div className="space-y-6">
+            {/* MD3 Elevated Card */}
+            <Card className="p-6 rounded-3xl border-transparent shadow-md bg-white hover:shadow-lg transition-shadow duration-300">
+              <div className="flex items-center gap-2 mb-4 text-blue-600">
+                <Cookie className="h-5 w-5" />
+                <Label htmlFor="cookies" className="text-lg font-medium text-slate-700">
+                  输入 Cookie 字符串
+                </Label>
+              </div>
+              
+              {/* Styled Textarea */}
+              <Textarea
+                id="cookies"
+                placeholder="粘贴cookie字符串，支持多行输入..."
+                value={inputCookies}
+                onChange={(e) => setInputCookies(e.target.value)}
+                className="min-h-[250px] rounded-2xl border-slate-200 bg-slate-50 p-4 font-mono text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all resize-none shadow-inner"
+              />
+            </Card>
 
-          <Card className="p-5 bg-card border-border card-shadow">
-            <Label htmlFor="password" className="text-base font-semibold mb-3 block">
-              密码 <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="password"
-              type="text"
-              placeholder="请输入密码"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="font-mono bg-background border-border focus:border-primary fb-transition"
-            />
-          </Card>
+            <Card className="p-6 rounded-3xl border-transparent shadow-md bg-white hover:shadow-lg transition-shadow duration-300">
+              <div className="flex items-center gap-2 mb-4 text-blue-600">
+                <KeyRound className="h-5 w-5" />
+                <Label htmlFor="password" className="text-lg font-medium text-slate-700">
+                  密码
+                </Label>
+              </div>
 
-          <Card className="p-5 bg-card border-border card-shadow">
-            <Label className="text-base font-semibold mb-3 block">输出格式</Label>
-            <RadioGroup value={formatType} onValueChange={(value) => setFormatType(value as FormatType)}>
-              {[
-                { value: "format1", label: "格式1：c_user值--密码--原cookie字符串" },
-                { value: "format2", label: "格式2：c_user值---密码" },
-              ].map((format) => (
-                <div key={format.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-secondary fb-transition">
-                  <RadioGroupItem value={format.value} id={format.value} />
-                  <Label htmlFor={format.value} className="text-sm cursor-pointer">{format.label}</Label>
+              {/* Search-bar style Input (Pill shape) */}
+              <Input
+                id="password"
+                type="text"
+                placeholder="请输入密码"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-12 rounded-full border-slate-200 bg-slate-50 px-6 font-mono focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all shadow-sm"
+              />
+            </Card>
+
+            <Card className="p-6 rounded-3xl border-transparent shadow-md bg-white hover:shadow-lg transition-shadow duration-300">
+              <Label className="text-lg font-medium text-slate-700 mb-4 block">输出格式</Label>
+              <RadioGroup 
+                value={formatType} 
+                onValueChange={(value) => setFormatType(value as FormatType)}
+                className="gap-3"
+              >
+                {[
+                  { value: "format1", label: "格式1：c_user值--密码--原cookie" },
+                  { value: "format2", label: "格式2：c_user值---密码" },
+                ].map((format) => (
+                  <div 
+                    key={format.value} 
+                    className={`flex items-center space-x-3 p-4 rounded-2xl border cursor-pointer transition-all ${
+                      formatType === format.value 
+                        ? "bg-blue-50 border-blue-200" 
+                        : "bg-white border-slate-100 hover:bg-slate-50"
+                    }`}
+                  >
+                    <RadioGroupItem value={format.value} id={format.value} className="text-blue-600" />
+                    <Label htmlFor={format.value} className="text-sm cursor-pointer text-slate-700 font-medium">
+                      {format.label}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </Card>
+          </div>
+
+          {/* Output Section */}
+          <div className="space-y-6">
+            <Card className="p-6 h-full flex flex-col rounded-3xl border-transparent shadow-md bg-white hover:shadow-lg transition-shadow duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <Label className="text-lg font-medium text-slate-700">转换结果</Label>
+                <div className="flex gap-2 text-sm font-medium">
+                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                    {resultCount} 成功
+                  </span>
+                  {errorCount > 0 && (
+                    <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+                      {errorCount} 错误
+                    </span>
+                  )}
                 </div>
-              ))}
-            </RadioGroup>
-          </Card>
-        </div>
-
-        {/* Output Section */}
-        <div className="space-y-4">
-          <Card className="p-5 bg-card border-border card-shadow">
-            <div className="flex items-center justify-between mb-3">
-              <Label className="text-base font-semibold">转换结果</Label>
-              <div className="flex gap-3 text-sm">
-                <span className="text-green-500 px-2 py-0.5 rounded-full bg-green-500/10">{resultCount} 成功</span>
-                {errorCount > 0 && <span className="text-destructive px-2 py-0.5 rounded-full bg-destructive/10">{errorCount} 错误</span>}
               </div>
-            </div>
-            <ScrollArea className="h-[350px] w-full rounded-lg border border-border bg-background">
-              <div className="p-4">
-                {outputText ? (
-                  <pre className="font-mono text-sm whitespace-pre-wrap break-all">
-                    {outputText.split("\n").map((line, index) => (
-                      <div key={index} className={line.startsWith("[错误]") ? "text-destructive" : "text-foreground"}>
-                        {line}
-                      </div>
-                    ))}
-                  </pre>
-                ) : (
-                  <p className="text-muted-foreground text-sm">{showError ? "请先输入 Cookie 和密码" : "转换结果将显示在这里..."}</p>
-                )}
-              </div>
-            </ScrollArea>
-          </Card>
 
-          <div className="flex gap-3">
-            <Button onClick={handleCopy} className="flex-1 py-6 bg-primary hover:bg-primary/90 fb-transition" disabled={!outputText || showError}>
-              {copied ? <CheckCircle2 className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
-              {copied ? "已复制" : "复制结果"}
-            </Button>
-            <Button onClick={handleClear} variant="outline" className="flex-1 py-6 border-2 border-border hover:bg-secondary fb-transition">
-              <Eraser className="mr-2 h-4 w-4" />
-              清空
-            </Button>
+              <ScrollArea className="flex-1 w-full rounded-2xl border border-slate-100 bg-slate-50 min-h-[350px]">
+                <div className="p-6">
+                  {outputText ? (
+                    <pre className="font-mono text-sm whitespace-pre-wrap break-all">
+                      {outputText.split("\n").map((line, index) => (
+                        <div
+                          key={index}
+                          className={`py-1 ${
+                            line.startsWith("[错误]") 
+                              ? "text-red-600 bg-red-50/50 px-2 rounded" 
+                              : "text-slate-600"
+                          }`}
+                        >
+                          {line}
+                        </div>
+                      ))}
+                    </pre>
+                  ) : (
+                    <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-2 py-20">
+                      <Cookie className="h-10 w-10 opacity-20" />
+                      <p className="text-sm">
+                        {showError ? "等待输入..." : "转换结果将显示在这里"}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+
+              <div className="flex gap-4 mt-6">
+                {/* Primary Action - Google Blue, Pill Shape */}
+                <Button
+                  onClick={handleCopy}
+                  className="flex-1 py-6 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all"
+                  disabled={!outputText || showError}
+                >
+                  {copied ? <CheckCircle2 className="mr-2 h-5 w-5" /> : <Copy className="mr-2 h-5 w-5" />}
+                  {copied ? "已复制" : "复制结果"}
+                </Button>
+
+                {/* Secondary Action - Outlined/Tonal, Pill Shape */}
+                <Button
+                  onClick={handleClear}
+                  variant="outline"
+                  className="flex-1 py-6 rounded-full border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:border-slate-300 transition-all"
+                >
+                  <Eraser className="mr-2 h-5 w-5" />
+                  清空
+                </Button>
+              </div>
+            </Card>
           </div>
         </div>
       </div>
