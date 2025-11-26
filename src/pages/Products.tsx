@@ -12,6 +12,7 @@ const products = [
     name: "脸书白号",
     description: "企业级账号解决方案，3天质保服务，安全稳定可靠",
     price: "¥2/个",
+    salesCount: "5418个",
     features: [
       "真实IP注册，账号安全有保障",
       "账号注册时长30-180天，活跃度高",
@@ -66,8 +67,18 @@ const Products = () => {
             </CardHeader>
 
             <CardContent className="relative">
-              <div className="text-3xl font-bold mb-4 text-primary">
-                {product.price}
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-3xl font-bold text-primary">
+                  {product.price}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Badge variant="secondary" className="bg-secondary text-foreground px-3 py-1">
+                    库存: 999+个
+                  </Badge>
+                  <Badge variant="outline" className="border-primary/20 text-primary px-3 py-1">
+                    已售: {product.salesCount}
+                  </Badge>
+                </div>
               </div>
               
               <ul className="space-y-2.5 mb-4">
