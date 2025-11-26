@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ShoppingCart, Star, Shield, Clock, ArrowRight, Sparkles, Send } from "lucide-react";
+import { ShoppingCart, Star, Shield, Clock, ArrowRight, Sparkles, Send, Check } from "lucide-react";
 import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 
@@ -28,7 +28,7 @@ const products = [
   },
 ];
 
-// Google Material Design 风格的 "Products" 页面
+// Refactored to Material Design 3 (Material You) Style
 const Products = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
 
@@ -38,92 +38,116 @@ const Products = () => {
       description="提供高质量Facebook白号，严格质量把控，完善售后保障体系，助力您的业务拓展"
       backLabel="返回首页"
     >
-      {/* 促销横幅: Google 风格 */}
-      <div className="mb-8 flex justify-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-800">
-          <Sparkles className="w-4 h-4 text-blue-600" />
-          <span className="text-sm font-medium">限时优惠 · 批量购买享更多折扣</span>
+      {/* Material 3 Style Promotion Chip */}
+      <div className="mb-10 flex justify-center">
+        <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50 text-blue-900 shadow-sm border border-blue-100">
+          <Sparkles className="w-5 h-5 text-blue-600" />
+          <span className="text-sm font-medium tracking-wide">限时优惠 · 批量购买享更多折扣</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {products.map((product) => (
-          // 卡片: Material Design "Outlined Card" 风格
-          <Card key={product.id} className="border border-gray-200 shadow-none hover:shadow-lg transition-shadow duration-300">
-            <CardHeader>
-              <div className="flex items-start justify-between mb-1">
-                <CardTitle className="text-xl font-medium text-gray-800">{product.name}</CardTitle>
+          // Material 3 Elevated Card: Rounded-3xl, No border, Soft Shadow
+          <Card 
+            key={product.id} 
+            className="rounded-3xl border-0 bg-white shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
+          >
+            <CardHeader className="p-6 pb-2">
+              <div className="flex items-start justify-between mb-2">
+                <CardTitle className="text-2xl font-normal text-slate-900 tracking-tight">
+                  {product.name}
+                </CardTitle>
                 {product.badge && (
-                  <Badge className="bg-blue-100 text-blue-800 font-semibold">{product.badge}</Badge>
+                  <Badge className="rounded-full px-3 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 border-0 font-medium">
+                    {product.badge}
+                  </Badge>
                 )}
               </div>
-              <CardDescription className="text-sm text-gray-500">{product.description}</CardDescription>
+              <CardDescription className="text-base text-slate-500 leading-relaxed">
+                {product.description}
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline justify-between mb-4">
-                <p className="text-3xl font-bold text-blue-600">{product.price}</p>
+
+            <CardContent className="p-6 pt-4">
+              <div className="flex items-end justify-between mb-6">
+                <div className="flex items-baseline gap-1">
+                    <p className="text-4xl font-normal text-blue-600">{product.price}</p>
+                </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-700">库存: 999+个</p>
-                  <p className="text-sm text-gray-500">已售: {product.salesCount}</p>
+                  <p className="text-sm font-medium text-slate-700 bg-slate-100 px-3 py-1 rounded-full inline-block mb-1">
+                    库存: 999+
+                  </p>
+                  <p className="text-xs text-slate-400 mt-1">已售: {product.salesCount}</p>
                 </div>
               </div>
 
-              <ul className="space-y-2.5 mb-5">
+              <ul className="space-y-3 mb-8">
                 {product.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start text-sm text-gray-700">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-3 mt-1.5 flex-shrink-0" />
+                  <li key={idx} className="flex items-center text-sm text-slate-600">
+                    <div className="w-6 h-6 rounded-full bg-green-50 flex items-center justify-center mr-3 flex-shrink-0 text-green-600">
+                        <Check className="w-3.5 h-3.5" />
+                    </div>
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
               
-              {/* 信任徽章 */}
-              <div className="border-t border-gray-200 pt-4">
-                <div className="grid grid-cols-3 gap-2 text-center">
+              {/* Trust Badges - Material Container Style */}
+              <div className="bg-slate-50 rounded-2xl p-4">
+                <div className="grid grid-cols-3 gap-4 text-center">
                   {product.trustBadges?.map((badge, idx) => {
                     const Icon = badge.icon;
                     return (
-                      <div key={idx} className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                        <Icon className="w-5 h-5 mx-auto text-blue-600 mb-1" />
-                        <p className="text-sm font-semibold text-gray-800">{badge.value}</p>
-                        <p className="text-xs text-gray-500">{badge.label}</p>
+                      <div key={idx} className="flex flex-col items-center gap-1">
+                        <div className="p-2 bg-white rounded-full shadow-sm mb-1 text-blue-600">
+                             <Icon className="w-5 h-5" />
+                        </div>
+                        <p className="text-sm font-bold text-slate-800">{badge.value}</p>
+                        <p className="text-xs text-slate-500">{badge.label}</p>
                       </div>
                     );
                   })}
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
-              {/* 主按钮: Material Design "Filled Button" 风格 */}
+
+            <CardFooter className="p-6 pt-0">
               <Dialog open={isContactOpen} onOpenChange={setIsContactOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md transition-all duration-300">
-                    <ShoppingCart className="w-4 h-4 mr-2" />
+                  {/* Material 3 Filled Button: Rounded-full, Flat Blue */}
+                  <Button className="w-full rounded-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-base font-medium shadow-none hover:shadow-md active:scale-[0.98] transition-all duration-200">
+                    <ShoppingCart className="w-5 h-5 mr-2" />
                     咨询购买
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-sm rounded-lg">
-                  <DialogHeader>
-                    <DialogTitle className="text-lg font-semibold text-gray-900">专业服务团队</DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500">我们的客服团队将为您提供一对一专业咨询服务</DialogDescription>
+                
+                {/* Dialog styling updates */}
+                <DialogContent className="sm:max-w-sm sm:rounded-3xl p-6">
+                  <DialogHeader className="mb-4">
+                    <DialogTitle className="text-xl text-center font-normal text-slate-900">专业服务团队</DialogTitle>
+                    <DialogDescription className="text-center text-slate-500">
+                      我们的客服团队将为您提供一对一专业咨询服务
+                    </DialogDescription>
                   </DialogHeader>
-                  <div className="space-y-2 py-2">
+                  
+                  <div className="space-y-3">
                     {[1, 2, 3].map((_, index) => (
                       <a
                         key={index}
                         href="https://t.me/Facebookkf_bot"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200 group"
+                        className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 hover:bg-blue-50 transition-colors duration-200 group"
                       >
-                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                          <Send className="w-5 h-5 text-blue-600" />
+                        <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                          <Send className="w-5 h-5" />
                         </div>
                         <div className="flex-1">
-                          <div className="font-medium text-sm text-gray-800">Telegram</div>
-                          <div className="text-xs text-gray-500">@Facebookkf_bot</div>
+                          <div className="font-medium text-slate-900">Telegram Support</div>
+                          <div className="text-sm text-slate-500">@Facebookkf_bot</div>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors" />
                       </a>
                     ))}
                   </div>
@@ -134,20 +158,25 @@ const Products = () => {
         ))}
       </div>
 
-      {/* 底部信息卡片 */}
-      <Card className="mt-8 border border-gray-200 shadow-none">
-        <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-blue-600" />
+      {/* Bottom Info Card - Material 3 Elevated Style */}
+      <Card className="mt-10 rounded-3xl border-0 bg-white shadow-sm hover:shadow-md transition-shadow p-2">
+        <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center">
+              <Shield className="w-7 h-7 text-blue-600" />
             </div>
-            <div>
-              <h3 className="font-medium text-base text-gray-800">安全保障</h3>
-              <p className="text-sm text-gray-500">所有账号均经过严格质量检测</p>
+            <div className="text-center md:text-left">
+              <h3 className="font-medium text-lg text-slate-900">安全保障</h3>
+              <p className="text-slate-500">所有账号均经过严格质量检测，请放心使用</p>
             </div>
           </div>
-          {/* 次要按钮: Material Design "Outlined Button" 风格 */}
-          <Button variant="outline" onClick={() => window.open('https://t.me/Facebookkf_bot', '_blank')} className="border-gray-300 text-gray-700 hover:bg-gray-50">
+
+          {/* Secondary Action: Outlined/Tonal Pill Button */}
+          <Button 
+            variant="outline" 
+            onClick={() => window.open('https://t.me/Facebookkf_bot', '_blank')} 
+            className="rounded-full h-12 px-8 border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300"
+          >
             了解更多
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
