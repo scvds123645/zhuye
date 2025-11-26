@@ -35,14 +35,12 @@ const NumberExtractor = () => {
     }
     
     setValidationError(null);
-
     if (!inputText.trim()) {
       setOutputText("");
       setTotalCount(0);
       setUniqueCount(0);
       return;
     }
-
     // Extract all 14-digit numbers
     const regex = /\b\d{14}\b/g;
     const matches = inputText.match(regex) || [];
@@ -86,9 +84,9 @@ const NumberExtractor = () => {
   };
 
   const stats = [
-    { label: "找到数量", value: totalCount, color: "text-primary" },
-    { label: "去重后", value: uniqueCount, color: "text-green-500" },
-    { label: "已删除", value: totalCount - uniqueCount, color: "text-orange-500" },
+    { label: "找到数量", value: totalCount, icon: Hash, color: "text-blue-600", bgColor: "bg-blue-100" },
+    { label: "去重后", value: uniqueCount, icon: CheckCircle2, color: "text-green-600", bgColor: "bg-green-100" },
+    { label: "已删除", value: totalCount - uniqueCount, icon: Eraser, color: "text-orange-600", bgColor: "bg-orange-100" },
   ];
 
   return (
@@ -98,16 +96,16 @@ const NumberExtractor = () => {
       backTo="/tools"
       backLabel="返回工具列表"
     >
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      {/* --- 统计信息卡片 --- */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {stats.map((stat) => (
-          <Card key={stat.label} className="p-4 bg-card border-border card-shadow hover:bg-secondary/30 fb-transition">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
-                <Hash className={`w-5 h-5 ${stat.color}`} />
+          <Card key={stat.label} className="p-4 border rounded-xl transition-all hover:border-gray-300">
+            <div className="flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${stat.bgColor}`}>
+                <stat.icon className={`w-6 h-6 ${stat.color}`} />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">{stat.label}</p>
+                <p className="text-sm text-gray-500">{stat.label}</p>
                 <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
               </div>
             </div>
@@ -116,9 +114,9 @@ const NumberExtractor = () => {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Input Section */}
-        <Card className="p-5 bg-card border-border card-shadow">
-          <Label htmlFor="input" className="text-base font-semibold mb-3 block">
+        {/* --- 输入区域 --- */}
+        <div className="space-y-3">
+          <Label htmlFor="input" className="text-base font-medium text-gray-800">
             输入文本
           </Label>
           <Textarea
@@ -126,77 +124,76 @@ const NumberExtractor = () => {
             placeholder="粘贴包含14位数字的文本...&#10;&#10;示例：&#10;用户12345678901234注册成功&#10;订单号：98765432109876&#10;账号：11111111111111"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            className="min-h-[400px] font-mono text-sm bg-background border-border focus:border-primary fb-transition"
+            className="min-h-[400px] font-mono text-sm bg-gray-50 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
           />
           {validationError && (
-            <p className="text-sm text-destructive mt-2">{validationError}</p>
+            <p className="text-sm text-red-600 mt-1">{validationError}</p>
           )}
-          <div className="mt-2 text-xs text-muted-foreground">
-            已输入: {inputText.length.toLocaleString()} / 100,000 字符
+          <div className="text-xs text-gray-500 text-right">
+            {inputText.length.toLocaleString()} / 100,000
           </div>
-        </Card>
+        </div>
 
-        {/* Output Section */}
+        {/* --- 输出区域 --- */}
         <div className="space-y-4">
-          <Card className="p-5 bg-card border-border card-shadow">
-            <div className="flex items-center justify-between mb-3">
-              <Label className="text-base font-semibold">提取结果</Label>
-              {uniqueCount > 0 && (
-                <span className="text-sm text-primary px-3 py-1 rounded-full bg-primary/10">
-                  {uniqueCount} 个号码
-                </span>
+          <div className="flex items-center justify-between">
+            <Label className="text-base font-medium text-gray-800">提取结果</Label>
+            {uniqueCount > 0 && (
+              <span className="text-sm font-medium text-blue-700 px-3 py-1 rounded-full bg-blue-100">
+                {uniqueCount} 个号码
+              </span>
+            )}
+          </div>
+          <ScrollArea className="h-[400px] w-full rounded-lg border bg-gray-50">
+            <div className="p-4">
+              {outputText ? (
+                <pre className="font-mono text-sm whitespace-pre-wrap break-all text-gray-800">
+                  {outputText}
+                </pre>
+              ) : (
+                <p className="text-gray-500 text-sm">
+                  {validationError ? "请修正输入错误" : "提取的号码将显示在这里..."}
+                </p>
               )}
             </div>
-            <ScrollArea className="h-[400px] w-full rounded-lg border border-border bg-background">
-              <div className="p-4">
-                {outputText ? (
-                  <pre className="font-mono text-sm whitespace-pre-wrap break-all text-foreground">
-                    {outputText}
-                  </pre>
-                ) : (
-                  <p className="text-muted-foreground text-sm">
-                    {validationError ? "请修正错误后重试" : "提取的号码将显示在这里..."}
-                  </p>
-                )}
-              </div>
-            </ScrollArea>
-          </Card>
-
+          </ScrollArea>
+          
           <div className="flex gap-3">
+            {/* --- Google 风格的主要按钮（填充） --- */}
             <Button 
-              onClick={handleCopy} 
-              className="flex-1 py-6 bg-primary hover:bg-primary/90 fb-transition" 
-              disabled={!outputText}
-            >
-              {copied ? <CheckCircle2 className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                onClick={handleCopy} 
+                className="flex-1 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-3 transition-colors disabled:bg-gray-300" 
+                disabled={!outputText}>
+              {copied ? <CheckCircle2 className="mr-2 h-5 w-5" /> : <Copy className="mr-2 h-5 w-5" />}
               {copied ? "已复制" : "复制结果"}
             </Button>
+            
+            {/* --- Google 风格的次要按钮（轮廓） --- */}
             <Button 
-              onClick={handleClear} 
-              variant="outline" 
-              className="flex-1 py-6 border-2 border-border hover:bg-secondary fb-transition"
-            >
-              <Eraser className="mr-2 h-4 w-4" />
+                onClick={handleClear} 
+                variant="outline" 
+                className="flex-1 text-blue-600 border-gray-300 hover:bg-blue-50 font-medium rounded-lg text-base px-5 py-3 transition-colors">
+              <Eraser className="mr-2 h-5 w-5" />
               清空
             </Button>
           </div>
         </div>
       </div>
-
-      {/* Usage Tips */}
-      <Card className="mt-6 p-5 bg-card border-border card-shadow">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <Sparkles className="w-5 h-5 text-primary" />
+      
+      {/* --- 使用说明 --- */}
+      <Card className="mt-6 p-5 border rounded-xl">
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+            <Sparkles className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground mb-2">使用说明</h3>
-            <ul className="space-y-1 text-sm text-muted-foreground">
-              <li>• 自动识别并提取文本中所有14位连续数字</li>
-              <li>• 支持混合文本，智能分离数字和其他字符</li>
-              <li>• 自动去除重复号码，保留首次出现的号码</li>
-              <li>• 每行输出一个号码，方便批量处理</li>
-              <li>• 最大支持100,000字符的文本输入</li>
+            <h3 className="font-semibold text-gray-800 mb-2">使用说明</h3>
+            <ul className="space-y-1 text-sm text-gray-600 list-disc list-inside">
+              <li>自动识别并提取文本中所有14位连续数字。</li>
+              <li>支持混合文本，智能分离数字和其他字符。</li>
+              <li>自动去除重复号码，保留首次出现的号码。</li>
+              <li>每行输出一个号码，方便批量处理。</li>
+              <li>最大支持100,000字符的文本输入。</li>
             </ul>
           </div>
         </div>
@@ -206,3 +203,4 @@ const NumberExtractor = () => {
 };
 
 export default NumberExtractor;
+
