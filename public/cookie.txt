@@ -1,0 +1,701 @@
+ ==UserScript==
+ @name         Facebook Cookie注入器
+ @namespace    httptampermonkey.net
+ @version      2.0.0
+ @description  Facebook专用Cookie注入、备份、导入、删除工具
+ @author       You
+ @match        .facebook.com
+ @match        .fb.com
+ @grant        none
+ @run-at       document-end
+ ==UserScript==
+
+(function() {
+    'use strict';
+
+    const SELECTORS = {
+        BTN_MAIN '#cookie-manager-btn',
+        PANEL '#cookie-manager-panel',
+        OVERLAY '#cookie-manager-overlay',
+        INPUT_TEXTAREA '#cookie-input',
+        BTN_INJECT '#btn-inject',
+        BTN_BACKUP '#btn-backup',
+        BTN_IMPORT '#btn-import',
+        INPUT_FILE '#cookie-file-input',
+        BTN_DELETE '#btn-delete',
+        BTN_CLOSE '#btn-close',
+        FB_WATERMARK '#fb-watermark',
+        FB_TIME_DISPLAY '#fb-time',
+        FB_WARNING '#fb-warning'
+    };
+
+    const COOKIE_NAMES = {
+        FB_C_USER 'c_user',
+        FB_XS 'xs'
+    };
+
+    const UIManager = (function() {
+        let panelElement, overlayElement, mainButtonElement;
+
+        function appendStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                #cookie-manager-btn {
+                    position fixed;
+                    bottom 20px;
+                    right 20px;
+                    width 60px;
+                    height 60px;
+                    background linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    border-radius 50%;
+                    border none;
+                    color white;
+                    font-size 24px;
+                    cursor pointer;
+                    z-index 999998;
+                    box-shadow 0 4px 15px rgba(0,0,0,0.3);
+                    display flex;
+                    align-items center;
+                    justify-content center;
+                    transition transform 0.2s;
+                }
+                #cookie-manager-btnactive {
+                    transform scale(0.95);
+                }
+                #cookie-manager-panel {
+                    position fixed;
+                    bottom 0;
+                    left 0;
+                    right 0;
+                    background white;
+                    border-radius 20px 20px 0 0;
+                    padding 20px;
+                    z-index 999999;
+                    box-shadow 0 -5px 30px rgba(0,0,0,0.3);
+                    max-height 80vh;
+                    overflow-y auto;
+                    transform translateY(100%);
+                    transition transform 0.3s ease;
+                }
+                #cookie-manager-panel.show {
+                    transform translateY(0);
+                }
+                #cookie-manager-overlay {
+                    position fixed;
+                    top 0;
+                    left 0;
+                    right 0;
+                    bottom 0;
+                    background rgba(0,0,0,0.5);
+                    z-index 999998;
+                    opacity 0;
+                    pointer-events none;
+                    transition opacity 0.3s;
+                }
+                #cookie-manager-overlay.show {
+                    opacity 1;
+                    pointer-events auto;
+                }
+                .cookie-title {
+                    font-size 20px;
+                    font-weight bold;
+                    margin-bottom 15px;
+                    color #333;
+                    text-align center;
+                    position relative;
+                }
+                .fb-reg-date-btn {
+                    position absolute;
+                    left 0;
+                    top 50%;
+                    transform translateY(-50%);
+                    background linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+                    color #667eea;
+                    border none;
+                    padding 8px 12px;
+                    border-radius 50%;
+                    font-size 18px;
+                    cursor pointer;
+                    transition all 0.2s;
+                    opacity 0.8;
+                    width 36px;
+                    height 36px;
+                    display flex;
+                    align-items center;
+                    justify-content center;
+                }
+                .fb-reg-date-btnactive {
+                    transform translateY(-50%) scale(0.95);
+                    opacity 1;
+                    background linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+                }
+                .cookie-textarea {
+                    width 100%;
+                    min-height 120px;
+                    padding 12px;
+                    border 2px solid #ddd;
+                    border-radius 10px;
+                    font-size 14px;
+                    margin-bottom 15px;
+                    box-sizing border-box;
+                    resize vertical;
+                }
+                .cookie-btn {
+                    width 100%;
+                    padding 15px;
+                    margin-bottom 10px;
+                    border none;
+                    border-radius 10px;
+                    font-size 16px;
+                    font-weight bold;
+                    cursor pointer;
+                    transition all 0.2s;
+                    box-shadow 0 2px 8px rgba(0,0,0,0.1);
+                }
+                .cookie-btnactive {
+                    transform scale(0.98);
+                }
+                .btn-inject {
+                    background linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color white;
+                }
+                .btn-backup {
+                    background linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                    color white;
+                }
+                .btn-import {
+                    background linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                    color white;
+                }
+                .btn-delete {
+                    background linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+                    color white;
+                }
+                .btn-close {
+                    background #f0f0f0;
+                    color #666;
+                }
+                .file-input {
+                    display none;
+                }
+                #fb-watermark {
+                    position fixed;
+                    top 10px;
+                    left 10px;
+                    background rgba(0,0,0,0.7);
+                    color white;
+                    padding 8px 12px;
+                    border-radius 8px;
+                    font-size 12px;
+                    z-index 999997;
+                    cursor move;
+                    user-select none;
+                    box-shadow 0 2px 10px rgba(0,0,0,0.3);
+                    touch-action none;
+                }
+                #fb-watermark div {
+                    margin 2px 0;
+                }
+                #fb-warning {
+                    position fixed;
+                    top 0;
+                    left 0;
+                    right 0;
+                    bottom 0;
+                    background linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+                    color white;
+                    display flex;
+                    flex-direction column;
+                    align-items center;
+                    justify-content center;
+                    text-align center;
+                    font-weight bold;
+                    z-index 999999;
+                    animation pulse 2s infinite;
+                    line-height 1.6;
+                    padding 20px;
+                }
+                #fb-warning .warning-main {
+                    font-size 24px;
+                    margin-bottom 15px;
+                }
+                #fb-warning .warning-tip {
+                    font-size 16px;
+                    font-weight normal;
+                    opacity 0.95;
+                    margin-bottom 10px;
+                }
+                .warning-close {
+                    background white !important;
+                    color #ee5a6f !important;
+                    border none !important;
+                    padding 15px 40px !important;
+                    border-radius 10px !important;
+                    font-size 18px !important;
+                    font-weight bold !important;
+                    cursor pointer !important;
+                    box-shadow 0 4px 15px rgba(0,0,0,0.2) !important;
+                    transition transform 0.2s !important;
+                    margin-top 20px !important;
+                    display inline-block !important;
+                }
+                .warning-closeactive {
+                    transform scale(0.95) !important;
+                }
+                .warning-closedisabled {
+                    opacity 0.5 !important;
+                    cursor not-allowed !important;
+                }
+                @keyframes pulse {
+                    0%, 100% { opacity 1; }
+                    50% { opacity 0.85; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function createElements() {
+            mainButtonElement = document.createElement('button');
+            mainButtonElement.id = SELECTORS.BTN_MAIN.substring(1);
+            mainButtonElement.innerHTML = '🍪';
+            document.body.appendChild(mainButtonElement);
+
+            overlayElement = document.createElement('div');
+            overlayElement.id = SELECTORS.OVERLAY.substring(1);
+            document.body.appendChild(overlayElement);
+
+            panelElement = document.createElement('div');
+            panelElement.id = SELECTORS.PANEL.substring(1);
+            
+            panelElement.innerHTML = `
+                div class=cookie-title
+                    button class=fb-reg-date-btn id=fb-reg-date-btn📅button
+                    🍪 Facebook Cookie注入器
+                div
+                textarea class=cookie-textarea id=${SELECTORS.INPUT_TEXTAREA.substring(1)} placeholder=粘贴Facebook Cookie字符串...&#10;支持格式：&#10;1. c_user=123456;xs=abc123456&#10;2. svvsvssvsc_user=123;xs=abc (自动提取)&#10;3. 完整Cookie (自动提取c_user和xs)textarea
+                button class=cookie-btn btn-inject id=${SELECTORS.BTN_INJECT.substring(1)}💉 注入Cookiebutton
+                button class=cookie-btn btn-backup id=${SELECTORS.BTN_BACKUP.substring(1)}💾 备份Cookiebutton
+                button class=cookie-btn btn-import id=${SELECTORS.BTN_IMPORT.substring(1)}📁 导入Cookiebutton
+                input type=file id=${SELECTORS.INPUT_FILE.substring(1)} class=file-input accept=.txt
+                button class=cookie-btn btn-delete id=${SELECTORS.BTN_DELETE.substring(1)}🗑️ 删除所有Cookiebutton
+                button class=cookie-btn btn-close id=${SELECTORS.BTN_CLOSE.substring(1)}❌ 关闭button
+            `;
+            document.body.appendChild(panelElement);
+        }
+
+        function togglePanelVisibility() {
+            panelElement.classList.toggle('show');
+            overlayElement.classList.toggle('show');
+        }
+
+        function closePanelVisibility() {
+            panelElement.classList.remove('show');
+            overlayElement.classList.remove('show');
+        }
+
+        function getCookieInputText() {
+            return document.querySelector(SELECTORS.INPUT_TEXTAREA).value;
+        }
+
+        function setCookieInputText(value) {
+            document.querySelector(SELECTORS.INPUT_TEXTAREA).value = value;
+        }
+
+        function getFileInputElement() {
+            return document.querySelector(SELECTORS.INPUT_FILE);
+        }
+
+        return {
+            init function() {
+                appendStyles();
+                createElements();
+            },
+            togglePanel togglePanelVisibility,
+            closePanel closePanelVisibility,
+            getCookieInput getCookieInputText,
+            setCookieInput setCookieInputText,
+            getFileInputElement getFileInputElement,
+            get mainButton() { return mainButtonElement; }
+        };
+    })();
+
+    const CookieService = (function() {
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days = 365) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days  24  60  60  1000));
+            const hostname = window.location.hostname;
+            
+            const parts = hostname.split('.');
+            const domain = parts.length  2  '.' + parts.slice(-2).join('.')  hostname;
+            
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=;domain=${domain}`;
+        }
+
+        function extractFacebookCookies(cookieStr) {
+            const result = {
+                c_user null,
+                xs null
+            };
+
+             使用正则表达式提取 c_user 和 xs
+            const cUserMatch = cookieStr.match(c_user=([^;s]+));
+            const xsMatch = cookieStr.match(xs=([^;s]+));
+
+            if (cUserMatch) {
+                result.c_user = cUserMatch[1];
+            }
+            if (xsMatch) {
+                result.xs = xsMatch[1];
+            }
+
+            return result;
+        }
+
+        function parseCookieString(cookieStr) {
+             Facebook 专用：只提取 c_user 和 xs
+            const fbCookies = extractFacebookCookies(cookieStr);
+            const cookies = [];
+            
+            if (fbCookies.c_user) {
+                cookies.push({ name COOKIE_NAMES.FB_C_USER, value fbCookies.c_user });
+            }
+            if (fbCookies.xs) {
+                cookies.push({ name COOKIE_NAMES.FB_XS, value fbCookies.xs });
+            }
+            
+            return cookies;
+        }
+
+        return {
+            injectCookies function() {
+                const input = UIManager.getCookieInput();
+                if (!input) {
+                    alert('请输入Facebook Cookie字符串！');
+                    return;
+                }
+
+                const cookies = parseCookieString(input);
+                if (cookies.length === 0) {
+                    alert('未找到有效的Facebook Cookie！nn请确保输入包含 c_user 和 xs');
+                    return;
+                }
+
+                 检查是否同时有 c_user 和 xs
+                const hasCUser = cookies.some(c = c.name === COOKIE_NAMES.FB_C_USER);
+                const hasXs = cookies.some(c = c.name === COOKIE_NAMES.FB_XS);
+                
+                if (!hasCUser  !hasXs) {
+                    alert('❌ Facebook Cookie 不完整！nn需要同时包含：n• c_user (账号ID)n• xs (会话凭证)');
+                    return;
+                }
+
+                cookies.forEach(({ name, value }) = {
+                    setCookie(name, value);
+                });
+
+                const cUserCookie = cookies.find(c = c.name === COOKIE_NAMES.FB_C_USER);
+                alert(`✅ 成功注入 Facebook Cookie！nn账号ID ${cUserCookie.value}nn页面即将跳转到 Facebook 移动版...`);
+                setTimeout(() = {
+                    window.location.href = 'httpsm.facebook.com';
+                }, 500);
+            },
+
+            backupCookies function() {
+                const cUser = getCookie(COOKIE_NAMES.FB_C_USER);
+                const xs = getCookie(COOKIE_NAMES.FB_XS);
+                
+                if (!cUser && !xs) {
+                    alert('❌ 未找到Facebook关键Cookie！nn缺少：c_user 和 xsnn请先登录Facebook账号或注入有效的Cookie。');
+                    return;
+                }
+                
+                if (!cUser) {
+                    alert('❌ 未找到Facebook关键Cookie！nn缺少：c_usernn这是Facebook账号ID,必须存在才能备份。');
+                    return;
+                }
+                
+                if (!xs) {
+                    alert('❌ 未找到Facebook关键Cookie！nn缺少：xsnn这是Facebook会话凭证,必须存在才能备份。');
+                    return;
+                }
+                
+                const parts = [];
+                parts.push(`${COOKIE_NAMES.FB_C_USER}=${cUser}`);
+                parts.push(`${COOKIE_NAMES.FB_XS}=${xs}`);
+                const cookieStr = parts.join('; ');
+
+                const accountId = cUser  'unknown';
+                const timestamp = new Date().toISOString().replace([.]g, '-').slice(0, -5);
+                const filename = `${accountId}_${timestamp}_cookies.txt`;
+
+                const blob = new Blob([cookieStr], { type 'textplain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                alert('Cookie备份成功！');
+            },
+
+            importCookies function(fileInput) {
+                const file = fileInput.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) = {
+                    const content = e.target.result;
+                    UIManager.setCookieInput(content);
+                    alert('Cookie导入成功！请点击注入Cookie按钮。');
+                };
+                reader.readAsText(file);
+                fileInput.value = '';
+            },
+
+            deleteCookies function() {
+                if (!confirm('确定要删除当前域名的所有Cookie吗？')) return;
+
+                const cookies = document.cookie.split(';');
+                const hostname = window.location.hostname;
+                const parts = hostname.split('.');
+                
+                const domains = ['', hostname, '.' + hostname];
+                if (parts.length  2) {
+                    const mainDomain = parts.slice(-2).join('.');
+                    domains.push(mainDomain, '.' + mainDomain);
+                }
+                
+                cookies.forEach(cookie = {
+                    const name = cookie.split('=')[0].trim();
+                    if (!name) return;
+                    
+                    domains.forEach(domain = {
+                        ['', ''].forEach(path = {
+                            const domainPart = domain  `;domain=${domain}`  '';
+                            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 000000 GMT;path=${path}${domainPart}`;
+                        });
+                    });
+                });
+
+                alert(`已尝试删除 ${cookies.length} 个Cookie！n页面即将跳转到 Facebook 移动版...`);
+                setTimeout(() = {
+                    window.location.href = 'httpsm.facebook.com';
+                }, 500);
+            },
+            getCookie getCookie
+        };
+    })();
+
+    const FacebookFeatures = (function() {
+        let watermarkElement = null;
+        let warningBannerElement = null;
+        let isDraggingWatermark = false;
+        let dragOffset = { x 0, y 0 };
+        let warningDismissed = false;
+
+        function getCurrentTime() {
+            return new Date().toTimeString().slice(0, 8);
+        }
+
+        function maskAccountId(cUser) {
+            if (!cUser  cUser.length  11) return cUser;
+            return cUser.substring(0, 5) + 'xxxxx' + cUser.substring(10);
+        }
+
+        function createWatermark() {
+            const cUser = CookieService.getCookie(COOKIE_NAMES.FB_C_USER);
+            if (!cUser) return;
+
+            const maskedId = maskAccountId(cUser);
+
+            watermarkElement = document.createElement('div');
+            watermarkElement.id = SELECTORS.FB_WATERMARK.substring(1);
+            watermarkElement.innerHTML = `
+                div👤 ID ${maskedId}div
+                div id=${SELECTORS.FB_TIME_DISPLAY.substring(1)}⏰ ${getCurrentTime()}div
+            `;
+            document.body.appendChild(watermarkElement);
+
+            setInterval(() = {
+                const timeEl = document.querySelector(SELECTORS.FB_TIME_DISPLAY);
+                if (timeEl) {
+                    timeEl.textContent = `⏰ ${getCurrentTime()}`;
+                }
+            }, 1000);
+
+            watermarkElement.addEventListener('mousedown', startDrag);
+            watermarkElement.addEventListener('touchstart', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchend', stopDrag);
+        }
+
+        function startDrag(e) {
+            isDraggingWatermark = true;
+            const rect = watermarkElement.getBoundingClientRect();
+            const clientX = e.touches  e.touches[0].clientX  e.clientX;
+            const clientY = e.touches  e.touches[0].clientY  e.clientY;
+            dragOffset.x = clientX - rect.left;
+            dragOffset.y = clientY - rect.top;
+            e.preventDefault();
+        }
+
+        function drag(e) {
+            if (!isDraggingWatermark  !watermarkElement) return;
+            const clientX = e.touches  e.touches[0].clientX  e.clientX;
+            const clientY = e.touches  e.touches[0].clientY  e.clientY;
+            watermarkElement.style.left = (clientX - dragOffset.x) + 'px';
+            watermarkElement.style.top = (clientY - dragOffset.y) + 'px';
+            watermarkElement.style.right = 'auto';
+            e.preventDefault();
+        }
+
+        function stopDrag() {
+            isDraggingWatermark = false;
+        }
+
+        function checkBookmarksPage() {
+            const isBookmarksPage = window.location.pathname.includes('bookmarks');
+            
+            if (isBookmarksPage && !warningDismissed) {
+                showWarning();
+            } else if (!isBookmarksPage) {
+                warningDismissed = false;
+                hideWarning();
+            }
+        }
+
+        function showWarning() {
+            if (warningBannerElement) return;
+            warningBannerElement = document.createElement('div');
+            warningBannerElement.id = SELECTORS.FB_WARNING.substring(1);
+            warningBannerElement.innerHTML = `
+                div class=warning-main⚠️ 警告：请不要点击退出登录,否则cookie永久失效!div
+                div class=warning-tip💡 提示：切换账号只需注入新的Cookie并点击注入即可div
+                div class=warning-tip🚪 需要退出登录请使用Cookie注入器的删除功能div
+                button class=warning-close disabled我知道了 (5)button
+            `;
+            document.body.appendChild(warningBannerElement);
+            
+            const closeBtn = warningBannerElement.querySelector('.warning-close');
+            let countdown = 5;
+            
+            const countdownInterval = setInterval(() = {
+                countdown--;
+                if (countdown  0) {
+                    closeBtn.textContent = `我知道了 (${countdown})`;
+                } else {
+                    clearInterval(countdownInterval);
+                    closeBtn.textContent = '我知道了';
+                    closeBtn.disabled = false;
+                }
+            }, 1000);
+            
+            closeBtn.addEventListener('click', () = {
+                if (!closeBtn.disabled) {
+                    warningDismissed = true;
+                    hideWarning();
+                }
+            });
+        }
+
+        function hideWarning() {
+            if (warningBannerElement) {
+                warningBannerElement.remove();
+                warningBannerElement = null;
+            }
+        }
+
+        return {
+            init function() {
+                createWatermark();
+                checkBookmarksPage();
+
+                let lastUrl = location.href;
+                const checkUrlChange = () = {
+                    if (location.href !== lastUrl) {
+                        lastUrl = location.href;
+                        checkBookmarksPage();
+                    }
+                };
+                
+                window.addEventListener('popstate', checkUrlChange);
+                
+                const originalPushState = history.pushState;
+                const originalReplaceState = history.replaceState;
+                
+                history.pushState = function() {
+                    originalPushState.apply(this, arguments);
+                    checkUrlChange();
+                };
+                
+                history.replaceState = function() {
+                    originalReplaceState.apply(this, arguments);
+                    checkUrlChange();
+                };
+                
+                setInterval(checkUrlChange, 500);
+            }
+        };
+    })();
+
+    function initialize() {
+        var _hmt = _hmt  [];
+        (function() {
+            var hm = document.createElement(script);
+            hm.src = httpshm.baidu.comhm.jsf586eeedfc80d1d93fccf340c607ec63;
+            var s = document.getElementsByTagName(script)[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        console.log('📊 百度统计已加载');
+        
+        UIManager.init();
+
+        UIManager.mainButton.addEventListener('click', UIManager.togglePanel);
+        document.querySelector(SELECTORS.OVERLAY).addEventListener('click', UIManager.closePanel);
+        document.querySelector(SELECTORS.BTN_INJECT).addEventListener('click', CookieService.injectCookies);
+        document.querySelector(SELECTORS.BTN_BACKUP).addEventListener('click', CookieService.backupCookies);
+        document.querySelector(SELECTORS.BTN_IMPORT).addEventListener('click', () = UIManager.getFileInputElement().click());
+        UIManager.getFileInputElement().addEventListener('change', (e) = CookieService.importCookies(e.target));
+        document.querySelector(SELECTORS.BTN_DELETE).addEventListener('click', CookieService.deleteCookies);
+        document.querySelector(SELECTORS.BTN_CLOSE).addEventListener('click', UIManager.closePanel);
+
+        FacebookFeatures.init();
+        
+        const fbRegDateBtn = document.querySelector('#fb-reg-date-btn');
+        if (fbRegDateBtn) {
+            fbRegDateBtn.addEventListener('click', () = {
+                window.location.href = 'httpsm.facebook.comyour_informationlisttile=PERSONAL_INFO_GROUPING';
+            });
+        }
+
+        window.cookieManager = {
+            injectCookies CookieService.injectCookies,
+            backupCookies CookieService.backupCookies,
+            importCookies function(fileInputTarget) {
+                CookieService.importCookies(fileInputTarget);
+            },
+            deleteCookies CookieService.deleteCookies,
+            closePanel UIManager.closePanel
+        };
+
+        console.log('🍪 Facebook Cookie注入器已加载');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initialize);
+    } else {
+        initialize();
+    }
+
+})();
