@@ -846,7 +846,7 @@
         UIManager.getButton(SELECTORS.BTN_IMPORT).addEventListener('click', () => UIManager.getFileInputElement().click());
         UIManager.getFileInputElement().addEventListener('change', (e) => CookieService.importFromFile(e.target));
 
-        console.log('🍪 Facebook Cookie Manager v2.1.3 loaded.');
+        console.log('🍪 Facebook Cookie Manager v2.0.0 loaded.');
     }
 
     if (document.readyState === 'complete') {
