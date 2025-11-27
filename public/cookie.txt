@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Facebook Cookie注入器
+// @name         Facebook Cookie 注入器
 // @namespace    http://tampermonkey.net/
 // @version      2.0.0
-// @description  Facebook专用Cookie注入、备份、导入、删除工具
+// @description  可拖动的Facebook专用Cookie注入、备份、导入、删除工具。
 // @author       You
 // @match        *://*.facebook.com/*
 // @match        *://*.fb.com/*
@@ -13,689 +13,194 @@
 (function() {
     'use strict';
 
+    // --- Material Symbols (SVG) ---
+    const ICONS = {
+        cookie: `<svg height="24px" width="24px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 416.991 416.991" xml:space="preserve" fill="#FFFFFF"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path style="fill:#D4B783;" d="M381.114,225.079c-14.766-3.154-27.751-11.758-36.427-24.102 c-7.866,3.647-16.438,5.543-25.258,5.544c-10.471,0.001-20.822-2.78-29.936-8.042c-17.015-9.824-27.983-27.382-29.744-46.57 c-19.289-1.763-36.796-12.823-46.567-29.748c-9.821-17.011-10.544-37.695-2.48-55.19c-12.344-8.672-20.95-21.655-24.107-36.418 c-32.697,1.049-63.311,10.475-89.779,26.183C50.256,91.091,20,146.326,20,208.496c0,103.937,84.559,188.496,188.496,188.496 c34.945,0,67.698-9.56,95.784-26.199C349.368,337.576,379.198,284.794,381.114,225.079z M120.4,184.892 c-0.727,2.708-2.463,4.971-4.891,6.373c-1.604,0.923-3.415,1.407-5.25,1.407h-0.001c-3.745-0.001-7.232-2.017-9.1-5.262 c-2.886-4.997-1.166-11.429,3.841-14.327c1.612-0.928,3.423-1.412,5.258-1.412c3.739,0,7.223,2.011,9.093,5.249 C120.754,179.35,121.126,182.181,120.4,184.892z M136.574,290.904c-5.79,0-10.5-4.711-10.5-10.5c0-5.79,4.711-10.5,10.5-10.5 c5.79,0,10.5,4.71,10.5,10.5C147.074,286.194,142.364,290.904,136.574,290.904z M191.271,115.503 c-1.877,3.25-5.362,5.262-9.101,5.262c-1.835,0-3.646-0.484-5.238-1.4c-5.019-2.899-6.746-9.328-3.862-14.338 c1.877-3.25,5.361-5.262,9.101-5.262c1.835,0,3.646,0.484,5.238,1.4C192.428,104.064,194.155,110.493,191.271,115.503z M243.904,311.968c-1.887,3.255-5.368,5.262-9.101,5.262c-1.847,0-3.668-0.49-5.266-1.416c-4.991-2.883-6.718-9.312-3.834-14.322 c1.893-3.259,5.372-5.262,9.101-5.262c1.847,0,3.668,0.49,5.267,1.417c2.403,1.383,4.145,3.647,4.873,6.358 C245.672,306.71,245.302,309.539,243.904,311.968z M316.862,237.531c-0.724,2.712-2.462,4.98-4.893,6.384 c-1.604,0.923-3.415,1.407-5.251,1.407c-3.745,0-7.232-2.017-9.1-5.262c-1.393-2.403-1.77-5.234-1.045-7.947 c0.724-2.713,2.462-4.98,4.894-6.384c1.604-0.923,3.415-1.407,5.251-1.407c3.745,0,7.231,2.016,9.1,5.262 C317.21,231.987,317.587,234.819,316.862,237.531z"></path> <g> <path d="M187.409,101.165c-1.591-0.916-3.402-1.4-5.238-1.4c-3.739,0-7.223,2.011-9.101,5.262 c-2.884,5.011-1.157,11.439,3.862,14.338c1.591,0.916,3.402,1.4,5.238,1.4c3.739,0,7.224-2.011,9.101-5.262 C194.155,110.493,192.428,104.064,187.409,101.165z"></path> <path d="M110.257,171.672c-1.835,0-3.646,0.484-5.258,1.412c-5.007,2.898-6.727,9.33-3.841,14.327 c1.868,3.245,5.355,5.261,9.1,5.262h0.001c1.835,0,3.646-0.484,5.25-1.407c2.428-1.402,4.164-3.665,4.891-6.373 c0.727-2.71,0.354-5.542-1.049-7.971C117.48,173.683,113.996,171.672,110.257,171.672z"></path> <path d="M136.574,269.904c-5.79,0-10.5,4.71-10.5,10.5c0,5.789,4.711,10.5,10.5,10.5c5.79,0,10.5-4.711,10.5-10.5 C147.074,274.615,142.364,269.904,136.574,269.904z"></path> <path d="M240.071,297.647c-1.599-0.927-3.42-1.417-5.267-1.417c-3.729,0-7.208,2.003-9.101,5.262 c-2.884,5.01-1.157,11.439,3.834,14.322c1.598,0.926,3.419,1.416,5.266,1.416c3.732,0,7.214-2.006,9.101-5.262 c1.398-2.429,1.768-5.257,1.04-7.963C244.216,301.293,242.474,299.03,240.071,297.647z"></path> <path d="M306.718,224.323c-1.836,0-3.647,0.484-5.251,1.407c-2.432,1.404-4.17,3.672-4.894,6.384 c-0.725,2.712-0.348,5.544,1.045,7.947c1.868,3.245,5.355,5.261,9.1,5.262c1.836,0,3.647-0.484,5.251-1.407 c2.432-1.404-4.17-3.672,4.893-6.384c0.725-2.712,0.348-5.544-1.045-7.947C313.949,226.339,310.463,224.323,306.718,224.323z"></path> <path d="M416.97,206.596l-0.013-0.831c-0.064-5.279-4.222-9.598-9.494-9.864c-14.875-0.751-28.007-9.639-34.27-23.193 c-1.245-2.694-3.623-4.696-6.489-5.465c-2.867-0.769-5.926-0.224-8.353,1.487c-6.706,4.73-14.927,7.335-23.146,7.336 c-6.964,0-13.858-1.854-19.935-5.363c-13.458-7.77-21.242-22.804-19.83-38.299c0.269-2.956-0.789-5.879-2.888-7.977 c-2.099-2.099-5.032-3.152-7.977-2.889c-1.195,0.109-2.411,0.164-3.614,0.164c-14.271,0-27.561-7.662-34.683-19.996 c-7.77-13.458-6.994-30.369,1.976-43.084c1.711-2.425,2.257-5.485,1.488-8.352c-0.768-2.867-2.77-5.245-5.464-6.49 c-13.548-6.262-22.434-19.387-23.188-34.254c-0.268-5.269-4.583-9.424-9.858-9.492l-0.816-0.013C209.777,0.01,209.138,0,208.496,0 C93.531,0,0,93.531,0,208.496s93.531,208.496,208.496,208.496s208.495-93.531,208.495-208.496 C416.991,207.861,416.981,207.229,416.97,206.596z M304.28,370.792c-28.087,16.639-60.839,26.199-95.784,26.199 C104.559,396.991,20,312.433,20,208.496c0-62.17,30.255-117.404,76.814-151.759c29.744-21.948,66.142-35.374,105.558-36.639 c3.158,14.763,11.764,27.746,24.107,36.418c-8.063,17.495-7.341,38.179,2.48,55.19c9.771,16.925,27.278,27.985,46.567,29.748 c1.761,19.188,12.729,36.746,29.744,46.57c9.114,5.262,19.466,8.043,29.936,8.042c8.82-0.001,17.392-1.897,25.258-5.544 c8.676,12.343,21.661,20.947,36.427,24.102C394.761,281.057,358.085,338.917,304.28,370.792z"></path> </g> </g> </g></svg>`,
+        account_circle: `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/></svg>`,
+        warning: `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>`
+    };
+
     const SELECTORS = {
-        BTN_MAIN: '#cookie-manager-btn',
-        PANEL: '#cookie-manager-panel',
-        OVERLAY: '#cookie-manager-overlay',
-        INPUT_TEXTAREA: '#cookie-input',
+        FAB: '#cookie-manager-fab',
+        BOTTOM_SHEET: '#cookie-manager-bottom-sheet',
+        SCRIM: '#cookie-manager-scrim',
+        TEXT_FIELD: '#cookie-input',
         BTN_INJECT: '#btn-inject',
         BTN_BACKUP: '#btn-backup',
         BTN_IMPORT: '#btn-import',
         INPUT_FILE: '#cookie-file-input',
         BTN_DELETE: '#btn-delete',
         BTN_CLOSE: '#btn-close',
-        FB_WATERMARK: '#fb-watermark',
-        FB_TIME_DISPLAY: '#fb-time',
-        FB_WARNING: '#fb-warning'
+        WATERMARK: '#cookie-manager-watermark',
+        TIME_DISPLAY: '#cookie-manager-time',
+        DIALOG: '#cookie-manager-dialog',
     };
 
-    const COOKIE_NAMES = {
-        FB_C_USER: 'c_user',
-        FB_XS: 'xs'
-    };
+    const COOKIE_NAMES = { FB_C_USER: 'c_user', FB_XS: 'xs' };
 
     const UIManager = (function() {
-        let panelElement, overlayElement, mainButtonElement;
+        let bottomSheet, scrim, fab;
 
-        function appendStyles() {
-            const style = document.createElement('style');
-            style.textContent = `
-                #cookie-manager-btn {
-                    position: fixed;
-                    bottom: 20px;
-                    right: 20px;
-                    width: 60px;
-                    height: 60px;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    border-radius: 50%;
-                    border: none;
-                    color: white;
-                    font-size: 24px;
-                    cursor: pointer;
-                    z-index: 999998;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: transform 0.2s;
+        function appendStyles() { const style = document.createElement('style'); style.textContent = `:root { --md-sys-color-primary: #0B57D0; --md-sys-color-on-primary: #FFFFFF; --md-sys-color-primary-container: #D3E4FF; --md-sys-color-on-primary-container: #001D36; --md-sys-color-error: #B3261E; --md-sys-color-surface-container-low: #F7F2FA; --md-sys-color-outline: #74777F; --md-sys-color-scrim: #000000; --md-sys-color-on-surface: #1C1B1F; --md-sys-color-on-surface-variant: #44474E; --md-sys-color-surface-container-highest: #E6E0E9; } .cookie-manager-base, .cookie-manager-base * { font-family: 'Roboto', 'Google Sans', sans-serif; box-sizing: border-box; } ${SELECTORS.FAB} { position: fixed; bottom: 16px; right: 16px; width: 56px; height: 56px; background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border: none; border-radius: 16px; box-shadow: 0 4px 8px 3px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; transition: box-shadow 0.2s ease-out; user-select: none; } ${SELECTORS.FAB}:hover { box-shadow: 0 6px 10px 4px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.3); } ${SELECTORS.FAB} svg { fill: var(--md-sys-color-on-primary-container); } ${SELECTORS.BOTTOM_SHEET} { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--md-sys-color-surface-container-low); color: var(--md-sys-color-on-surface); border-top-left-radius: 28px; border-top-right-radius: 28px; padding: 4px 16px 16px 16px; z-index: 2000; box-shadow: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); display: flex; flex-direction: column; gap: 12px; } ${SELECTORS.BOTTOM_SHEET}.show { transform: translateY(0); } .drag-handle { width: 32px; height: 4px; background-color: var(--md-sys-color-outline); border-radius: 2px; margin: 8px auto; } .bottom-sheet-title { font-size: 22px; font-weight: 400; text-align: center; margin: 0; } ${SELECTORS.SCRIM} { position: fixed; inset: 0; background-color: var(--md-sys-color-scrim); opacity: 0; z-index: 1999; pointer-events: none; transition: opacity 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); } ${SELECTORS.SCRIM}.show { opacity: 0.4; pointer-events: auto; } .text-field-container { position: relative; } ${SELECTORS.TEXT_FIELD} { width: 100%; min-height: 90px; padding: 16px; border-radius: 4px; border: 1px solid var(--md-sys-color-outline); background-color: transparent; font-size: 16px; resize: vertical; color: var(--md-sys-color-on-surface); } ${SELECTORS.TEXT_FIELD}:focus { outline: 2px solid var(--md-sys-color-primary); border-color: transparent; } .text-field-label { position: absolute; top: 16px; left: 16px; font-size: 16px; color: var(--md-sys-color-on-surface-variant); pointer-events: none; transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1); } ${SELECTORS.TEXT_FIELD}:focus + .text-field-label, ${SELECTORS.TEXT_FIELD}:not(:placeholder-shown) + .text-field-label { top: -8px; left: 12px; font-size: 12px; color: var(--md-sys-color-primary); background-color: var(--md-sys-color-surface-container-low); padding: 0 4px; } .helper-text { font-size: 12px; color: var(--md-sys-color-on-surface-variant); padding: 0 16px; margin-top: -8px; } .btn { width: 100%; height: 40px; border: none; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease, box-shadow 0.2s ease; } .btn-filled { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); } .btn-outlined { background-color: transparent; color: var(--md-sys-color-primary); border: 1px solid var(--md-sys-color-outline); } .btn-text { background-color: transparent; color: var(--md-sys-color-primary); } .btn-text.error { color: var(--md-sys-color-error); } .button-row { display: flex; gap: 8px; } ${SELECTORS.WATERMARK} { position: fixed; top: 16px; left: 16px; height: 32px; background-color: var(--md-sys-color-surface-container-highest); color: var(--md-sys-color-on-surface-variant); border-radius: 8px; padding: 0 12px 0 8px; font-size: 14px; z-index: 999; cursor: move; user-select: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15); } ${SELECTORS.WATERMARK} svg { fill: currentColor; } ${SELECTORS.DIALOG} { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); background-color: var(--md-sys-color-surface-container-low); color: var(--md-sys-color-on-surface); border-radius: 28px; width: calc(100vw - 32px); max-width: 560px; padding: 24px; z-index: 3000; box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 16px; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; } ${SELECTORS.DIALOG}.show { opacity: 1; transform: translate(-50%, -50%) scale(1); } .dialog-header { display: flex; align-items: center; gap: 16px; } .dialog-icon { color: var(--md-sys-color-error); } .dialog-title { font-size: 24px; font-weight: 400; } .dialog-actions { display: flex; justify-content: flex-end; } .file-input { display: none; }`; document.head.appendChild(style); }
+
+        function createElements() { const container = document.createElement('div'); container.classList.add('cookie-manager-base'); fab = document.createElement('button'); fab.id = SELECTORS.FAB.substring(1); fab.innerHTML = ICONS.cookie; fab.setAttribute('aria-label', 'Open Cookie Manager'); scrim = document.createElement('div'); scrim.id = SELECTORS.SCRIM.substring(1); bottomSheet = document.createElement('div'); bottomSheet.id = SELECTORS.BOTTOM_SHEET.substring(1); bottomSheet.innerHTML = `<div class="drag-handle"></div><h2 class="bottom-sheet-title">Cookie 注入器</h2><div class="text-field-container"><textarea id="${SELECTORS.TEXT_FIELD.substring(1)}" class="cookie-manager-base" placeholder=" "></textarea><label for="${SELECTORS.TEXT_FIELD.substring(1)}" class="text-field-label">粘贴Cookie字符串</label></div><div class="helper-text">自动识别 c_user 和 xs</div><button class="btn btn-filled" id="${SELECTORS.BTN_INJECT.substring(1)}">注入并刷新</button><div class="button-row"><button class="btn btn-outlined" id="${SELECTORS.BTN_BACKUP.substring(1)}">备份Cookie</button><button class="btn btn-outlined" id="${SELECTORS.BTN_IMPORT.substring(1)}">从文件导入</button></div><div class="button-row"><button class="btn btn-text error" id="${SELECTORS.BTN_DELETE.substring(1)}">删除所有Cookie</button><button class="btn btn-text" id="${SELECTORS.BTN_CLOSE.substring(1)}">关闭</button></div><input type="file" id="${SELECTORS.INPUT_FILE.substring(1)}" class="file-input" accept=".txt">`; container.append(fab, scrim, bottomSheet); document.body.appendChild(container); }
+
+        function togglePanel(visible) { const show = typeof visible === 'boolean' ? visible : !bottomSheet.classList.contains('show'); bottomSheet.classList.toggle('show', show); scrim.classList.toggle('show', show); }
+
+        // --- MODIFIED FUNCTION ---
+        function showAlertDialog() {
+            if (document.querySelector(SELECTORS.DIALOG)) return;
+            const dialogScrim = document.createElement('div');
+            dialogScrim.id = SELECTORS.SCRIM.substring(1);
+            dialogScrim.classList.add('show');
+            dialogScrim.style.zIndex = '2999';
+
+            const dialog = document.createElement('div');
+            dialog.id = SELECTORS.DIALOG.substring(1);
+            dialog.innerHTML = `<div class="dialog-header"><span class="dialog-icon">${ICONS.warning}</span><h3 class="dialog-title">警告</h3></div><p class="dialog-content">请勿手动点击‘退出登录’，这会导致Cookie失效。如需切换账号，请使用本工具的注入或删除功能。</p><div class="dialog-actions"><button class="btn btn-text" id="dialog-btn-ok">知道了</button></div>`;
+            document.body.append(dialogScrim, dialog);
+
+            const okButton = dialog.querySelector('#dialog-btn-ok');
+
+            // --- Countdown Logic ---
+            okButton.disabled = true;
+            let countdown = 5;
+            okButton.style.opacity = '0.6';
+            okButton.style.cursor = 'not-allowed';
+            okButton.textContent = `知道了 (${countdown})`;
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    okButton.textContent = `知道了 (${countdown})`;
+                } else {
+                    clearInterval(countdownInterval);
+                    okButton.disabled = false;
+                    okButton.textContent = '知道了';
+                    okButton.style.opacity = '1';
+                    okButton.style.cursor = 'pointer';
                 }
-                #cookie-manager-btn:active {
-                    transform: scale(0.95);
-                }
-                #cookie-manager-panel {
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    background: white;
-                    border-radius: 20px 20px 0 0;
-                    padding: 20px;
-                    z-index: 999999;
-                    box-shadow: 0 -5px 30px rgba(0,0,0,0.3);
-                    max-height: 80vh;
-                    overflow-y: auto;
-                    transform: translateY(100%);
-                    transition: transform 0.3s ease;
-                }
-                #cookie-manager-panel.show {
-                    transform: translateY(0);
-                }
-                #cookie-manager-overlay {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: rgba(0,0,0,0.5);
-                    z-index: 999998;
-                    opacity: 0;
-                    pointer-events: none;
-                    transition: opacity 0.3s;
-                }
-                #cookie-manager-overlay.show {
-                    opacity: 1;
-                    pointer-events: auto;
-                }
-                .cookie-title {
-                    font-size: 20px;
-                    font-weight: bold;
-                    margin-bottom: 15px;
-                    color: #333;
-                    text-align: center;
-                    position: relative;
-                }
-                .fb-reg-date-btn {
-                    position: absolute;
-                    left: 0;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-                    color: #667eea;
-                    border: none;
-                    padding: 8px 12px;
-                    border-radius: 50%;
-                    font-size: 18px;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    opacity: 0.8;
-                    width: 36px;
-                    height: 36px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                .fb-reg-date-btn:active {
-                    transform: translateY(-50%) scale(0.95);
-                    opacity: 1;
-                    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
-                }
-                .cookie-textarea {
-                    width: 100%;
-                    min-height: 120px;
-                    padding: 12px;
-                    border: 2px solid #ddd;
-                    border-radius: 10px;
-                    font-size: 14px;
-                    margin-bottom: 15px;
-                    box-sizing: border-box;
-                    resize: vertical;
-                }
-                .cookie-btn {
-                    width: 100%;
-                    padding: 15px;
-                    margin-bottom: 10px;
-                    border: none;
-                    border-radius: 10px;
-                    font-size: 16px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: all 0.2s;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                }
-                .cookie-btn:active {
-                    transform: scale(0.98);
-                }
-                .btn-inject {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                }
-                .btn-backup {
-                    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                    color: white;
-                }
-                .btn-import {
-                    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-                    color: white;
-                }
-                .btn-delete {
-                    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-                    color: white;
-                }
-                .btn-close {
-                    background: #f0f0f0;
-                    color: #666;
-                }
-                .file-input {
-                    display: none;
-                }
-                #fb-watermark {
-                    position: fixed;
-                    top: 10px;
-                    left: 10px;
-                    background: rgba(0,0,0,0.7);
-                    color: white;
-                    padding: 8px 12px;
-                    border-radius: 8px;
-                    font-size: 12px;
-                    z-index: 999997;
-                    cursor: move;
-                    user-select: none;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-                    touch-action: none;
-                }
-                #fb-watermark div {
-                    margin: 2px 0;
-                }
-                #fb-warning {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-                    color: white;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    font-weight: bold;
-                    z-index: 999999;
-                    animation: pulse 2s infinite;
-                    line-height: 1.6;
-                    padding: 20px;
-                }
-                #fb-warning .warning-main {
-                    font-size: 24px;
-                    margin-bottom: 15px;
-                }
-                #fb-warning .warning-tip {
-                    font-size: 16px;
-                    font-weight: normal;
-                    opacity: 0.95;
-                    margin-bottom: 10px;
-                }
-                .warning-close {
-                    background: white !important;
-                    color: #ee5a6f !important;
-                    border: none !important;
-                    padding: 15px 40px !important;
-                    border-radius: 10px !important;
-                    font-size: 18px !important;
-                    font-weight: bold !important;
-                    cursor: pointer !important;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-                    transition: transform 0.2s !important;
-                    margin-top: 20px !important;
-                    display: inline-block !important;
-                }
-                .warning-close:active {
-                    transform: scale(0.95) !important;
-                }
-                .warning-close:disabled {
-                    opacity: 0.5 !important;
-                    cursor: not-allowed !important;
-                }
-                @keyframes pulse {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.85; }
-                }
-            `;
-            document.head.appendChild(style);
+            }, 1000);
+
+            setTimeout(() => dialog.classList.add('show'), 10);
+
+            const close = () => {
+                clearInterval(countdownInterval);
+                dialog.classList.remove('show');
+                dialogScrim.classList.remove('show');
+                setTimeout(() => {
+                    dialog.remove();
+                    dialogScrim.remove();
+                }, 200);
+            };
+
+            okButton.addEventListener('click', close);
+            // The line to close the dialog by clicking the background has been removed.
+            // dialogScrim.addEventListener('click', close);
         }
+        // --- END OF MODIFIED FUNCTION ---
 
-        function createElements() {
-            mainButtonElement = document.createElement('button');
-            mainButtonElement.id = SELECTORS.BTN_MAIN.substring(1);
-            mainButtonElement.innerHTML = '🍪';
-            document.body.appendChild(mainButtonElement);
+        return { init: function() { appendStyles(); createElements(); }, togglePanel, showAlertDialog, getCookieInput: () => document.querySelector(SELECTORS.TEXT_FIELD).value, setCookieInput: (value) => { document.querySelector(SELECTORS.TEXT_FIELD).value = value; document.querySelector(SELECTORS.TEXT_FIELD).dispatchEvent(new Event('input')); }, getFileInputElement: () => document.querySelector(SELECTORS.INPUT_FILE), getFab: () => document.querySelector(SELECTORS.FAB), getScrim: () => document.querySelector(SELECTORS.SCRIM), getButton: (selector) => document.querySelector(selector) };
 
-            overlayElement = document.createElement('div');
-            overlayElement.id = SELECTORS.OVERLAY.substring(1);
-            document.body.appendChild(overlayElement);
-
-            panelElement = document.createElement('div');
-            panelElement.id = SELECTORS.PANEL.substring(1);
-            
-            panelElement.innerHTML = `
-                <div class="cookie-title">
-                    <button class="fb-reg-date-btn" id="fb-reg-date-btn">📅</button>
-                    🍪 Facebook Cookie注入器
-                </div>
-                <textarea class="cookie-textarea" id="${SELECTORS.INPUT_TEXTAREA.substring(1)}" placeholder="粘贴Facebook Cookie字符串...&#10;支持格式：&#10;1. c_user=123456;xs=abc123456&#10;2. svvsvssvsc_user=123;xs=abc (自动提取)&#10;3. 完整Cookie (自动提取c_user和xs)"></textarea>
-                <button class="cookie-btn btn-inject" id="${SELECTORS.BTN_INJECT.substring(1)}">💉 注入Cookie</button>
-                <button class="cookie-btn btn-backup" id="${SELECTORS.BTN_BACKUP.substring(1)}">💾 备份Cookie</button>
-                <button class="cookie-btn btn-import" id="${SELECTORS.BTN_IMPORT.substring(1)}">📁 导入Cookie</button>
-                <input type="file" id="${SELECTORS.INPUT_FILE.substring(1)}" class="file-input" accept=".txt">
-                <button class="cookie-btn btn-delete" id="${SELECTORS.BTN_DELETE.substring(1)}">🗑️ 删除所有Cookie</button>
-                <button class="cookie-btn btn-close" id="${SELECTORS.BTN_CLOSE.substring(1)}">❌ 关闭</button>
-            `;
-            document.body.appendChild(panelElement);
-        }
-
-        function togglePanelVisibility() {
-            panelElement.classList.toggle('show');
-            overlayElement.classList.toggle('show');
-        }
-
-        function closePanelVisibility() {
-            panelElement.classList.remove('show');
-            overlayElement.classList.remove('show');
-        }
-
-        function getCookieInputText() {
-            return document.querySelector(SELECTORS.INPUT_TEXTAREA).value;
-        }
-
-        function setCookieInputText(value) {
-            document.querySelector(SELECTORS.INPUT_TEXTAREA).value = value;
-        }
-
-        function getFileInputElement() {
-            return document.querySelector(SELECTORS.INPUT_FILE);
-        }
-
-        return {
-            init: function() {
-                appendStyles();
-                createElements();
-            },
-            togglePanel: togglePanelVisibility,
-            closePanel: closePanelVisibility,
-            getCookieInput: getCookieInputText,
-            setCookieInput: setCookieInputText,
-            getFileInputElement: getFileInputElement,
-            get mainButton() { return mainButtonElement; }
-        };
     })();
 
     const CookieService = (function() {
-
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-            return null;
-        }
-
-        function setCookie(name, value, days = 365) {
-            const expires = new Date();
-            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-            const hostname = window.location.hostname;
-            
-            const parts = hostname.split('.');
-            const domain = parts.length > 2 ? '.' + parts.slice(-2).join('.') : hostname;
-            
-            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;domain=${domain}`;
-        }
-
-        function extractFacebookCookies(cookieStr) {
-            const result = {
-                c_user: null,
-                xs: null
-            };
-
-            // 使用正则表达式提取 c_user 和 xs
-            const cUserMatch = cookieStr.match(/c_user=([^;|\s]+)/);
-            const xsMatch = cookieStr.match(/xs=([^;|\s]+)/);
-
-            if (cUserMatch) {
-                result.c_user = cUserMatch[1];
-            }
-            if (xsMatch) {
-                result.xs = xsMatch[1];
-            }
-
-            return result;
-        }
-
-        function parseCookieString(cookieStr) {
-            // Facebook 专用：只提取 c_user 和 xs
-            const fbCookies = extractFacebookCookies(cookieStr);
-            const cookies = [];
-            
-            if (fbCookies.c_user) {
-                cookies.push({ name: COOKIE_NAMES.FB_C_USER, value: fbCookies.c_user });
-            }
-            if (fbCookies.xs) {
-                cookies.push({ name: COOKIE_NAMES.FB_XS, value: fbCookies.xs });
-            }
-            
-            return cookies;
-        }
-
-        return {
-            injectCookies: function() {
-                const input = UIManager.getCookieInput();
-                if (!input) {
-                    alert('请输入Facebook Cookie字符串！');
-                    return;
-                }
-
-                const cookies = parseCookieString(input);
-                if (cookies.length === 0) {
-                    alert('未找到有效的Facebook Cookie！\n\n请确保输入包含 c_user 和 xs');
-                    return;
-                }
-
-                // 检查是否同时有 c_user 和 xs
-                const hasCUser = cookies.some(c => c.name === COOKIE_NAMES.FB_C_USER);
-                const hasXs = cookies.some(c => c.name === COOKIE_NAMES.FB_XS);
-                
-                if (!hasCUser || !hasXs) {
-                    alert('❌ Facebook Cookie 不完整！\n\n需要同时包含：\n• c_user (账号ID)\n• xs (会话凭证)');
-                    return;
-                }
-
-                cookies.forEach(({ name, value }) => {
-                    setCookie(name, value);
-                });
-
-                const cUserCookie = cookies.find(c => c.name === COOKIE_NAMES.FB_C_USER);
-                alert(`✅ 成功注入 Facebook Cookie！\n\n账号ID: ${cUserCookie.value}\n\n页面即将跳转到 Facebook 移动版...`);
-                setTimeout(() => {
-                    window.location.href = 'https://m.facebook.com/';
-                }, 500);
-            },
-
-            backupCookies: function() {
-                const cUser = getCookie(COOKIE_NAMES.FB_C_USER);
-                const xs = getCookie(COOKIE_NAMES.FB_XS);
-                
-                if (!cUser && !xs) {
-                    alert('❌ 未找到Facebook关键Cookie！\n\n缺少：c_user 和 xs\n\n请先登录Facebook账号或注入有效的Cookie。');
-                    return;
-                }
-                
-                if (!cUser) {
-                    alert('❌ 未找到Facebook关键Cookie！\n\n缺少：c_user\n\n这是Facebook账号ID,必须存在才能备份。');
-                    return;
-                }
-                
-                if (!xs) {
-                    alert('❌ 未找到Facebook关键Cookie！\n\n缺少：xs\n\n这是Facebook会话凭证,必须存在才能备份。');
-                    return;
-                }
-                
-                const parts = [];
-                parts.push(`${COOKIE_NAMES.FB_C_USER}=${cUser}`);
-                parts.push(`${COOKIE_NAMES.FB_XS}=${xs}`);
-                const cookieStr = parts.join('; ');
-
-                const accountId = cUser || 'unknown';
-                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-                const filename = `${accountId}_${timestamp}_cookies.txt`;
-
-                const blob = new Blob([cookieStr], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.click();
-                URL.revokeObjectURL(url);
-
-                alert('Cookie备份成功！');
-            },
-
-            importCookies: function(fileInput) {
-                const file = fileInput.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const content = e.target.result;
-                    UIManager.setCookieInput(content);
-                    alert('Cookie导入成功！请点击"注入Cookie"按钮。');
-                };
-                reader.readAsText(file);
-                fileInput.value = '';
-            },
-
-            deleteCookies: function() {
-                if (!confirm('确定要删除当前域名的所有Cookie吗？')) return;
-
-                const cookies = document.cookie.split(';');
-                const hostname = window.location.hostname;
-                const parts = hostname.split('.');
-                
-                const domains = ['', hostname, '.' + hostname];
-                if (parts.length > 2) {
-                    const mainDomain = parts.slice(-2).join('.');
-                    domains.push(mainDomain, '.' + mainDomain);
-                }
-                
-                cookies.forEach(cookie => {
-                    const name = cookie.split('=')[0].trim();
-                    if (!name) return;
-                    
-                    domains.forEach(domain => {
-                        ['/', ''].forEach(path => {
-                            const domainPart = domain ? `;domain=${domain}` : '';
-                            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path}${domainPart}`;
-                        });
-                    });
-                });
-
-                alert(`已尝试删除 ${cookies.length} 个Cookie！\n页面即将跳转到 Facebook 移动版...`);
-                setTimeout(() => {
-                    window.location.href = 'https://m.facebook.com/';
-                }, 500);
-            },
-            getCookie: getCookie
-        };
+        function getCookie(name) { const value = `; ${document.cookie}`; const parts = value.split(`; ${name}=`); if (parts.length === 2) return parts.pop().split(';').shift(); return null; } function setCookie(name, value, days = 365) { const expires = new Date(); expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000)); const domain = `.${window.location.hostname.split('.').slice(-2).join('.')}`; document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;domain=${domain}`; } function extractFacebookCookies(cookieStr) { const cUserMatch = cookieStr.match(/c_user=([^;]+)/); const xsMatch = cookieStr.match(/xs=([^;]+)/); return { c_user: cUserMatch ? cUserMatch[1] : null, xs: xsMatch ? xsMatch[1] : null }; } function injectAndReload() { const input = UIManager.getCookieInput(); if (!input) { alert('请输入Cookie字符串！'); return; } const { c_user, xs } = extractFacebookCookies(input); if (!c_user || !xs) { alert('❌ Cookie无效！\n未能提取到c_user和xs。'); return; } setCookie(COOKIE_NAMES.FB_C_USER, c_user); setCookie(COOKIE_NAMES.FB_XS, xs); alert(`✅ 成功注入 Cookie！\n账号ID: ${c_user}\n\n页面即将刷新...`); setTimeout(() => window.location.reload(), 500); } function backupCookies() { const cUser = getCookie(COOKIE_NAMES.FB_C_USER); const xs = getCookie(COOKIE_NAMES.FB_XS); if (!cUser || !xs) { alert('❌ 未找到关键Cookie！'); return; } const cookieStr = `c_user=${cUser}; xs=${xs};`; const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5); const filename = `fb_cookies_${cUser}_${timestamp}.txt`; const blob = new Blob([cookieStr], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url); alert('✅ Cookie备份文件已开始下载！'); } function importFromFile(fileInput) { const file = fileInput.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { UIManager.setCookieInput(e.target.result); alert('文件内容已导入，请点击“注入并刷新”。'); }; reader.readAsText(file); fileInput.value = ''; } function deleteAllCookies() { if (!confirm('确定要删除所有Cookie吗？')) return; const cookies = document.cookie.split(';'); const domain = `.${window.location.hostname.split('.').slice(-2).join('.')}`; cookies.forEach(cookie => { const name = cookie.split('=')[0].trim(); if (name) { document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${domain}`; } }); alert('🗑️ 已尝试删除所有Cookie！页面即将刷新...'); setTimeout(() => window.location.reload(), 500); } return { getCookie, injectAndReload, backupCookies, importFromFile, deleteAllCookies };
     })();
 
     const FacebookFeatures = (function() {
-        let watermarkElement = null;
-        let warningBannerElement = null;
-        let isDraggingWatermark = false;
-        let dragOffset = { x: 0, y: 0 };
-        let warningDismissed = false;
-
-        function getCurrentTime() {
-            return new Date().toTimeString().slice(0, 8);
-        }
-
-        function maskAccountId(cUser) {
-            if (!cUser || cUser.length < 11) return cUser;
-            return cUser.substring(0, 5) + 'xxxxx' + cUser.substring(10);
-        }
+        let warningShown = false;
 
         function createWatermark() {
             const cUser = CookieService.getCookie(COOKIE_NAMES.FB_C_USER);
             if (!cUser) return;
-
-            const maskedId = maskAccountId(cUser);
-
-            watermarkElement = document.createElement('div');
-            watermarkElement.id = SELECTORS.FB_WATERMARK.substring(1);
-            watermarkElement.innerHTML = `
-                <div>👤 ID: ${maskedId}</div>
-                <div id="${SELECTORS.FB_TIME_DISPLAY.substring(1)}">⏰ ${getCurrentTime()}</div>
-            `;
-            document.body.appendChild(watermarkElement);
-
+            const maskedId = cUser.length > 10 ? `${cUser.substring(0, 5)}...${cUser.slice(-5)}` : cUser;
+            const watermark = document.createElement('div');
+            watermark.id = SELECTORS.WATERMARK.substring(1);
+            watermark.className = 'cookie-manager-base';
+            watermark.innerHTML = `${ICONS.account_circle}<span>${maskedId}</span><span id="${SELECTORS.TIME_DISPLAY.substring(1)}">${new Date().toLocaleTimeString()}</span>`;
+            document.body.appendChild(watermark);
             setInterval(() => {
-                const timeEl = document.querySelector(SELECTORS.FB_TIME_DISPLAY);
-                if (timeEl) {
-                    timeEl.textContent = `⏰ ${getCurrentTime()}`;
-                }
+                const timeEl = document.getElementById(SELECTORS.TIME_DISPLAY.substring(1));
+                if (timeEl) timeEl.textContent = new Date().toLocaleTimeString();
             }, 1000);
 
-            watermarkElement.addEventListener('mousedown', startDrag);
-            watermarkElement.addEventListener('touchstart', startDrag);
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('touchmove', drag);
-            document.addEventListener('mouseup', stopDrag);
-            document.addEventListener('touchend', stopDrag);
+            // --- Draggable Watermark Logic ---
+            let isDragging = false;
+            let offset = { x: 0, y: 0 };
+            const dragStart = (e) => {
+                isDragging = true;
+                watermark.style.transition = 'none';
+                const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+                const rect = watermark.getBoundingClientRect();
+                offset.x = clientX - rect.left;
+                offset.y = clientY - rect.top;
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('touchmove', dragMove, { passive: false });
+                document.addEventListener('mouseup', dragEnd, { once: true });
+                document.addEventListener('touchend', dragEnd, { once: true });
+            };
+            const dragMove = (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+                let newLeft = clientX - offset.x;
+                let newTop = clientY - offset.y;
+                newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - watermark.offsetWidth));
+                newTop = Math.max(0, Math.min(newTop, window.innerHeight - watermark.offsetHeight));
+                watermark.style.left = `${newLeft}px`;
+                watermark.style.top = `${newTop}px`;
+                watermark.style.right = 'auto';
+                watermark.style.bottom = 'auto';
+            };
+            const dragEnd = () => {
+                isDragging = false;
+                watermark.style.transition = '';
+                document.removeEventListener('mousemove', dragMove);
+                document.removeEventListener('touchmove', dragMove);
+            };
+            watermark.addEventListener('mousedown', dragStart);
+            watermark.addEventListener('touchstart', dragStart, { passive: false });
         }
 
-        function startDrag(e) {
-            isDraggingWatermark = true;
-            const rect = watermarkElement.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            dragOffset.x = clientX - rect.left;
-            dragOffset.y = clientY - rect.top;
-            e.preventDefault();
-        }
+        function checkForLogoutPage() { const isLogoutPage = window.location.pathname.includes('/bookmarks'); if (isLogoutPage && !warningShown) { UIManager.showAlertDialog(); warningShown = true; } }
 
-        function drag(e) {
-            if (!isDraggingWatermark || !watermarkElement) return;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            watermarkElement.style.left = (clientX - dragOffset.x) + 'px';
-            watermarkElement.style.top = (clientY - dragOffset.y) + 'px';
-            watermarkElement.style.right = 'auto';
-            e.preventDefault();
-        }
+        function observeUrlChanges() { let lastUrl = location.href; new MutationObserver(() => { if (location.href !== lastUrl) { lastUrl = location.href; warningShown = false; checkForLogoutPage(); } }).observe(document.body, { childList: true, subtree: true }); window.addEventListener('popstate', () => { warningShown = false; checkForLogoutPage(); }); }
 
-        function stopDrag() {
-            isDraggingWatermark = false;
-        }
+        return { init: function() { createWatermark(); checkForLogoutPage(); observeUrlChanges(); } };
 
-        function checkBookmarksPage() {
-            const isBookmarksPage = window.location.pathname.includes('/bookmarks/');
-            
-            if (isBookmarksPage && !warningDismissed) {
-                showWarning();
-            } else if (!isBookmarksPage) {
-                warningDismissed = false;
-                hideWarning();
-            }
-        }
-
-        function showWarning() {
-            if (warningBannerElement) return;
-            warningBannerElement = document.createElement('div');
-            warningBannerElement.id = SELECTORS.FB_WARNING.substring(1);
-            warningBannerElement.innerHTML = `
-                <div class="warning-main">⚠️ 警告：请不要点击退出登录,否则cookie永久失效!</div>
-                <div class="warning-tip">💡 提示：切换账号只需注入新的Cookie并点击注入即可</div>
-                <div class="warning-tip">🚪 需要退出登录请使用Cookie注入器的删除功能</div>
-                <button class="warning-close" disabled>我知道了 (5)</button>
-            `;
-            document.body.appendChild(warningBannerElement);
-            
-            const closeBtn = warningBannerElement.querySelector('.warning-close');
-            let countdown = 5;
-            
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                if (countdown > 0) {
-                    closeBtn.textContent = `我知道了 (${countdown})`;
-                } else {
-                    clearInterval(countdownInterval);
-                    closeBtn.textContent = '我知道了';
-                    closeBtn.disabled = false;
-                }
-            }, 1000);
-            
-            closeBtn.addEventListener('click', () => {
-                if (!closeBtn.disabled) {
-                    warningDismissed = true;
-                    hideWarning();
-                }
-            });
-        }
-
-        function hideWarning() {
-            if (warningBannerElement) {
-                warningBannerElement.remove();
-                warningBannerElement = null;
-            }
-        }
-
-        return {
-            init: function() {
-                createWatermark();
-                checkBookmarksPage();
-
-                let lastUrl = location.href;
-                const checkUrlChange = () => {
-                    if (location.href !== lastUrl) {
-                        lastUrl = location.href;
-                        checkBookmarksPage();
-                    }
-                };
-                
-                window.addEventListener('popstate', checkUrlChange);
-                
-                const originalPushState = history.pushState;
-                const originalReplaceState = history.replaceState;
-                
-                history.pushState = function() {
-                    originalPushState.apply(this, arguments);
-                    checkUrlChange();
-                };
-                
-                history.replaceState = function() {
-                    originalReplaceState.apply(this, arguments);
-                    checkUrlChange();
-                };
-                
-                setInterval(checkUrlChange, 500);
-            }
-        };
     })();
 
+    // --- Main Initialization ---
     function initialize() {
-        var _hmt = _hmt || [];
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?f586eeedfc80d1d93fccf340c607ec63";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-        console.log('📊 百度统计已加载');
-        
+        if (document.getElementById(SELECTORS.FAB.substring(1))) return;
         UIManager.init();
-
-        UIManager.mainButton.addEventListener('click', UIManager.togglePanel);
-        document.querySelector(SELECTORS.OVERLAY).addEventListener('click', UIManager.closePanel);
-        document.querySelector(SELECTORS.BTN_INJECT).addEventListener('click', CookieService.injectCookies);
-        document.querySelector(SELECTORS.BTN_BACKUP).addEventListener('click', CookieService.backupCookies);
-        document.querySelector(SELECTORS.BTN_IMPORT).addEventListener('click', () => UIManager.getFileInputElement().click());
-        UIManager.getFileInputElement().addEventListener('change', (e) => CookieService.importCookies(e.target));
-        document.querySelector(SELECTORS.BTN_DELETE).addEventListener('click', CookieService.deleteCookies);
-        document.querySelector(SELECTORS.BTN_CLOSE).addEventListener('click', UIManager.closePanel);
-
         FacebookFeatures.init();
-        
-        const fbRegDateBtn = document.querySelector('#fb-reg-date-btn');
-        if (fbRegDateBtn) {
-            fbRegDateBtn.addEventListener('click', () => {
-                window.location.href = 'https://m.facebook.com/your_information/list?tile=PERSONAL_INFO_GROUPING';
-            });
-        }
 
-        window.cookieManager = {
-            injectCookies: CookieService.injectCookies,
-            backupCookies: CookieService.backupCookies,
-            importCookies: function(fileInputTarget) {
-                CookieService.importCookies(fileInputTarget);
-            },
-            deleteCookies: CookieService.deleteCookies,
-            closePanel: UIManager.closePanel
-        };
+        const fab = UIManager.getFab();
+        let isDragging = false, wasDragged = false, offset = { x: 0, y: 0 };
+        const dragStart = (e) => { isDragging = true; fab.style.transition = 'none'; fab.style.cursor = 'grabbing'; const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX; const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY; const rect = fab.getBoundingClientRect(); offset.x = clientX - rect.left; offset.y = clientY - rect.top; document.addEventListener('mousemove', dragMove); document.addEventListener('touchmove', dragMove, { passive: false }); document.addEventListener('mouseup', dragEnd, { once: true }); document.addEventListener('touchend', dragEnd, { once: true }); };
+        const dragMove = (e) => { if (!isDragging) return; wasDragged = true; e.preventDefault(); const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX; const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY; let newLeft = clientX - offset.x; let newTop = clientY - offset.y; newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - fab.offsetWidth)); newTop = Math.max(0, Math.min(newTop, window.innerHeight - fab.offsetHeight)); fab.style.left = `${newLeft}px`; fab.style.top = `${newTop}px`; fab.style.right = 'auto'; fab.style.bottom = 'auto'; };
+        const dragEnd = () => { isDragging = false; fab.style.transition = ''; fab.style.cursor = 'pointer'; document.removeEventListener('mousemove', dragMove); document.removeEventListener('touchmove', dragMove); setTimeout(() => { wasDragged = false; }, 50); };
+        fab.addEventListener('mousedown', dragStart);
+        fab.addEventListener('touchstart', dragStart, { passive: false });
+        fab.addEventListener('click', (e) => { if (wasDragged) { e.stopPropagation(); return; } UIManager.togglePanel(); });
 
-        console.log('🍪 Facebook Cookie注入器已加载');
+        UIManager.getScrim().addEventListener('click', () => UIManager.togglePanel(false));
+        UIManager.getButton(SELECTORS.BTN_CLOSE).addEventListener('click', () => UIManager.togglePanel(false));
+        UIManager.getButton(SELECTORS.BTN_INJECT).addEventListener('click', CookieService.injectAndReload);
+        UIManager.getButton(SELECTORS.BTN_BACKUP).addEventListener('click', CookieService.backupCookies);
+        UIManager.getButton(SELECTORS.BTN_DELETE).addEventListener('click', CookieService.deleteAllCookies);
+        UIManager.getButton(SELECTORS.BTN_IMPORT).addEventListener('click', () => UIManager.getFileInputElement().click());
+        UIManager.getFileInputElement().addEventListener('change', (e) => CookieService.importFromFile(e.target));
+        console.log('🍪 Facebook Cookie Manager (M3 v3.3.3 All-Draggable) loaded.');
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initialize);
-    } else {
+    if (document.readyState === 'complete') {
         initialize();
+    } else {
+        window.addEventListener('load', initialize);
     }
-
 })();
