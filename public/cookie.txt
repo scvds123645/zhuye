@@ -2,7 +2,7 @@
 // @name         Facebook Cookie 注入器
 // @namespace    http://tampermonkey.net/
 // @version      2.0.0
-// @description  可拖动的Facebook专用Cookie注入、备份、导入、删除工具
+// @description  Facebook专用Cookie注入、备份、导入、删除工具
 // @author       You
 // @match        *://*.facebook.com/*
 // @match        *://*.fb.com/*
@@ -18,7 +18,7 @@
         account_circle: `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/></svg>`,
         warning: `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>`,
         check: `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>`,
-        info: `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59-8-8-8z"/></svg>`
+        info: `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>`
     };
 
     const SELECTORS = {
@@ -39,6 +39,9 @@
     };
 
     const COOKIE_NAMES = { FB_C_USER: 'c_user', FB_XS: 'xs' };
+
+    // 检测设备类型
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
 
     const DialogManager = (function() {
         function showDialog({ type = 'info', title, message, confirmText = '确定', cancelText = '取消', onConfirm, showCancel = false, countdown = 0, allowDismiss = true }) {
@@ -150,20 +153,21 @@
                 }
 
                 .cookie-manager-base, .cookie-manager-base * {
-                    font-family: 'Roboto', 'Google Sans', sans-serif;
+                    font-family: 'Roboto', 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                     box-sizing: border-box;
+                    -webkit-tap-highlight-color: transparent;
                 }
 
                 ${SELECTORS.FAB} {
                     position: fixed;
-                    bottom: 80px;
-                    right: 20px;
-                    width: 56px;
-                    height: 56px;
+                    bottom: ${isMobile ? '70px' : '80px'};
+                    right: ${isMobile ? '16px' : '20px'};
+                    width: ${isMobile ? '48px' : '56px'};
+                    height: ${isMobile ? '48px' : '56px'};
                     background-color: var(--md-sys-color-primary-container);
                     color: var(--md-sys-color-on-primary-container);
                     border: none;
-                    border-radius: 16px;
+                    border-radius: ${isMobile ? '12px' : '16px'};
                     box-shadow: 0 4px 8px 3px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.3);
                     display: flex;
                     align-items: center;
@@ -172,15 +176,25 @@
                     z-index: 1000;
                     transition: box-shadow 0.2s ease-out, transform 0.2s ease;
                     user-select: none;
+                    touch-action: none;
                 }
 
-                ${SELECTORS.FAB}:hover {
+                ${SELECTORS.FAB}:active {
                     box-shadow: 0 6px 10px 4px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.3);
-                    transform: scale(1.05);
+                    transform: scale(0.95);
+                }
+
+                @media (hover: hover) {
+                    ${SELECTORS.FAB}:hover {
+                        box-shadow: 0 6px 10px 4px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.3);
+                        transform: scale(1.05);
+                    }
                 }
 
                 ${SELECTORS.FAB} svg {
                     fill: var(--md-sys-color-on-primary-container);
+                    width: ${isMobile ? '20px' : '24px'};
+                    height: ${isMobile ? '20px' : '24px'};
                 }
 
                 ${SELECTORS.BOTTOM_SHEET} {
@@ -192,16 +206,17 @@
                     color: var(--md-sys-color-on-surface);
                     border-top-left-radius: 28px;
                     border-top-right-radius: 28px;
-                    padding: 4px 24px 24px 24px;
+                    padding: ${isMobile ? '4px 16px 24px 16px' : '4px 24px 24px 24px'};
                     z-index: 2000;
                     box-shadow: 0 1px 3px 1px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.3);
-                    max-height: 90vh;
+                    max-height: 85vh;
                     overflow-y: auto;
                     transform: translateY(100%);
                     transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
                     display: flex;
                     flex-direction: column;
-                    gap: 16px;
+                    gap: ${isMobile ? '12px' : '16px'};
+                    overscroll-behavior: contain;
                 }
 
                 ${SELECTORS.BOTTOM_SHEET}.show {
@@ -209,18 +224,24 @@
                 }
 
                 .drag-handle {
-                    width: 32px;
-                    height: 4px;
+                    width: ${isMobile ? '40px' : '32px'};
+                    height: ${isMobile ? '5px' : '4px'};
                     background-color: var(--md-sys-color-outline);
-                    border-radius: 2px;
-                    margin: 8px auto;
+                    border-radius: ${isMobile ? '2.5px' : '2px'};
+                    margin: ${isMobile ? '12px auto' : '8px auto'};
+                    cursor: grab;
+                    touch-action: none;
+                }
+
+                .drag-handle:active {
+                    cursor: grabbing;
                 }
 
                 .bottom-sheet-title {
-                    font-size: 24px;
+                    font-size: ${isMobile ? '20px' : '24px'};
                     font-weight: 400;
                     text-align: center;
-                    margin: 8px 0;
+                    margin: ${isMobile ? '4px 0' : '8px 0'};
                 }
 
                 ${SELECTORS.SCRIM} {
@@ -245,8 +266,8 @@
 
                 ${SELECTORS.TEXT_FIELD} {
                     width: 100%;
-                    height: 100px;
-                    padding: 16px;
+                    height: ${isMobile ? '80px' : '100px'};
+                    padding: ${isMobile ? '12px' : '16px'};
                     border-radius: 4px;
                     border: 1px solid var(--md-sys-color-outline);
                     background-color: transparent;
@@ -256,6 +277,7 @@
                     transition: outline 0.2s ease, border-color 0.2s ease;
                     touch-action: manipulation;
                     overflow-y: auto;
+                    -webkit-appearance: none;
                 }
 
                 ${SELECTORS.TEXT_FIELD}:focus {
@@ -266,8 +288,8 @@
 
                 .text-field-label {
                     position: absolute;
-                    top: 16px;
-                    left: 16px;
+                    top: ${isMobile ? '12px' : '16px'};
+                    left: ${isMobile ? '12px' : '16px'};
                     font-size: 16px;
                     color: var(--md-sys-color-on-surface-variant);
                     pointer-events: none;
@@ -285,24 +307,30 @@
                 }
 
                 .helper-text {
-                    font-size: 12px;
+                    font-size: ${isMobile ? '11px' : '12px'};
                     color: var(--md-sys-color-on-surface-variant);
-                    padding: 4px 16px 0;
+                    padding: 4px ${isMobile ? '12px' : '16px'} 0;
                 }
 
                 .btn {
-                    height: 40px;
+                    height: ${isMobile ? '44px' : '40px'};
+                    min-height: 44px;
                     border: none;
-                    border-radius: 20px;
-                    font-size: 14px;
+                    border-radius: ${isMobile ? '22px' : '20px'};
+                    font-size: ${isMobile ? '15px' : '14px'};
                     font-weight: 500;
                     cursor: pointer;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-                    padding: 0 24px;
+                    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+                    padding: 0 ${isMobile ? '20px' : '24px'};
                     white-space: nowrap;
+                    touch-action: manipulation;
+                }
+
+                .btn:active {
+                    transform: scale(0.97);
                 }
 
                 .btn-filled {
@@ -310,8 +338,14 @@
                     color: var(--md-sys-color-on-primary);
                 }
 
-                .btn-filled:hover {
+                .btn-filled:active {
                     box-shadow: 0 1px 3px 1px rgba(0,0,0,0.15);
+                }
+
+                @media (hover: hover) {
+                    .btn-filled:hover {
+                        box-shadow: 0 1px 3px 1px rgba(0,0,0,0.15);
+                    }
                 }
 
                 .btn-outlined {
@@ -320,8 +354,14 @@
                     border: 1px solid var(--md-sys-color-outline);
                 }
 
-                .btn-outlined:hover {
-                    background-color: rgba(11, 87, 208, 0.08);
+                .btn-outlined:active {
+                    background-color: rgba(11, 87, 208, 0.12);
+                }
+
+                @media (hover: hover) {
+                    .btn-outlined:hover {
+                        background-color: rgba(11, 87, 208, 0.08);
+                    }
                 }
 
                 .btn-text {
@@ -329,53 +369,83 @@
                     color: var(--md-sys-color-primary);
                 }
 
-                .btn-text:hover {
-                    background-color: rgba(11, 87, 208, 0.08);
+                .btn-text:active {
+                    background-color: rgba(11, 87, 208, 0.12);
+                }
+
+                @media (hover: hover) {
+                    .btn-text:hover {
+                        background-color: rgba(11, 87, 208, 0.08);
+                    }
                 }
 
                 .btn-text.error {
                     color: var(--md-sys-color-error);
                 }
 
-                .btn-text.error:hover {
-                    background-color: rgba(179, 38, 30, 0.08);
+                .btn-text.error:active {
+                    background-color: rgba(179, 38, 30, 0.12);
+                }
+
+                @media (hover: hover) {
+                    .btn-text.error:hover {
+                        background-color: rgba(179, 38, 30, 0.08);
+                    }
                 }
 
                 .button-row {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap: 12px;
+                    gap: ${isMobile ? '8px' : '12px'};
                 }
 
                 .button-group {
                     display: flex;
                     flex-direction: column;
-                    gap: 12px;
+                    gap: ${isMobile ? '8px' : '12px'};
                     margin-top: 8px;
                 }
 
                 ${SELECTORS.WATERMARK} {
                     position: fixed;
-                    top: 20px;
-                    left: 20px;
-                    height: 40px;
+                    top: ${isMobile ? '12px' : '20px'};
+                    left: ${isMobile ? '12px' : '20px'};
+                    height: ${isMobile ? '36px' : '40px'};
                     background-color: var(--md-sys-color-surface-container-highest);
                     color: var(--md-sys-color-on-surface-variant);
-                    border-radius: 20px;
-                    padding: 0 16px 0 12px;
-                    font-size: 14px;
+                    border-radius: ${isMobile ? '18px' : '20px'};
+                    padding: 0 ${isMobile ? '12px' : '16px'} 0 ${isMobile ? '8px' : '12px'};
+                    font-size: ${isMobile ? '12px' : '14px'};
                     z-index: 999;
                     cursor: move;
                     user-select: none;
                     display: flex;
                     align-items: center;
-                    gap: 8px;
+                    gap: ${isMobile ? '6px' : '8px'};
                     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+                    touch-action: none;
+                    max-width: ${isMobile ? 'calc(100vw - 80px)' : 'none'};
                 }
 
                 ${SELECTORS.WATERMARK} svg {
                     fill: currentColor;
+                    width: ${isMobile ? '16px' : '20px'};
+                    height: ${isMobile ? '16px' : '20px'};
+                    flex-shrink: 0;
                 }
+
+                ${SELECTORS.WATERMARK} span {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                ${isMobile ? `
+                    ${SELECTORS.DATE_DISPLAY}, 
+                    ${SELECTORS.TIME_DISPLAY} {
+                        display: none;
+                    }
+                ` : ''}
 
                 ${SELECTORS.DIALOG} {
                     position: fixed;
@@ -384,15 +454,15 @@
                     transform: translate(-50%, -50%) scale(0.95);
                     background-color: var(--md-sys-color-surface-container-low);
                     color: var(--md-sys-color-on-surface);
-                    border-radius: 28px;
-                    width: calc(100vw - 48px);
-                    max-width: 400px;
-                    padding: 24px;
+                    border-radius: ${isMobile ? '24px' : '28px'};
+                    width: calc(100vw - ${isMobile ? '32px' : '48px'});
+                    max-width: ${isMobile ? '360px' : '400px'};
+                    padding: ${isMobile ? '20px' : '24px'};
                     z-index: 3000;
                     box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12), 0 5px 5px -3px rgba(0,0,0,0.2);
                     display: flex;
                     flex-direction: column;
-                    gap: 16px;
+                    gap: ${isMobile ? '12px' : '16px'};
                     opacity: 0;
                     transition: opacity 0.2s ease, transform 0.2s ease;
                 }
@@ -405,12 +475,18 @@
                 .dialog-header {
                     display: flex;
                     align-items: center;
-                    gap: 16px;
+                    gap: ${isMobile ? '12px' : '16px'};
                 }
 
                 .dialog-icon {
                     display: flex;
                     align-items: center;
+                    flex-shrink: 0;
+                }
+
+                .dialog-icon svg {
+                    width: ${isMobile ? '22px' : '24px'};
+                    height: ${isMobile ? '22px' : '24px'};
                 }
 
                 .dialog-icon-warning {
@@ -430,14 +506,15 @@
                 }
 
                 .dialog-title {
-                    font-size: 24px;
+                    font-size: ${isMobile ? '20px' : '24px'};
                     font-weight: 400;
                     margin: 0;
+                    line-height: 1.2;
                 }
 
                 .dialog-content {
-                    font-size: 14px;
-                    line-height: 20px;
+                    font-size: ${isMobile ? '13px' : '14px'};
+                    line-height: ${isMobile ? '18px' : '20px'};
                     color: var(--md-sys-color-on-surface-variant);
                     margin: 0;
                     white-space: pre-line;
@@ -453,6 +530,31 @@
                 .file-input {
                     display: none;
                 }
+
+                /* 移动端滚动条优化 */
+                ${isMobile ? `
+                    ${SELECTORS.BOTTOM_SHEET}::-webkit-scrollbar {
+                        width: 4px;
+                    }
+                    ${SELECTORS.BOTTOM_SHEET}::-webkit-scrollbar-thumb {
+                        background-color: rgba(0, 0, 0, 0.2);
+                        border-radius: 2px;
+                    }
+                    ${SELECTORS.TEXT_FIELD}::-webkit-scrollbar {
+                        width: 4px;
+                    }
+                    ${SELECTORS.TEXT_FIELD}::-webkit-scrollbar-thumb {
+                        background-color: rgba(0, 0, 0, 0.2);
+                        border-radius: 2px;
+                    }
+                ` : ''}
+
+                /* 防止移动端双击缩放 */
+                ${isMobile ? `
+                    .btn, ${SELECTORS.FAB}, ${SELECTORS.WATERMARK} {
+                        touch-action: manipulation;
+                    }
+                ` : ''}
             `;
             document.head.appendChild(style);
         }
@@ -495,12 +597,65 @@
 
             container.append(fab, scrim, bottomSheet);
             document.body.appendChild(container);
+
+            // 移动端拖拽关闭底部面板
+            if (isMobile) {
+                setupDragToClose();
+            }
+        }
+
+        function setupDragToClose() {
+            const dragHandle = bottomSheet.querySelector('.drag-handle');
+            let startY = 0;
+            let currentY = 0;
+            let isDragging = false;
+
+            const handleStart = (e) => {
+                const touch = e.type === 'touchstart' ? e.touches[0] : e;
+                startY = touch.clientY;
+                isDragging = true;
+                bottomSheet.style.transition = 'none';
+            };
+
+            const handleMove = (e) => {
+                if (!isDragging) return;
+                const touch = e.type === 'touchmove' ? e.touches[0] : e;
+                currentY = touch.clientY - startY;
+                if (currentY > 0) {
+                    bottomSheet.style.transform = `translateY(${currentY}px)`;
+                }
+            };
+
+            const handleEnd = () => {
+                if (!isDragging) return;
+                isDragging = false;
+                bottomSheet.style.transition = '';
+                
+                if (currentY > 100) {
+                    togglePanel(false);
+                } else {
+                    bottomSheet.style.transform = 'translateY(0)';
+                }
+                currentY = 0;
+            };
+
+            dragHandle.addEventListener('touchstart', handleStart, { passive: true });
+            dragHandle.addEventListener('mousedown', handleStart);
+            document.addEventListener('touchmove', handleMove, { passive: true });
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchend', handleEnd);
+            document.addEventListener('mouseup', handleEnd);
         }
 
         function togglePanel(visible) {
             const show = typeof visible === 'boolean' ? visible : !bottomSheet.classList.contains('show');
             bottomSheet.classList.toggle('show', show);
             scrim.classList.toggle('show', show);
+            
+            // 防止移动端背景滚动
+            if (isMobile) {
+                document.body.style.overflow = show ? 'hidden' : '';
+            }
         }
 
         return {
@@ -684,18 +839,20 @@
             watermark.innerHTML = `
                 ${ICONS.account_circle}
                 <span>${maskedId}</span>
-                <span id="${SELECTORS.DATE_DISPLAY.substring(1)}" style="margin-left: 8px;">${new Date().toLocaleDateString()}</span>
-                <span id="${SELECTORS.TIME_DISPLAY.substring(1)}" style="margin-left: 8px;">${new Date().toLocaleTimeString()}</span>
+                ${!isMobile ? `<span id="${SELECTORS.DATE_DISPLAY.substring(1)}" style="margin-left: 8px;">${new Date().toLocaleDateString()}</span>` : ''}
+                ${!isMobile ? `<span id="${SELECTORS.TIME_DISPLAY.substring(1)}" style="margin-left: 8px;">${new Date().toLocaleTimeString()}</span>` : ''}
             `;
             document.body.appendChild(watermark);
 
-            setInterval(() => {
-                const timeEl = document.getElementById(SELECTORS.TIME_DISPLAY.substring(1));
-                if (timeEl) timeEl.textContent = new Date().toLocaleTimeString();
+            if (!isMobile) {
+                setInterval(() => {
+                    const timeEl = document.getElementById(SELECTORS.TIME_DISPLAY.substring(1));
+                    if (timeEl) timeEl.textContent = new Date().toLocaleTimeString();
 
-                const dateEl = document.getElementById(SELECTORS.DATE_DISPLAY.substring(1));
-                if (dateEl) dateEl.textContent = new Date().toLocaleDateString();
-            }, 1000);
+                    const dateEl = document.getElementById(SELECTORS.DATE_DISPLAY.substring(1));
+                    if (dateEl) dateEl.textContent = new Date().toLocaleDateString();
+                }, 1000);
+            }
 
             let isDragging = false;
             let offset = { x: 0, y: 0 };
@@ -846,7 +1003,7 @@
         UIManager.getButton(SELECTORS.BTN_IMPORT).addEventListener('click', () => UIManager.getFileInputElement().click());
         UIManager.getFileInputElement().addEventListener('change', (e) => CookieService.importFromFile(e.target));
 
-        console.log('🍪 Facebook Cookie Manager v2.0.0 loaded.');
+        console.log('🍪 Facebook Cookie Manager v2.1.0 (Mobile Optimized) loaded.');
     }
 
     if (document.readyState === 'complete') {
