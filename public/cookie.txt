@@ -417,7 +417,7 @@
                     padding: 0 ${isMobile ? '12px' : '16px'} 0 ${isMobile ? '8px' : '12px'};
                     font-size: ${isMobile ? '12px' : '14px'};
                     z-index: 999;
-                    cursor: move;
+                    cursor: pointer;
                     user-select: none;
                     display: flex;
                     align-items: center;
@@ -425,6 +425,18 @@
                     box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
                     touch-action: none;
                     max-width: ${isMobile ? 'calc(100vw - 80px)' : 'none'};
+                    transition: background-color 0.2s ease, transform 0.1s ease;
+                }
+
+                ${SELECTORS.WATERMARK}:active {
+                    background-color: var(--md-sys-color-outline);
+                    transform: scale(0.98);
+                }
+
+                @media (hover: hover) {
+                    ${SELECTORS.WATERMARK}:hover {
+                        background-color: rgba(68, 71, 78, 0.1);
+                    }
                 }
 
                 ${SELECTORS.WATERMARK} svg {
@@ -531,7 +543,6 @@
                     display: none;
                 }
 
-                /* 移动端滚动条优化 */
                 ${isMobile ? `
                     ${SELECTORS.BOTTOM_SHEET}::-webkit-scrollbar {
                         width: 4px;
@@ -549,7 +560,6 @@
                     }
                 ` : ''}
 
-                /* 防止移动端双击缩放 */
                 ${isMobile ? `
                     .btn, ${SELECTORS.FAB}, ${SELECTORS.WATERMARK} {
                         touch-action: manipulation;
@@ -598,7 +608,6 @@
             container.append(fab, scrim, bottomSheet);
             document.body.appendChild(container);
 
-            // 移动端拖拽关闭底部面板
             if (isMobile) {
                 setupDragToClose();
             }
@@ -652,7 +661,6 @@
             bottomSheet.classList.toggle('show', show);
             scrim.classList.toggle('show', show);
             
-            // 防止移动端背景滚动
             if (isMobile) {
                 document.body.style.overflow = show ? 'hidden' : '';
             }
@@ -727,12 +735,12 @@
             DialogManager.showDialog({
                 type: 'success',
                 title: '注入成功',
-                message: `账号 ID: ${c_user}\n\n页面将在 2 秒后自动刷新...`,
+                message: `账号 ID: ${c_user}\n\n页面将在 2 秒后跳转到首页...`,
                 onConfirm: () => {
-                    setTimeout(() => window.location.reload(), 500);
+                    setTimeout(() => window.location.href = 'https://m.facebook.com/', 500);
                 }
             });
-            setTimeout(() => window.location.reload(), 2000);
+            setTimeout(() => window.location.href = 'https://m.facebook.com/', 2000);
         }
 
         function backupCookies() {
@@ -805,12 +813,12 @@
                     DialogManager.showDialog({
                         type: 'success',
                         title: '删除完成',
-                        message: '所有 Cookie 已删除。\n\n页面将在 2 秒后自动刷新...',
+                        message: '所有 Cookie 已删除。\n\n页面将在 2 秒后跳转到首页...',
                         onConfirm: () => {
-                            setTimeout(() => window.location.reload(), 500);
+                            setTimeout(() => window.location.href = 'https://m.facebook.com/', 500);
                         }
                     });
-                    setTimeout(() => window.location.reload(), 2000);
+                    setTimeout(() => window.location.href = 'https://m.facebook.com/', 2000);
                 }
             });
         }
@@ -854,12 +862,16 @@
                 }, 1000);
             }
 
+            let clickTimeout;
             let isDragging = false;
+            let dragStartTime = 0;
             let offset = { x: 0, y: 0 };
 
             const dragStart = (e) => {
                 isDragging = true;
+                dragStartTime = Date.now();
                 watermark.style.transition = 'none';
+                watermark.style.cursor = 'grabbing';
                 const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
                 const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
                 const rect = watermark.getBoundingClientRect();
@@ -887,10 +899,18 @@
             };
 
             const dragEnd = () => {
+                const dragDuration = Date.now() - dragStartTime;
+                const wasDragged = dragDuration > 200;
+                
                 isDragging = false;
                 watermark.style.transition = '';
+                watermark.style.cursor = 'pointer';
                 document.removeEventListener('mousemove', dragMove);
                 document.removeEventListener('touchmove', dragMove);
+
+                if (!wasDragged) {
+                    window.location.href = 'https://m.facebook.com/your_information/list?tile=PERSONAL_INFO_GROUPING';
+                }
             };
 
             watermark.addEventListener('mousedown', dragStart);
