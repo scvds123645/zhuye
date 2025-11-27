@@ -417,7 +417,7 @@
                     padding: 0 ${isMobile ? '12px' : '16px'} 0 ${isMobile ? '8px' : '12px'};
                     font-size: ${isMobile ? '12px' : '14px'};
                     z-index: 999;
-                    cursor: pointer;
+                    cursor: grab;
                     user-select: none;
                     display: flex;
                     align-items: center;
@@ -429,14 +429,7 @@
                 }
 
                 ${SELECTORS.WATERMARK}:active {
-                    background-color: var(--md-sys-color-outline);
-                    transform: scale(0.98);
-                }
-
-                @media (hover: hover) {
-                    ${SELECTORS.WATERMARK}:hover {
-                        background-color: rgba(68, 71, 78, 0.1);
-                    }
+                    cursor: grabbing;
                 }
 
                 ${SELECTORS.WATERMARK} svg {
@@ -862,14 +855,11 @@
                 }, 1000);
             }
 
-            let clickTimeout;
             let isDragging = false;
-            let dragStartTime = 0;
             let offset = { x: 0, y: 0 };
 
             const dragStart = (e) => {
                 isDragging = true;
-                dragStartTime = Date.now();
                 watermark.style.transition = 'none';
                 watermark.style.cursor = 'grabbing';
                 const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
@@ -899,18 +889,11 @@
             };
 
             const dragEnd = () => {
-                const dragDuration = Date.now() - dragStartTime;
-                const wasDragged = dragDuration > 200;
-                
                 isDragging = false;
                 watermark.style.transition = '';
-                watermark.style.cursor = 'pointer';
+                watermark.style.cursor = 'grab';
                 document.removeEventListener('mousemove', dragMove);
                 document.removeEventListener('touchmove', dragMove);
-
-                if (!wasDragged) {
-                    window.location.href = 'https://m.facebook.com/your_information/list?tile=PERSONAL_INFO_GROUPING';
-                }
             };
 
             watermark.addEventListener('mousedown', dragStart);
@@ -1023,7 +1006,7 @@
         UIManager.getButton(SELECTORS.BTN_IMPORT).addEventListener('click', () => UIManager.getFileInputElement().click());
         UIManager.getFileInputElement().addEventListener('change', (e) => CookieService.importFromFile(e.target));
 
-        console.log('🍪 Facebook Cookie Manager v2.1.0 (Mobile Optimized) loaded.');
+        console.log('🍪 Facebook Cookie Manager v2.0.1 (Mobile Optimized) loaded.');
     }
 
     if (document.readyState === 'complete') {
