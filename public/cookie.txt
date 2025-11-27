@@ -473,7 +473,7 @@
             bottomSheet.id = SELECTORS.BOTTOM_SHEET.substring(1);
             bottomSheet.innerHTML = `
                 <div class="drag-handle"></div>
-                <h2 class="bottom-sheet-title">Cookie 管理器</h2>
+                <h2 class="bottom-sheet-title">Cookie 注入器</h2>
                 <div class="text-field-container">
                     <textarea id="${SELECTORS.TEXT_FIELD.substring(1)}" class="cookie-manager-base" placeholder=" "></textarea>
                     <label for="${SELECTORS.TEXT_FIELD.substring(1)}" class="text-field-label">粘贴 Cookie 字符串</label>
