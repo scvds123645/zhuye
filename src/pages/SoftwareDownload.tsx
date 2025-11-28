@@ -148,7 +148,6 @@ const SoftwareDownload = () => {
   );
 
   const handleShare = async (app: App) => {
-    // 默认分享链接逻辑
     let url = `${window.location.origin}/rj?app=${encodeURIComponent(app.name)}`;
     
     // 如果是“脸书白号卡网”，使用自定义链接
@@ -173,14 +172,23 @@ const SoftwareDownload = () => {
     });
   };
 
+  // 修复了定位逻辑的 useEffect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const appName = params.get('app');
+    let appName = params.get('app');
+
+    // 修复逻辑：如果 URL 参数是 fb，手动将其映射到对应的应用名称
+    if (appName === 'fb') {
+      appName = '脸书白号卡网';
+    }
+
     if (appName) {
       setHighlightedApp(appName);
       setTimeout(() => {
-        const element = document.getElementById(appName);
-        if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const element = document.getElementById(appName as string);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }, 100);
       setTimeout(() => setHighlightedApp(null), 3000);
     }
