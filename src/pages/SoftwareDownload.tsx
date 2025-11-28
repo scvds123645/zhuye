@@ -118,7 +118,7 @@ const SoftwareDownload = () => {
       ageRating: "18+",
       description: "脸书白号卡网提供各类脸书账号、虚拟卡等资源，是专业的脸书账号和卡资源交易平台。",
       icon: "https://www.584136.xyz/%E5%A4%B4%E5%83%8F/telegam@fb180.jpg",
-      url: "https://www.584136.xyz/"
+      url: "https://fh10.zmfaka.cn/item/c24vp9/"
     },
     {
       id: "fb-accounts",
