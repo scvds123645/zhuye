@@ -12,7 +12,8 @@ import {
   AtSign, 
   Sparkles, 
   Store, 
-  ArrowRight 
+  ArrowRight,
+  Binary // Added for the number generator
 } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 
@@ -25,6 +26,13 @@ const Tools = () => {
       icon: Hash,
       title: "14位数字提取工具",
       description: "自动从文本中提取并去重14位连续数字",
+      external: false,
+    },
+    {
+      path: "/14d",
+      icon: Binary,
+      title: "FB UID 生成器",
+      description: "批量生成 99 个 Facebook 账户 ID",
       external: false,
     },
     {
