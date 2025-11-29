@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { 
@@ -14,12 +15,14 @@ import {
   Store, 
   ArrowRight,
   ChevronRight,
-  Binary
+  Binary,
+  Loader2 // 新增 Loading 图标
 } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 
 const Tools = () => {
   const navigate = useNavigate();
+  const [loadingPath, setLoadingPath] = useState<string | null>(null);
 
   const tools = [
     {
@@ -32,8 +35,8 @@ const Tools = () => {
     {
       path: "/14d",
       icon: Binary,
-      title: "FB UID 生成器", // 更新标题
-      description: "批量生成 99 个 Facebook 账户 ID", // 更新描述
+      title: "FB UID 生成器",
+      description: "批量生成 99 个 Facebook 账户 ID",
       external: false,
     },
     {
@@ -95,11 +98,23 @@ const Tools = () => {
   ];
 
   const handleNavigation = (path: string, isExternal: boolean) => {
-    if (isExternal) {
-      window.open(path, '_blank');
-    } else {
-      navigate(path);
-    }
+    // 防止重复点击
+    if (loadingPath) return;
+
+    // 设置当前点击的卡片状态
+    setLoadingPath(path);
+
+    // 添加 250ms 延迟，让用户看清点击反馈动画
+    setTimeout(() => {
+      if (isExternal) {
+        window.open(path, '_blank');
+        setLoadingPath(null); // 外部链接跳转后重置状态
+      } else {
+        navigate(path);
+        // 内部路由跳转通常会卸载组件，但也重置以防万一
+        setLoadingPath(null); 
+      }
+    }, 250); 
   };
 
   return (
@@ -111,72 +126,90 @@ const Tools = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 p-1 sm:p-2">
         {tools.map((tool) => {
           const IconComponent = tool.icon;
+          const isLoading = loadingPath === tool.path;
           
           return (
             <Card
               key={tool.path}
               onClick={() => handleNavigation(tool.path, tool.external)}
-              className="
-                relative group cursor-pointer overflow-hidden
-                rounded-2xl border-transparent bg-white
-                shadow-[0_1px_3px_rgba(0,0,0,0.05)] 
-                p-4
-                sm:rounded-3xl sm:p-6
-                sm:shadow-[0_2px_12px_rgba(0,0,0,0.06)] 
-                hover:shadow-[0_4px_20px_rgba(0,0,0,0.1)]
-                hover:bg-blue-50/30
-                sm:hover:-translate-y-1
-                transition-all duration-300 ease-[cubic-bezier(0.2,0.0,0,1.0)]
-              "
-            >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-[0.03] bg-blue-600 transition-opacity duration-300 pointer-events-none" />
-
-              <div className="flex flex-row items-center sm:flex-col sm:items-start sm:h-full gap-4 sm:gap-5">
+              className={`
+                group relative cursor-pointer overflow-hidden
+                bg-white border
+                rounded-2xl sm:rounded-3xl
+                transition-all duration-200 ease-out
+                p-4 sm:p-6
                 
-                <div className="
+                /* 动态样式逻辑 */
+                ${isLoading 
+                  ? 'border-blue-400/50 bg-blue-50/50 scale-[0.98] shadow-inner' // 点击时的按压态
+                  : 'border-slate-200/60 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_-8px_rgba(59,130,246,0.12)] hover:border-blue-400/30 hover:-translate-y-[2px]' // 常态和悬浮态
+                }
+              `}
+            >
+              {/* 装饰：Hover 时顶部出现的极光渐变条 (仅在非加载时显示) */}
+              {!isLoading && (
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400/0 via-blue-500/40 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              )}
+              
+              <div className="relative flex flex-row items-center sm:flex-col sm:items-start sm:h-full gap-4 sm:gap-5 z-10">
+                
+                {/* 图标容器 */}
+                <div className={`
                   shrink-0 flex items-center justify-center
                   rounded-xl sm:rounded-2xl 
                   w-12 h-12 sm:w-14 sm:h-14 
-                  bg-blue-50 text-blue-600 
-                  group-hover:scale-105 sm:group-hover:scale-110 
-                  group-hover:bg-blue-100 
+                  border
                   transition-all duration-300
-                ">
-                  <IconComponent className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+                  ${isLoading 
+                    ? 'bg-blue-100 border-blue-200 text-blue-600 scale-95' 
+                    : 'bg-gradient-to-br from-blue-50 to-indigo-50/50 border-blue-100/60 text-blue-600 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] group-hover:scale-105'
+                  }
+                `}>
+                  {/* 图标切换动画：点击时显示 Loading */}
+                  {isLoading ? (
+                    <Loader2 className="w-6 h-6 sm:w-7 sm:h-7 animate-spin" strokeWidth={2} />
+                  ) : (
+                    <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 opacity-90" strokeWidth={1.5} />
+                  )}
                 </div>
 
-                <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
+                {/* 文本区域 */}
+                <div className="flex-1 min-w-0 space-y-1 sm:space-y-2.5">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-base sm:text-xl text-slate-800 truncate group-hover:text-blue-700 transition-colors">
+                    <h3 className={`font-semibold text-[15px] sm:text-lg truncate tracking-tight transition-colors ${isLoading ? 'text-blue-700' : 'text-slate-800 group-hover:text-blue-700'}`}>
                       {tool.title}
                     </h3>
                     {tool.external && (
                       <ExternalLink className="w-3 h-3 text-slate-400 sm:hidden" />
                     )}
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-snug line-clamp-2">
+                  <p className="text-xs sm:text-[13px] text-slate-500 leading-snug line-clamp-2 font-normal">
                     {tool.description}
                   </p>
                 </div>
 
-                <div className="shrink-0 sm:mt-auto sm:w-full sm:pt-2">
-                  <div className="sm:hidden text-slate-300 group-hover:text-blue-500 transition-colors">
-                    <ChevronRight className="w-5 h-5" />
+                {/* 操作区域 */}
+                <div className="shrink-0 sm:mt-auto sm:w-full sm:pt-3">
+                  {/* 手机端箭头 */}
+                  <div className={`sm:hidden transition-all ${isLoading ? 'text-blue-600 translate-x-1' : 'text-slate-300 group-hover:text-blue-500'}`}>
+                    {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ChevronRight className="w-5 h-5" />}
                   </div>
 
-                  <span className="
-                    hidden sm:inline-flex items-center gap-2 px-4 py-2 
-                    rounded-full text-sm font-medium
-                    bg-blue-50 text-blue-700 
-                    group-hover:bg-blue-600 group-hover:text-white
-                    transition-colors duration-300
-                  ">
-                    {tool.external ? '访问链接' : '立即使用'}
-                    <ArrowRight className="w-4 h-4" />
-                  </span>
+                  {/* 桌面端按钮 */}
+                  <div className={`
+                    hidden sm:flex items-center gap-2 text-sm font-medium transition-colors duration-300
+                    ${isLoading ? 'text-blue-700' : 'text-blue-600/90 group-hover:text-blue-700'}
+                  `}>
+                    <span className="relative">
+                      {tool.external ? '访问链接' : '立即使用'}
+                      {/* 下划线动画 */}
+                      {!isLoading && <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-blue-600 transition-all duration-300 group-hover:w-full" />}
+                    </span>
+                    <ArrowRight className={`w-4 h-4 transition-transform ${isLoading ? 'translate-x-1 opacity-50' : 'group-hover:translate-x-1'}`} />
+                  </div>
                   
                   {tool.external && (
-                    <div className="hidden sm:block absolute top-6 right-6 p-2 rounded-full bg-gray-50 text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
+                    <div className="hidden sm:block absolute top-6 right-6 text-slate-300 group-hover:text-blue-400 transition-colors">
                       <ExternalLink className="w-4 h-4" />
                     </div>
                   )}
@@ -187,41 +220,34 @@ const Tools = () => {
         })}
       </div>
 
-      <div className="mt-6 sm:mt-10 pb-6">
+      <div className="mt-8 sm:mt-12 pb-8">
         <Card className="
-          border-none rounded-2xl sm:rounded-3xl 
-          bg-slate-50 
-          p-5 sm:p-8
+          relative overflow-hidden
+          border border-indigo-100/50
+          rounded-2xl sm:rounded-3xl 
+          bg-gradient-to-br from-slate-50/80 to-indigo-50/30
+          backdrop-blur-sm
+          p-6 sm:p-8
         ">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6">
+          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-5 sm:gap-8">
             <div className="
               w-10 h-10 sm:w-12 sm:h-12 
-              rounded-full bg-white shadow-sm 
+              rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-white/50
               flex items-center justify-center shrink-0 text-blue-600
             ">
-              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 fill-blue-50" />
             </div>
 
-            <div className="flex-1 space-y-2 sm:space-y-2 w-full">
-              <h3 className="text-base sm:text-lg font-medium text-slate-800">使用提示</h3>
+            <div className="flex-1 space-y-3 w-full">
+              <h3 className="text-base sm:text-lg font-semibold text-slate-800 tracking-tight">使用小贴士</h3>
               
-              <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-4 gap-y-2 text-xs sm:text-sm text-slate-600">
-                <span className="flex items-center gap-1.5 sm:gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
-                  支持批量处理
-                </span>
-                <span className="flex items-center gap-1.5 sm:gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
-                  本地数据安全
-                </span>
-                <span className="flex items-center gap-1.5 sm:gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
-                  一键复制结果
-                </span>
-                <span className="flex items-center gap-1.5 sm:gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />
-                  多端完美适配
-                </span>
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-6 gap-y-3 text-xs sm:text-sm text-slate-600">
+                {["支持批量处理", "本地数据安全", "一键复制结果", "多端完美适配"].map((tip, i) => (
+                  <span key={i} className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0 shadow-[0_0_8px_rgba(96,165,250,0.6)]" />
+                    {tip}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
