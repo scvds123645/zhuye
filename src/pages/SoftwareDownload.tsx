@@ -129,7 +129,7 @@ const SoftwareDownload = () => {
       downloads: "5000+",
       ageRating: "18+",
       description: "包含3万多个未180天的脸书账号资源文件，TXT格式，方便批量管理和使用。",
-      icon: "data:image/svg+xml,%3Csvg viewBox='-4 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.151-.036c-2.803 0-5.074 2.272-5.074 5.074v53.841c0 2.803 2.271 5.074 5.074 5.074h45.774c2.801 0 5.074-2.271 5.074-5.074v-38.605l-18.902-20.31h-31.946z' fill='%23F9CA06'/%3E%3Cpath d='M56.008 20.316v1h-12.799s-6.312-1.26-6.129-6.708c0 0 .208 5.708 6.004 5.708h12.924z' fill='%23F7BC04'/%3E%3Cpath d='M37.106-.036v14.561c0 1.656 1.104 5.792 6.104 5.792h12.799l-18.903-20.353z' opacity='.5' fill='%23ffffff'/%3E%3Cpath d='M18.763 43.045h-3.277v10.047c0 .414-.324.738-.756.738-.414 0-.738-.324-.738-.738v-10.047h-3.259c-.36 0-.648-.288-.648-.684 0-.36.288-.648.648-.648h8.03c.36 0 .648.288.648.685 0 .359-.288.647-.648.647zm11.7 10.803c-.216 0-.415-.089-.541-.27l-3.727-4.97-3.745 4.97c-.126.181-.324.27-.54.27-.396 0-.72-.306-.72-.72 0-.144.036-.306.144-.432l3.889-5.131-3.619-4.826c-.09-.126-.144-.27-.144-.414 0-.343.288-.721.72-.721.216 0 .432.108.576.288l3.439 4.627 3.439-4.646c.126-.18.324-.27.541-.27.378 0 .738.306.738.721 0 .144-.036.288-.126.414l-3.619 4.808 3.89 5.149c.09.126.126.27.126.415 0 .396-.325.738-.721.738zm11.195-10.803h-3.277v10.047c0 .414-.323.738-.756.738-.414 0-.738-.324-.738-.738v-10.047h-3.259c-.36 0-.648-.288-.648-.684 0-.36.288-.648.648-.648h8.03c.36 0 .648.288.648.685.001.359-.287.647-.648.647z' fill='%23ffffff'/%3E%3C/svg%3E",
+      icon: "data:image/svg+xml,%3Csvg viewBox='-4 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.151-.036c-2.803 0-5.074 2.272-5.074 5.074v53.841c0 2.803 2.271 5.074 5.074 5.074h45.774c2.801 0 5.074-2.271 5.074-5.074v-38.605l-18.902-20.31h-31.946z' fill='%23F9CA06'/%3E%3Cpath d='M56.008 20.316v1h-12.799s-6.312-1.26-6.129-6.708c0 0 .208 5.708 6.004 5.708h12.924z' fill='%23F7BC04'/%3E%3Cpath d='M37.106-.036v14.561c0 1.656 1.104 5.792 6.104 5.792h12.799l-18.903-20.353z' opacity='.5' fill='%23ffffff'/%3E%3Cpath d='M18.763 43.045h-3.277v10.047c0 .414-.324.738-.756.738-.414 0-.738-.324-.738-.738v-10.047h-3.259c-.36 0-.648-.288-.648-.684 0-.36.288-.648.648-.648h8.03c.36 0 .648.288.648.685 0 .359-.288.647-.648.647zm11.7 10.803c-.216 0-.415-.089-.541-.27l-3.727-4.97-3.745 4.97c-.126.181-.324.27-.54.27-.396 0-.72-.72 0-.144.036-.306.144-.432l3.889-5.131-3.619-4.826c-.09-.126-.144-.27-.144-.414 0-.343.288-.721.72-.721.216 0 .432.108.576.288l3.439 4.627 3.439-4.646c.126-.18.324-.27.541-.27.378 0 .738.306.738.721 0 .144-.036.288-.126.414l-3.619 4.808 3.89 5.149c.09.126.126.27.126.415 0 .396-.325.738-.721.738zm11.195-10.803h-3.277v10.047c0 .414-.323.738-.756.738-.414 0-.738-.324-.738-.738v-10.047h-3.259c-.36 0-.648-.288-.648-.684 0-.36.288-.648.648-.648h8.03c.36 0 .648.288.648.685.001.359-.287.647-.648.647z' fill='%23ffffff'/%3E%3C/svg%3E",
       url: "https://quwenjian.cc/share/download?key=0d5a04e745f8d04ae5c327f7c4ccb29232daefa6dfb37ab79b6542c57174d64f&code=53HWU"
     }
   ];
@@ -202,7 +202,8 @@ const SoftwareDownload = () => {
       showParticles={false}
     >
       {/* Search Bar: Material Design 3 Floating Search */}
-      <div className="mb-8 px-2">
+      {/* Change: px-2 -> px-4 to align better on mobile */}
+      <div className="mb-8 px-4 md:px-2">
         <div className="relative max-w-2xl mx-auto">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 w-6 h-6 pointer-events-none z-10" />
           <Input
@@ -224,12 +225,14 @@ const SoftwareDownload = () => {
           <p className="text-slate-500 text-lg font-medium">未找到匹配的应用</p>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        // Change: gap-6 -> gap-4 md:gap-6 for tighter mobile grid
+        <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredApps.map((app) => (
             <Card
               key={app.id}
               id={app.name}
-              className={`group relative p-6 border-none bg-white transition-all duration-300 rounded-3xl ${
+              // Change: p-6 -> p-4 md:p-6 for better space utilization on mobile
+              className={`group relative p-4 md:p-6 border-none bg-white transition-all duration-300 rounded-3xl ${
                 highlightedApp === app.name 
                   ? 'ring-2 ring-blue-400 shadow-xl scale-[1.02]' 
                   : 'shadow-sm hover:shadow-lg hover:-translate-y-0.5'
@@ -241,7 +244,8 @@ const SoftwareDownload = () => {
                   <img
                     src={app.icon}
                     alt={app.name}
-                    className="w-[72px] h-[72px] rounded-[18px] object-cover shadow-sm group-hover:shadow transition-shadow"
+                    // Change: w-[72px] -> w-14 md:w-[72px] (Same for height) for smaller mobile icons
+                    className="w-14 h-14 md:w-[72px] md:h-[72px] rounded-[18px] object-cover shadow-sm group-hover:shadow transition-shadow"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23e2e8f0' width='100' height='100'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%2394a3b8' font-size='40'%3E?%3C/text%3E%3C/svg%3E";
@@ -250,7 +254,8 @@ const SoftwareDownload = () => {
                 </div>
                 
                 <div className="flex-1 min-w-0 pt-1">
-                  <h3 className="font-bold text-xl text-slate-900 truncate leading-tight mb-1">{app.name}</h3>
+                  {/* Change: text-xl -> text-lg md:text-xl for optimized mobile typography */}
+                  <h3 className="font-bold text-lg md:text-xl text-slate-900 truncate leading-tight mb-1">{app.name}</h3>
                   <p className="text-sm text-blue-600 font-medium truncate mb-2">{app.publisher}</p>
                   <div className="flex items-center gap-3 text-sm">
                     <div className="flex items-center gap-1">
@@ -264,7 +269,8 @@ const SoftwareDownload = () => {
               </div>
 
               {/* App Stats */}
-              <div className="flex gap-8 mb-5 text-sm px-1">
+              {/* Change: gap-8 -> gap-5 md:gap-8 to prevent wrapping */}
+              <div className="flex gap-5 md:gap-8 mb-5 text-sm px-1">
                 <div>
                   <div className="text-xs text-slate-500 mb-0.5">下载量</div>
                   <div className="font-semibold text-slate-700">{app.downloads}</div>
@@ -312,7 +318,8 @@ const SoftwareDownload = () => {
 
       {/* Material You Style Tip Card */}
       <div className="mt-10">
-        <Card className="p-5 border-none bg-blue-50 rounded-3xl flex items-center gap-4 max-w-3xl mx-auto">
+        {/* Change: p-5 -> p-4 md:p-5, items-center -> items-start for better wrapping support */}
+        <Card className="p-4 md:p-5 border-none bg-blue-50 rounded-3xl flex items-start gap-4 max-w-3xl mx-auto">
           <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 text-blue-600">
             <Sparkles className="w-5 h-5" />
           </div>
