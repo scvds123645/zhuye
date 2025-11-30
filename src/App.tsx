@@ -15,6 +15,7 @@ import DiscordFormatter from "./pages/DiscordFormatter";
 import NumberExtractor from "./pages/NumberExtractor";
 import NumberGenerator from "./pages/NumberGenerator"; // Import added here
 import SoftwareDownload from "./pages/SoftwareDownload";
+import 180zidong from "./pages/180zidong";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/products" element={<Products />} />
           <Route path="/tools" element={<Tools />} />
+          <Route path="/180" element={<180zidong />} />
           <Route path="/jh" element={<CookieFilter />} />
           <Route path="/cookie" element={<CookieConverter />} />
           <Route path="/qc" element={<TextDeduplicator />} />
