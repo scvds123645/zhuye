@@ -19,7 +19,8 @@ import {
   Loader2,
   ShieldCheck,
   Zap,
-  Globe
+  Globe,
+  CalendarDays // 新增：引入日历图标
 } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 
@@ -76,6 +77,7 @@ const Tools = () => {
       icon: AtSign,
       title: "邮箱后缀转换",
       description: "批量格式化域名为邮箱后缀",
+
       external: false,
     },
     {
@@ -97,6 +99,14 @@ const Tools = () => {
       icon: KeyRound,
       title: "Cookie 注入",
       description: "Facebook Cookie 快速注入",
+      external: true,
+    },
+    // --- 新增部分 ---
+    {
+      path: "https://4.584136.xyz",
+      icon: CalendarDays,
+      title: "春节倒计时",
+      description: "精确计算距离农历新年的剩余时间",
       external: true,
     },
   ];
@@ -195,7 +205,6 @@ const Tools = () => {
                   <div className={`sm:hidden transition-all ${isLoading ? 'text-blue-600 translate-x-1' : 'text-slate-300 group-hover:text-blue-500'}`}>
                     {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ChevronRight className="w-5 h-5" />}
                   </div>
-
                   <div className={`
                     hidden sm:flex items-center gap-2 text-sm font-medium transition-colors duration-300
                     ${isLoading ? 'text-blue-700' : 'text-blue-600/90 group-hover:text-blue-700'}
@@ -219,7 +228,7 @@ const Tools = () => {
         })}
       </div>
 
-      {/* 底部提示卡片 - 已修复 */}
+      {/* 底部提示卡片 */}
       <div className="mt-8 sm:mt-12 pb-8">
         <Card className="
           relative overflow-hidden
@@ -255,7 +264,6 @@ const Tools = () => {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex gap-3">
                   <Zap className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
                   <div>
@@ -265,7 +273,6 @@ const Tools = () => {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex gap-3">
                   <Globe className="w-5 h-5 text-cyan-500 shrink-0 mt-0.5" />
                   <div>
@@ -275,7 +282,6 @@ const Tools = () => {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex gap-3">
                   <Cookie className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                   <div>
