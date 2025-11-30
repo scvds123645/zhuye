@@ -202,7 +202,7 @@ const SoftwareDownload = () => {
       showParticles={false}
     >
       {/* Search Bar: Material Design 3 Floating Search */}
-      {/* Change: px-2 -> px-4 to align better on mobile */}
+      {/* 1. 调整内边距: px-4 (Mobile) md:px-2 (Desktop) 以优化移动端对齐 */}
       <div className="mb-8 px-4 md:px-2">
         <div className="relative max-w-2xl mx-auto">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 w-6 h-6 pointer-events-none z-10" />
@@ -225,13 +225,13 @@ const SoftwareDownload = () => {
           <p className="text-slate-500 text-lg font-medium">未找到匹配的应用</p>
         </div>
       ) : (
-        // Change: gap-6 -> gap-4 md:gap-6 for tighter mobile grid
+        // 2. 优化网格间距: gap-4 (Mobile) md:gap-6 (Desktop)
         <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredApps.map((app) => (
             <Card
               key={app.id}
               id={app.name}
-              // Change: p-6 -> p-4 md:p-6 for better space utilization on mobile
+              // 3. 减少移动端卡片内边距: p-4 (Mobile) md:p-6 (Desktop)
               className={`group relative p-4 md:p-6 border-none bg-white transition-all duration-300 rounded-3xl ${
                 highlightedApp === app.name 
                   ? 'ring-2 ring-blue-400 shadow-xl scale-[1.02]' 
@@ -244,7 +244,7 @@ const SoftwareDownload = () => {
                   <img
                     src={app.icon}
                     alt={app.name}
-                    // Change: w-[72px] -> w-14 md:w-[72px] (Same for height) for smaller mobile icons
+                    // 4. 缩小移动端图标: w-14 h-14 (Mobile) md:w-[72px] (Desktop)
                     className="w-14 h-14 md:w-[72px] md:h-[72px] rounded-[18px] object-cover shadow-sm group-hover:shadow transition-shadow"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -254,7 +254,7 @@ const SoftwareDownload = () => {
                 </div>
                 
                 <div className="flex-1 min-w-0 pt-1">
-                  {/* Change: text-xl -> text-lg md:text-xl for optimized mobile typography */}
+                  {/* 5. 调整标题字号: text-lg (Mobile) md:text-xl (Desktop) */}
                   <h3 className="font-bold text-lg md:text-xl text-slate-900 truncate leading-tight mb-1">{app.name}</h3>
                   <p className="text-sm text-blue-600 font-medium truncate mb-2">{app.publisher}</p>
                   <div className="flex items-center gap-3 text-sm">
@@ -269,7 +269,7 @@ const SoftwareDownload = () => {
               </div>
 
               {/* App Stats */}
-              {/* Change: gap-8 -> gap-5 md:gap-8 to prevent wrapping */}
+              {/* 6. 缩小 Stats 间距: gap-5 (Mobile) md:gap-8 (Desktop) 以防换行 */}
               <div className="flex gap-5 md:gap-8 mb-5 text-sm px-1">
                 <div>
                   <div className="text-xs text-slate-500 mb-0.5">下载量</div>
@@ -282,7 +282,9 @@ const SoftwareDownload = () => {
               </div>
 
               {/* Description */}
-              <p className="text-sm text-slate-600 line-clamp-2 mb-6 leading-relaxed h-10">
+              {/* 7. 修复描述高度问题: h-10 -> min-h-[2.5rem] (或保持 h-auto 由 line-clamp 控制) */}
+              {/* 原来的 h-10 在移动端会导致 2 行文本显示不全 (40px < 2 * 1.625 * 14px) */}
+              <p className="text-sm text-slate-600 line-clamp-2 mb-6 leading-relaxed min-h-[2.5rem]">
                 {app.description}
               </p>
 
@@ -318,7 +320,7 @@ const SoftwareDownload = () => {
 
       {/* Material You Style Tip Card */}
       <div className="mt-10">
-        {/* Change: p-5 -> p-4 md:p-5, items-center -> items-start for better wrapping support */}
+        {/* 8. 安全卡片优化: items-start (处理文字折行), p-4 (Mobile) */}
         <Card className="p-4 md:p-5 border-none bg-blue-50 rounded-3xl flex items-start gap-4 max-w-3xl mx-auto">
           <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 text-blue-600">
             <Sparkles className="w-5 h-5" />
