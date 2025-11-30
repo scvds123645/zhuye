@@ -34,7 +34,7 @@ const Products = () => {
 
   return (
     <PageLayout
-      // 1. 移除了 title 和 description 属性，改用下方自定义头部
+      title="专业服务商"
       backLabel="返回首页"
     >
       {/* === 优化后的自定义头部区域 (Start) === */}
