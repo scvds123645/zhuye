@@ -198,7 +198,12 @@ const ProductsPage = () => {
               </p>
             </div>
 
-            <Button variant="outline" className="rounded-full h-10 sm:h-12 px-6 sm:px-8 border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-blue-600 w-full sm:w-auto">
+            {/* UPDATED BUTTON: Added onClick handler to open Telegram link */}
+            <Button 
+              variant="outline" 
+              className="rounded-full h-10 sm:h-12 px-6 sm:px-8 border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-blue-600 w-full sm:w-auto"
+              onClick={() => window.open('https://t.me/Facebookkf_bot', '_blank')}
+            >
               了解更多
             </Button>
           </div>
