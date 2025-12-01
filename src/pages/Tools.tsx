@@ -1,11 +1,10 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Hash,
   FileText,
   Cookie,
   UserCheck,
-  ExternalLink,
   KeyRound,
   RefreshCw,
   ListFilter,
@@ -20,13 +19,68 @@ import {
   Zap,
   Globe,
   CalendarDays,
-  ArrowUpRight
+  ArrowUpRight,
+  ChevronLeft
 } from "lucide-react";
-import PageLayout from "@/components/PageLayout";
 
+/*
+  -----------------------------------------------------------------
+  CUSTOM PAGE LAYOUT COMPONENT
+  (Included inline to ensure the code works standalone)
+  -----------------------------------------------------------------
+*/
+const PageLayout = ({ children, title, description, backLabel = "返回" }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen w-full bg-[#F5F5F7] font-sans selection:bg-blue-100 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
+        {/* Navigation Header */}
+        <header className="mb-8 flex items-center justify-between">
+          <button 
+            onClick={() => navigate(-1)}
+            className="group flex items-center gap-1 pl-2 pr-4 py-2 rounded-full hover:bg-white/60 transition-all text-slate-500 hover:text-slate-900"
+          >
+            <ChevronLeft className="h-5 w-5" />
+            <span className="text-sm font-medium">{backLabel}</span>
+          </button>
+        </header>
+
+        {/* Page Title Section */}
+        {(title || description) && (
+          <div className="mb-10 sm:mb-14 px-2 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {title && (
+              <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+                {title}
+              </h1>
+            )}
+            {description && (
+              <p className="text-base sm:text-lg text-slate-500 max-w-2xl leading-relaxed">
+                {description}
+              </p>
+            )}
+          </div>
+        )}
+
+        {children}
+      </div>
+    </div>
+  );
+};
+
+/*
+  -----------------------------------------------------------------
+  MAIN COMPONENT: Tools
+  -----------------------------------------------------------------
+*/
 const Tools = () => {
   const navigate = useNavigate();
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
+
+  // SEO: Set Document Title
+  useEffect(() => {
+    document.title = "实用工具箱 - Facebook运营必备工具";
+  }, []);
 
   const tools = [
     {
@@ -144,11 +198,11 @@ const Tools = () => {
       {/* Global Background: Apple System Gray 6 equivalent */}
       <div className="fixed inset-0 bg-[#F5F5F7] -z-50" />
       
-      {/* Subtle Gradient Mesh for Glass Depth (Optional, adds that premium feel) */}
+      {/* Subtle Gradient Mesh for Glass Depth */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent -z-40 pointer-events-none" />
 
       {/* Main Bento Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 p-4 sm:p-6 pb-32 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 pb-32 max-w-full mx-auto">
         {tools.map((tool) => {
           const IconComponent = tool.icon;
           const isLoading = loadingPath === tool.path;
@@ -290,7 +344,7 @@ const Tools = () => {
       </div>
 
       {/* Footer / Tips Section - iOS Widget Style */}
-      <div className="px-4 pb-12 sm:px-6 sm:pb-20 max-w-4xl mx-auto">
+      <div className="pb-12 sm:pb-20 max-w-4xl mx-auto">
         <div className="
           relative overflow-hidden
           rounded-[24px] sm:rounded-[36px]
