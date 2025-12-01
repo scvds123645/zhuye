@@ -204,7 +204,7 @@ const AppCard = ({ app, isHighlighted }) => {
             src={app.icon} 
             alt={app.name} 
             className="w-full h-full object-cover"
-            onError={(e) => {e.target.src = "https://api.dicebear.com/7.x/shapes/svg?seed=Fallback"}} 
+            onError={(e) => {(e.target as HTMLImageElement).src = "https://api.dicebear.com/7.x/shapes/svg?seed=Fallback"}} 
           />
         </div>
         

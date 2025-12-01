@@ -1,7 +1,24 @@
+# 允许所有搜索引擎爬虫
+User-agent: *
+Allow: /
+
+# Sitemap位置
+Sitemap: https://www.584136.xyz/sitemap.xml
+
+# 特定爬虫配置
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
 Allow: /
 
 User-agent: Twitterbot
@@ -10,5 +27,5 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# 爬取频率限制（可选）
+Crawl-delay: 1

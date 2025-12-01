@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Mail, 
@@ -8,6 +8,7 @@ import {
   Wrench, 
   Send 
 } from 'lucide-react';
+import SEO from '@/components/SEO';
 
 /* 
   ASSUMPTION: 
@@ -28,16 +29,43 @@ const ContactMePage = () => {
   const navigate = useNavigate();
   const [isContactOpen, setIsContactOpen] = useState(false);
 
-  // Set document title on mount to match SEO-optimized title
-  useEffect(() => {
-    document.title = "联系我们 - 专业脸书(Facebook)账号服务";
-  }, []);
-
   // Contact list data for the modal
   const contactOptions = [1, 2, 3];
 
+  // 结构化数据
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "联系我们 - 专业脸书账号服务",
+    "description": "提供稳定可靠的脸书（Facebook）白号、耐用号购买服务。通过Telegram联系我们的专业客服团队，获取一对一专业咨询。",
+    "url": "https://www.584136.xyz/",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "fb180",
+      "url": "https://www.584136.xyz/",
+      "logo": "https://www.584136.xyz/头像/telegam@fb180.jpg",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "url": "https://t.me/Facebookkf_bot",
+        "availableLanguage": ["zh-CN"]
+      },
+      "sameAs": [
+        "https://t.me/Facebookkf_bot"
+      ]
+    }
+  };
+
   return (
-    <div className="min-h-screen w-full bg-[#f8f9fa] flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden font-sans">
+    <>
+      <SEO 
+        title="联系我们 - 专业脸书(Facebook)账号服务"
+        description="提供稳定可靠的脸书（Facebook）白号、耐用号购买服务。通过Telegram联系我们的专业客服团队，获取一对一专业咨询。7x24小时在线支持。"
+        keywords="Facebook账号, 脸书账号, 脸书白号, FB耐用号, Facebook账号购买, Telegram客服, Facebook联系方式"
+        canonical="/"
+        structuredData={structuredData}
+      />
+      <div className="min-h-screen w-full bg-[#f8f9fa] flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden font-sans">
       
       {/* --- Background Decorative Blobs --- */}
       <div className="absolute top-[-5%] left-[-10%] w-64 h-64 sm:w-96 sm:h-96 bg-blue-100 rounded-full blur-3xl opacity-30 pointer-events-none" />
@@ -161,6 +189,7 @@ const ContactMePage = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SEO from '@/components/SEO';
 import {
   Hash,
   FileText,
@@ -77,10 +78,19 @@ const Tools = () => {
   const navigate = useNavigate();
   const [loadingPath, setLoadingPath] = useState<string | null>(null);
 
-  // SEO: Set Document Title
-  useEffect(() => {
-    document.title = "实用工具箱 - Facebook运营必备工具";
-  }, []);
+  // 结构化数据
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Facebook运营工具箱",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "提供Cookie筛选、Cookie转换、文本去重、账号格式化等多种Facebook运营必备工具，所有数据本地处理，保护隐私安全。"
+  };
 
   const tools = [
     {
@@ -190,11 +200,19 @@ const Tools = () => {
   };
 
   return (
-    <PageLayout
-      title="实用工具"
-      description="选择下方工具，快速完成数据处理"
-      backLabel="返回"
-    >
+    <>
+      <SEO 
+        title="实用工具箱 - Facebook运营必备工具 | fb180"
+        description="提供Cookie筛选、Cookie转换、文本去重、14位数字提取、账号格式化、邮箱后缀转换等多种Facebook运营必备工具。所有数据本地处理，隐私安全有保障。"
+        keywords="Facebook工具, Cookie筛选, Cookie转换, 文本去重, FB工具箱, Facebook运营工具, 账号格式化工具"
+        canonical="/tools"
+        structuredData={structuredData}
+      />
+      <PageLayout
+        title="实用工具"
+        description="选择下方工具，快速完成数据处理"
+        backLabel="返回"
+      >
       {/* Global Background: Apple System Gray 6 equivalent */}
       <div className="fixed inset-0 bg-[#F5F5F7] -z-50" />
       
@@ -401,6 +419,7 @@ const Tools = () => {
         </div>
       </div>
     </PageLayout>
+    </>
   );
 };
 

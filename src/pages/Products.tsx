@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // 1. 引入路由钩子，用于页面跳转
 import { useNavigate } from 'react-router-dom';
+import SEO from '@/components/SEO';
 import { 
   ShoppingCart, 
   Star, 
@@ -154,13 +155,45 @@ const contactLinks = [1, 2, 3];
 */
 const ProductsPage = () => {
   
-  // 3. SEO: 设置页面标题
-  useEffect(() => {
-    document.title = "购买账号 - 脸书(Facebook)白号/耐用号商城";
-  }, []);
+  // 结构化数据
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Facebook白号",
+    "description": "企业级Facebook账号解决方案，3天质保服务，安全稳定可靠。真实IP注册，账号注册时长30-180天，活跃度高。",
+    "brand": {
+      "@type": "Brand",
+      "name": "fb180"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "2",
+      "priceCurrency": "CNY",
+      "availability": "https://schema.org/InStock",
+      "url": "https://www.584136.xyz/products",
+      "seller": {
+        "@type": "Organization",
+        "name": "fb180"
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "5418"
+    }
+  };
 
   return (
-    <PageLayout backLabel="返回首页">
+    <>
+      <SEO 
+        title="购买账号 - 脸书(Facebook)白号/耐用号商城 | fb180"
+        description="专业提供Facebook白号、耐用号购买服务，企业级账号解决方案，3天质保，真实IP注册，账号活跃度高。已服务5000+客户，好评率98.5%。"
+        keywords="Facebook账号购买, 脸书白号, FB耐用号, Facebook账号批发, FB白号价格, 脸书账号商城"
+        canonical="/products"
+        ogType="product"
+        structuredData={structuredData}
+      />
+      <PageLayout backLabel="返回首页">
       
       {/* 1. Header Section */}
       {/* Reduced bottom margin on mobile: mb-10 */}
@@ -226,6 +259,7 @@ const ProductsPage = () => {
         </div>
       </section>
     </PageLayout>
+    </>
   );
 };
 
@@ -329,7 +363,7 @@ const ContactDialog = ({ triggerText }) => {
         </Button>
       </DialogTrigger>
       
-      <DialogContentWrapper>
+      <DialogContentWrapper className="">
         
         {/* Header */}
         <div className="bg-blue-50/50 p-5 sm:p-6 pb-4 text-center space-y-3">
