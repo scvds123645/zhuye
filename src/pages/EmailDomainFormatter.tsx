@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Copy, Eraser, CheckCircle2, AtSign, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/PageLayout";
+import SEO from "@/components/SEO";
 
 const EmailDomainFormatter = () => {
   const [inputText, setInputText] = useState("");
@@ -72,8 +73,30 @@ const EmailDomainFormatter = () => {
     setDomainCount(0);
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "域名转邮箱后缀工具",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "批量转换域名为邮箱后缀格式，支持添加@前缀和引号包裹，适用于邮件过滤配置。"
+  };
+
   return (
-    <PageLayout
+    <>
+      <SEO 
+        title="域名转邮箱后缀工具 - 批量域名格式化"
+        description="专业的域名转邮箱后缀工具，支持批量转换域名为@格式，可选添加引号包裹，适用于邮件过滤规则配置，支持逗号和换行分隔。"
+        keywords="域名转换, 邮箱后缀, 邮箱格式化, 域名格式化, 邮件过滤, 批量转换"
+        canonical="/yopmail"
+        structuredData={structuredData}
+      />
+      <PageLayout
       title="域名转邮箱后缀工具"
       description="输入域名列表，自动转换为邮箱后缀格式"
       backTo="/tools"
@@ -226,6 +249,7 @@ const EmailDomainFormatter = () => {
         </Card>
       </div>
     </PageLayout>
+    </>
   );
 };
 

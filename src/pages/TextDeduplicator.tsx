@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Copy, Eraser, CheckCircle2, FileText, Minus, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/PageLayout";
+import SEO from "@/components/SEO";
 
 const TextDeduplicator = () => {
   const [inputText, setInputText] = useState("");
@@ -90,8 +91,30 @@ const TextDeduplicator = () => {
     },
   ];
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "文本去重工具",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "智能文本去重工具，实时处理多行文本，自动去除重复行，保持原始顺序。"
+  };
+
   return (
-    <PageLayout
+    <>
+      <SEO 
+        title="文本去重工具 - 在线批量文本去重"
+        description="专业的文本去重工具，支持批量去除重复行，实时处理，保持原始顺序。适用于数据清理、账号管理等场景，操作简单高效。"
+        keywords="文本去重, 去重工具, 行去重, 数据清理, 批量去重, 文本处理"
+        canonical="/qc"
+        structuredData={structuredData}
+      />
+      <PageLayout
       title="文本去重工具"
       description="输入多行文本，自动去除重复行"
       backTo="/tools"
@@ -253,6 +276,7 @@ const TextDeduplicator = () => {
         </Card>
       </div>
     </PageLayout>
+    </>
   );
 };
 

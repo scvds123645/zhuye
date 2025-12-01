@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Share, Star, ChevronLeft } from 'lucide-react';
+import SEO from '@/components/SEO';
 
 // 模拟数据保持不变
 const MOCK_APPS = [
@@ -130,8 +131,31 @@ const SoftwareDownload = () => {
     app.category.includes(searchQuery)
   );
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "软件下载中心",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Android, iOS, Web",
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "CNY",
+      "lowPrice": "0",
+      "highPrice": "0"
+    },
+    "description": "提供Facebook、Gmail、Outlook、Discord等热门应用下载，以及专业的账号交易平台推荐。"
+  };
+
   return (
-    <div className="min-h-screen bg-[#F5F5F7] font-sans text-[#1d1d1f] pb-20 selection:bg-[#0071e3] selection:text-white cursor-default">
+    <>
+      <SEO 
+        title="软件下载中心 - Facebook/Gmail/Discord等应用下载"
+        description="提供Facebook、Gmail、Outlook、Zoho Mail、Discord、Via浏览器、绿茶VPN等热门应用免费下载，以及专业的Facebook账号交易平台推荐。"
+        keywords="软件下载, Facebook下载, Gmail下载, Discord下载, Outlook下载, 应用下载, APK下载"
+        canonical="/rj"
+        structuredData={structuredData}
+      />
+      <div className="min-h-screen bg-[#F5F5F7] font-sans text-[#1d1d1f] pb-20 selection:bg-[#0071e3] selection:text-white cursor-default">
       
       {/* 顶部导航区域 */}
       <div className="px-5 pt-10 pb-6 md:pt-16 md:px-10 max-w-7xl mx-auto relative">
@@ -180,6 +204,7 @@ const SoftwareDownload = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Copy, Wand2, CheckCircle2, Sparkles, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/PageLayout";
+import SEO from "@/components/SEO";
 
 interface FormattedResult {
   email: string;
@@ -80,8 +81,30 @@ const DiscordFormatter = () => {
     }
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "账号信息格式化工具",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "批量格式化账号信息，自动生成带接码地址的标准格式账号信息。"
+  };
+
   return (
-    <PageLayout
+    <>
+      <SEO 
+        title="账号信息格式化工具 - Discord账号批量格式化"
+        description="专业的账号信息格式化工具，支持批量格式化Discord等平台账号信息，自动生成带接码地址的标准格式，支持Ctrl+Enter快捷操作。"
+        keywords="账号格式化, Discord格式化, 批量格式化, 账号管理, 接码地址, 信息格式化"
+        canonical="/discord"
+        structuredData={structuredData}
+      />
+      <PageLayout
       title="账号信息格式化工具"
       description="输入账号信息，自动格式化为标准格式"
       backTo="/tools"
@@ -204,6 +227,7 @@ const DiscordFormatter = () => {
         </Card>
       </div>
     </PageLayout>
+    </>
   );
 };
 

@@ -10,6 +10,7 @@ import { Copy, Eraser, AlertCircle, CheckCircle2, KeyRound, Cookie, Settings2 } 
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import PageLayout from "@/components/PageLayout";
+import SEO from "@/components/SEO";
 
 type FormatType = "format1" | "format2";
 type PasswordMode = "default" | "custom";
@@ -113,8 +114,30 @@ const CookieConverter = () => {
     setShowError(false);
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cookie格式转换工具",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "专业的Cookie格式转换工具，支持多种输出格式，自动提取c_user和密码拼接，提高工作效率。"
+  };
+
   return (
-    <PageLayout
+    <>
+      <SEO 
+        title="Cookie格式转换工具 - 批量Cookie转换与UID提取"
+        description="专业的Cookie格式转换工具，支持批量转换、自动提取c_user、密码拼接等多种格式。提高Facebook账号管理效率，支持自定义密码和实时预览。"
+        keywords="Cookie转换, Cookie格式化, c_user提取, Facebook Cookie, Cookie工具, 批量转换"
+        canonical="/cookie"
+        structuredData={structuredData}
+      />
+      <PageLayout
       title="Cookie 格式转换工具"
       description="输入Cookie字符串，自动拼接密码和UID"
       backTo="/tools"
@@ -328,6 +351,7 @@ const CookieConverter = () => {
         </div>
       </div>
     </PageLayout>
+    </>
   );
 };
 

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useReducer, useRef, useState, memo } from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 import {
   Check, CheckCircle, Copy, Edit2, Eye, EyeOff, Loader2, RefreshCw, Save, Trash2, Users, XCircle, Zap, Play, HelpCircle, Star, ShieldCheck, StopCircle, Target
 } from 'lucide-react';
+import SEO from '@/components/SEO';
 
 // --- 类型定义 ---
 
@@ -287,14 +287,30 @@ const AppContent: React.FC = () => {
   const liveResults = state.results.filter((item) => item.status === 'Live');
   const dieResults = state.results.filter((item) => item.status === 'Die');
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Facebook自动撞库检测工具",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "全自动Facebook账号存活检测工具，自动生成UID并批量验证Live/Die状态，支持设定目标存活数量。"
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white font-sans pb-24 selection:bg-blue-500/30">
-        <HelmetProvider>
-            <Helmet>
-                <title>Facebook 自动撞库检测 | 批量 FB UID 生成与存活检查</title>
-                <meta name="description" content="全自动 Facebook 账号存活检测工具。自动生成 UID 并批量验证 Live/Die 状态，支持设定目标存活数量自动停止。" />
-            </Helmet>
-        </HelmetProvider>
+    <>
+      <SEO 
+        title="Facebook自动撞库检测 - 批量FB UID生成与存活检查"
+        description="全自动Facebook账号存活检测工具。自动生成6156开头的UID并批量验证Live/Die状态，支持设定目标存活数量自动停止，提供历史记录管理。"
+        keywords="Facebook撞库, FB UID检测, 账号存活检查, Facebook检测, UID生成, Live检测"
+        canonical="/180"
+        structuredData={structuredData}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white font-sans pb-24 selection:bg-blue-500/30">
 
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-3 py-4 sm:gap-6 sm:px-6 sm:py-12">
 
@@ -457,13 +473,10 @@ const AppContent: React.FC = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
-const App = () => (
-  <HelmetProvider>
-    <AppContent />
-  </HelmetProvider>
-);
+const App = () => <AppContent />;
 
 export default App;

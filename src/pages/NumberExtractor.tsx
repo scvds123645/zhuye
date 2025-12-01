@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Copy, Eraser, CheckCircle2, Hash, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/PageLayout";
+import SEO from "@/components/SEO";
 import { z } from "zod";
 
 const inputSchema = z.object({
@@ -87,8 +88,30 @@ const NumberExtractor = () => {
 
   const removedCount = totalCount - uniqueCount;
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "14位数字提取工具",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "智能14位数字提取工具，自动识别并提取Facebook UID等14位连续数字，支持智能去重。"
+  };
+
   return (
-    <PageLayout
+    <>
+      <SEO 
+        title="14位数字提取工具 - Facebook UID提取器"
+        description="专业的14位数字提取工具，智能识别并提取文本中的Facebook UID等14位连续数字，支持批量处理、自动去重，最大支持10万字符。"
+        keywords="数字提取, 14位数字, Facebook UID, UID提取, 号码提取, 批量提取"
+        canonical="/14"
+        structuredData={structuredData}
+      />
+      <PageLayout
       title="14位数字提取工具"
       description="自动提取文本中的14位连续数字，智能去重"
       backTo="/tools"
@@ -232,6 +255,7 @@ const NumberExtractor = () => {
         </div>
       </Card>
     </PageLayout>
+    </>
   );
 };
 

@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Copy, Eraser, CheckCircle2, Settings2, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/PageLayout";
+import SEO from "@/components/SEO";
 
 const CookieFilter = () => {
   const [inputText, setInputText] = useState("");
@@ -83,8 +84,30 @@ const CookieFilter = () => {
     setResultCount(0);
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Cookie筛选工具",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "高效的Cookie筛选工具，支持c_user和xs字段快速筛选，批量处理Cookie数据。"
+  };
+
   return (
-    <PageLayout
+    <>
+      <SEO 
+        title="Cookie筛选工具 - 快速提取c_user和xs字段"
+        description="专业的Cookie筛选工具，支持批量筛选c_user和xs字段，实时处理Cookie字符串，提高Facebook账号管理效率。"
+        keywords="Cookie筛选, Cookie过滤, c_user提取, xs提取, Facebook Cookie, Cookie管理"
+        canonical="/jh"
+        structuredData={structuredData}
+      />
+      <PageLayout
       title="Cookie 筛选工具"
       description="输入cookie字符串，选择要筛选的字段"
       backTo="/tools"
@@ -215,6 +238,7 @@ const CookieFilter = () => {
         </div>
       </div>
     </PageLayout>
+    </>
   );
 };
 

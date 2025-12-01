@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import PageLayout from "@/components/PageLayout";
+import SEO from "@/components/SEO";
 
 const NumberGenerator = () => {
   // --- 配置状态 ---
@@ -109,8 +110,30 @@ const NumberGenerator = () => {
     setProgress(0);
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "FB UID生成器",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "description": "批量生成Facebook账户UID，支持多种前缀选择，固定生成99个随机14位UID。"
+  };
+
   return (
-    <PageLayout
+    <>
+      <SEO 
+        title="FB UID生成器 - 批量生成Facebook账户ID"
+        description="专业的Facebook UID生成器，支持批量生成14位账户ID，提供6155/6156/6157/6158等多种前缀选择，固定生成99个随机UID。"
+        keywords="FB UID生成器, Facebook UID, UID生成, 账号生成, Facebook ID, 批量生成"
+        canonical="/14d"
+        structuredData={structuredData}
+      />
+      <PageLayout
       title="FB UID 生成器"
       description="批量生成 99 个 Facebook 账户 ID"
       backLabel="返回"
@@ -322,6 +345,7 @@ const NumberGenerator = () => {
         </div>
       </div>
     </PageLayout>
+    </>
   );
 };
 
