@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Share, Star, ChevronLeft } from 'lucide-react';
 
-// 模拟数据：保持之前的汉化内容和 SVG 图标
+// 模拟数据保持不变
 const MOCK_APPS = [
   {
     id: 1,
@@ -97,8 +97,34 @@ const MOCK_APPS = [
 
 const SoftwareDownload = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [highlightedId, setHighlightedId] = useState(null); // 用于控制高亮状态
 
-  // 简单的搜索过滤逻辑
+  // 修复：在组件挂载后手动检查 URL hash 并滚动
+  useEffect(() => {
+    // 稍微延迟一点执行，确保 DOM 元素已经渲染
+    const timer = setTimeout(() => {
+      const hash = window.location.hash;
+      if (hash) {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        
+        if (element) {
+          // 1. 平滑滚动到屏幕中间
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          
+          // 2. 提取应用ID并触发高亮动画
+          const appId = id.replace('app-', '');
+          setHighlightedId(Number(appId));
+          
+          // 3. 2秒后移除高亮
+          setTimeout(() => setHighlightedId(null), 2000);
+        }
+      }
+    }, 300); // 300ms 延迟通常足够 React 完成渲染
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const filteredApps = MOCK_APPS.filter(app => 
     app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     app.category.includes(searchQuery)
@@ -110,9 +136,7 @@ const SoftwareDownload = () => {
       {/* 顶部导航区域 */}
       <div className="px-5 pt-10 pb-6 md:pt-16 md:px-10 max-w-7xl mx-auto relative">
         
-        {/* 新增：返回按钮 (左上角) */}
-        {/* 移动端：占据一行，位于标题上方 */}
-        {/* 桌面端：绝对定位，不影响标题居中 */}
+        {/* 返回按钮 */}
         <div className="flex w-full mb-4 md:absolute md:top-16 md:left-10 md:w-auto md:mb-0 z-20">
           <a 
             href="/tools" 
@@ -148,22 +172,29 @@ const SoftwareDownload = () => {
       {/* 主要内容列表 */}
       <div className="px-4 md:px-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
         {filteredApps.map((app) => (
-          <AppCard key={app.id} app={app} />
+          <AppCard 
+            key={app.id} 
+            app={app} 
+            isHighlighted={highlightedId === app.id} 
+          />
         ))}
       </div>
     </div>
   );
 };
 
-const AppCard = ({ app }) => {
+const AppCard = ({ app, isHighlighted }) => {
   return (
+    // scroll-mt-32: 确保滚动时上方留出约 128px 的空间，不会紧贴顶部
     <div 
       id={`app-${app.id}`} 
-      className="group relative bg-white rounded-[20px] md:rounded-[2rem] p-5 md:p-6 flex flex-col 
+      className={`group relative bg-white rounded-[20px] md:rounded-[2rem] p-5 md:p-6 flex flex-col 
       shadow-[0_2px_10px_rgb(0,0,0,0.03)] md:shadow-[0_8px_30px_rgb(0,0,0,0.04)]
       transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
       hover:md:scale-[1.02] hover:md:shadow-[0_20px_40px_rgb(0,0,0,0.08)]
-      active:scale-[0.96]"
+      active:scale-[0.96] scroll-mt-32
+      ${isHighlighted ? 'ring-2 ring-[#0071e3] ring-offset-4' : ''}
+      `}
     >
       
       <div className="flex items-start gap-4">
