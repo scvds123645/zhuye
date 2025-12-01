@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Share, Star } from 'lucide-react';
 
-// 模拟数据：已汉化内容和单位，且第9个图标已更新为 TXT SVG
+// 模拟数据：保持之前的汉化内容和 SVG 图标
 const MOCK_APPS = [
   {
     id: 1,
@@ -89,7 +89,6 @@ const MOCK_APPS = [
     category: "数据资源",
     rating: 5.0,
     reviews: "2000+",
-    // 这里使用了内嵌的 SVG Data URI，展示为一个带 TXT 标识的蓝色文件图标
     icon: `data:image/svg+xml;utf8,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M14%202H6C4.9%202%204%202.9%204%204V20C4%2021.1%204.9%2022%206%2022H18C19.1%2022%2020%2021.1%2020%2020V8L14%202Z%22%20fill%3D%22%23007AFF%22%2F%3E%3Cpath%20d%3D%22M14%202V8H20%22%20fill%3D%22%230056B3%22%2F%3E%3Ctext%20x%3D%2212%22%20y%3D%2217%22%20font-family%3D%22sans-serif%22%20font-size%3D%226%22%20font-weight%3D%22bold%22%20fill%3D%22white%22%20text-anchor%3D%22middle%22%3ETXT%3C%2Ftext%3E%3C%2Fsvg%3E`,
     downloadUrl: "https://quwenjian.cc/share/download?key=0d5a04e745f8d04ae5c327f7c4ccb29232daefa6dfb37ab79b6542c57174d64f&code=53HWU",
     description: "海量FaceBook账号数据集合。"
@@ -106,8 +105,6 @@ const SoftwareDownload = () => {
   );
 
   return (
-    // 1. pb-safe: 预留底部安全区
-    // 2. -webkit-tap-highlight-color: transparent: 移除原生点击高亮，使用自定义 active 效果
     <div className="min-h-screen bg-[#F5F5F7] font-sans text-[#1d1d1f] pb-20 selection:bg-[#0071e3] selection:text-white cursor-default">
       
       {/* 顶部导航区域 */}
@@ -146,11 +143,15 @@ const SoftwareDownload = () => {
 
 const AppCard = ({ app }) => {
   return (
-    <div className="group relative bg-white rounded-[20px] md:rounded-[2rem] p-5 md:p-6 flex flex-col 
+    // [修改点1] 添加 ID 属性，格式为 app-{id}，用于接收锚点定位
+    <div 
+      id={`app-${app.id}`} 
+      className="group relative bg-white rounded-[20px] md:rounded-[2rem] p-5 md:p-6 flex flex-col 
       shadow-[0_2px_10px_rgb(0,0,0,0.03)] md:shadow-[0_8px_30px_rgb(0,0,0,0.04)]
       transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
       hover:md:scale-[1.02] hover:md:shadow-[0_20px_40px_rgb(0,0,0,0.08)]
-      active:scale-[0.96]">
+      active:scale-[0.96]"
+    >
       
       <div className="flex items-start gap-4">
         {/* App Icon */}
@@ -210,13 +211,24 @@ const AppCard = ({ app }) => {
           transition-transform active:scale-90 hover:bg-[#E5E5EA]"
           aria-label="分享"
           onClick={() => {
+              // [修改点2] 生成带有锚点的分享链接 (例如 https://site.com/#app-9)
+              const baseUrl = window.location.href.split('#')[0];
+              const shareUrl = `${baseUrl}#app-${app.id}`;
+              
+              // 优先尝试调用系统分享，否则复制到剪贴板
               if (navigator.share) {
                   navigator.share({
                       title: app.name,
-                      url: app.downloadUrl
+                      url: shareUrl
                   }).catch(console.error);
               } else {
-                  alert("链接已复制：" + app.downloadUrl);
+                  // 尝试写入剪贴板
+                  navigator.clipboard.writeText(shareUrl).then(() => {
+                      alert("链接已复制到剪贴板：" + shareUrl);
+                  }).catch(() => {
+                      // 剪贴板写入失败（如权限问题）时的回退
+                      alert("分享链接：" + shareUrl);
+                  });
               }
           }}
         >
