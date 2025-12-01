@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Share, Star } from 'lucide-react';
 
-// 更新后的数据列表
+// 模拟数据：已替换为你提供的9个软件资源
 const MOCK_APPS = [
   {
     id: 1,
@@ -89,7 +89,7 @@ const MOCK_APPS = [
     category: "Data Resource",
     rating: 5.0,
     reviews: "2K",
-    // 使用了一个通用的文件图标 SVG
+    // 使用通用文件图标 SVG
     icon: "https://api.dicebear.com/7.x/initials/svg?seed=TXT&backgroundColor=7f8c8d&textColor=white",
     downloadUrl: "https://quwenjian.cc/share/download?key=0d5a04e745f8d04ae5c327f7c4ccb29232daefa6dfb37ab79b6542c57174d64f&code=53HWU",
     description: "Large collection of account data."
@@ -110,11 +110,11 @@ const SoftwareDownload = () => {
     // 2. -webkit-tap-highlight-color: transparent: 移除原生点击高亮，使用自定义 active 效果
     <div className="min-h-screen bg-[#F5F5F7] font-sans text-[#1d1d1f] pb-20 selection:bg-[#0071e3] selection:text-white cursor-default">
       
-      {/* 顶部导航区域 (Sticky Header 效果可按需添加) */}
+      {/* 顶部导航区域 */}
       <div className="px-5 pt-12 pb-6 md:pt-16 md:px-10 max-w-7xl mx-auto">
         <div className="flex flex-col gap-4 md:items-center md:gap-8">
           
-          {/* iOS Large Title: 手机左对齐，桌面可能居中或保持左对齐 */}
+          {/* iOS Large Title */}
           <h1 className="text-[34px] leading-[41px] md:text-5xl font-bold tracking-tight text-[#1d1d1f] text-left md:text-center">
             Resources
           </h1>
@@ -128,7 +128,6 @@ const SoftwareDownload = () => {
               placeholder="Search apps & files"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              // text-[17px] 防止 iOS Safari 输入时自动放大
               className="w-full bg-[#E5E5EA] text-[#1d1d1f] placeholder-[#86868b] rounded-[10px] py-2.5 pl-9 pr-4 text-[17px] leading-none focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 transition-all"
             />
           </div>
@@ -136,7 +135,6 @@ const SoftwareDownload = () => {
       </div>
 
       {/* 主要内容列表 */}
-      {/* px-4: 手机端边距减小，grid-cols-1: 手机端单列 */}
       <div className="px-4 md:px-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
         {filteredApps.map((app) => (
           <AppCard key={app.id} app={app} />
@@ -148,7 +146,6 @@ const SoftwareDownload = () => {
 
 const AppCard = ({ app }) => {
   return (
-    // active:scale-[0.96] 提供更明显的手机端点击反馈
     <div className="group relative bg-white rounded-[20px] md:rounded-[2rem] p-5 md:p-6 flex flex-col 
       shadow-[0_2px_10px_rgb(0,0,0,0.03)] md:shadow-[0_8px_30px_rgb(0,0,0,0.04)]
       transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
@@ -156,20 +153,25 @@ const AppCard = ({ app }) => {
       active:scale-[0.96]">
       
       <div className="flex items-start gap-4">
-        {/* App Icon: 手机端稍小 (w-16), 桌面端正常 (w-20) */}
+        {/* App Icon */}
         <div className="w-[64px] h-[64px] md:w-20 md:h-20 rounded-[14px] md:rounded-[22px] overflow-hidden border border-black/5 shadow-sm shrink-0 relative z-10 bg-gray-50">
           <img 
             src={app.icon} 
             alt={app.name} 
             className="w-full h-full object-cover"
-            onError={(e) => {e.target.src = "https://api.dicebear.com/7.x/shapes/svg?seed=Fallback"}} // 简单的错误回退
+            onError={(e) => {e.target.src = "https://api.dicebear.com/7.x/shapes/svg?seed=Fallback"}} 
           />
         </div>
         
         {/* Info Section */}
         <div className="flex flex-col flex-1 pt-0.5 min-w-0">
           <div className="flex justify-between items-start">
-            <div className="pr-2">
+            {/* 
+                关键修复：
+                添加 flex-1 和 min-w-0，确保容器在 flex 布局中正确收缩，
+                防止长标题（如第9项）把右侧按钮挤出视图。
+            */}
+            <div className="pr-2 flex-1 min-w-0">
               <h3 className="text-[17px] md:text-xl font-semibold text-[#1d1d1f] leading-tight tracking-tight truncate">
                 {app.name}
               </h3>
@@ -178,7 +180,7 @@ const AppCard = ({ app }) => {
               </p>
             </div>
             
-            {/* Get Button (Mobile Compact): 改为 Link 以支持直接下载 */}
+            {/* Get/Download Button */}
             <a 
               href={app.downloadUrl}
               target="_blank"
@@ -201,8 +203,9 @@ const AppCard = ({ app }) => {
           </div>
         </div>
       </div>
+      
       <div className="mt-4 pt-3 border-t border-[#f5f5f7] flex items-center justify-between">
-        {/* Description: line-clamp-1 在手机端保持整洁 */}
+        {/* Description */}
         <p className="text-[#1d1d1f]/70 text-[13px] md:text-sm font-medium line-clamp-1 mr-4">
           {app.description}
         </p>
@@ -218,7 +221,6 @@ const AppCard = ({ app }) => {
                       url: app.downloadUrl
                   }).catch(console.error);
               } else {
-                  // Fallback logic can be added here
                   alert("Link copied: " + app.downloadUrl);
               }
           }}
