@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Share, Star } from 'lucide-react';
+import { Search, Share, Star, ChevronLeft } from 'lucide-react';
 
 // 模拟数据：保持之前的汉化内容和 SVG 图标
 const MOCK_APPS = [
@@ -108,7 +108,21 @@ const SoftwareDownload = () => {
     <div className="min-h-screen bg-[#F5F5F7] font-sans text-[#1d1d1f] pb-20 selection:bg-[#0071e3] selection:text-white cursor-default">
       
       {/* 顶部导航区域 */}
-      <div className="px-5 pt-12 pb-6 md:pt-16 md:px-10 max-w-7xl mx-auto">
+      <div className="px-5 pt-10 pb-6 md:pt-16 md:px-10 max-w-7xl mx-auto relative">
+        
+        {/* 新增：返回按钮 (左上角) */}
+        {/* 移动端：占据一行，位于标题上方 */}
+        {/* 桌面端：绝对定位，不影响标题居中 */}
+        <div className="flex w-full mb-4 md:absolute md:top-16 md:left-10 md:w-auto md:mb-0 z-20">
+          <a 
+            href="/tools" 
+            className="flex items-center gap-0.5 text-[#0071e3] transition-opacity hover:opacity-70 group"
+          >
+            <ChevronLeft className="w-6 h-6 -ml-1.5 stroke-[2.5]" />
+            <span className="text-[17px] font-medium">返回</span>
+          </a>
+        </div>
+
         <div className="flex flex-col gap-4 md:items-center md:gap-8">
           
           {/* iOS Large Title */}
@@ -143,7 +157,6 @@ const SoftwareDownload = () => {
 
 const AppCard = ({ app }) => {
   return (
-    // [修改点1] 添加 ID 属性，格式为 app-{id}，用于接收锚点定位
     <div 
       id={`app-${app.id}`} 
       className="group relative bg-white rounded-[20px] md:rounded-[2rem] p-5 md:p-6 flex flex-col 
@@ -211,22 +224,18 @@ const AppCard = ({ app }) => {
           transition-transform active:scale-90 hover:bg-[#E5E5EA]"
           aria-label="分享"
           onClick={() => {
-              // [修改点2] 生成带有锚点的分享链接 (例如 https://site.com/#app-9)
               const baseUrl = window.location.href.split('#')[0];
               const shareUrl = `${baseUrl}#app-${app.id}`;
               
-              // 优先尝试调用系统分享，否则复制到剪贴板
               if (navigator.share) {
                   navigator.share({
                       title: app.name,
                       url: shareUrl
                   }).catch(console.error);
               } else {
-                  // 尝试写入剪贴板
                   navigator.clipboard.writeText(shareUrl).then(() => {
                       alert("链接已复制到剪贴板：" + shareUrl);
                   }).catch(() => {
-                      // 剪贴板写入失败（如权限问题）时的回退
                       alert("分享链接：" + shareUrl);
                   });
               }
