@@ -151,7 +151,7 @@ const SoftwareDownload = () => {
           
           {/* iOS Large Title */}
           <h1 className="text-[34px] leading-[41px] md:text-5xl font-bold tracking-tight text-[#1d1d1f] text-left md:text-center">
-            资源下载
+            软件商店
           </h1>
           {/* iOS 风格搜索栏 */}
           <div className="relative w-full md:max-w-lg group">
