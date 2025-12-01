@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Share, Star } from 'lucide-react';
 
-// 模拟数据：已汉化内容和单位
+// 模拟数据：已汉化内容和单位，且第9个图标已更新为 TXT SVG
 const MOCK_APPS = [
   {
     id: 1,
@@ -89,8 +89,8 @@ const MOCK_APPS = [
     category: "数据资源",
     rating: 5.0,
     reviews: "2000+",
-    // 使用通用文件图标 SVG
-    icon: "https://api.dicebear.com/7.x/initials/svg?seed=TXT&backgroundColor=7f8c8d&textColor=white",
+    // 这里使用了内嵌的 SVG Data URI，展示为一个带 TXT 标识的蓝色文件图标
+    icon: `data:image/svg+xml;utf8,%3Csvg%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M14%202H6C4.9%202%204%202.9%204%204V20C4%2021.1%204.9%2022%206%2022H18C19.1%2022%2020%2021.1%2020%2020V8L14%202Z%22%20fill%3D%22%23007AFF%22%2F%3E%3Cpath%20d%3D%22M14%202V8H20%22%20fill%3D%22%230056B3%22%2F%3E%3Ctext%20x%3D%2212%22%20y%3D%2217%22%20font-family%3D%22sans-serif%22%20font-size%3D%226%22%20font-weight%3D%22bold%22%20fill%3D%22white%22%20text-anchor%3D%22middle%22%3ETXT%3C%2Ftext%3E%3C%2Fsvg%3E`,
     downloadUrl: "https://quwenjian.cc/share/download?key=0d5a04e745f8d04ae5c327f7c4ccb29232daefa6dfb37ab79b6542c57174d64f&code=53HWU",
     description: "海量FaceBook账号数据集合。"
   },
@@ -102,7 +102,7 @@ const SoftwareDownload = () => {
   // 简单的搜索过滤逻辑
   const filteredApps = MOCK_APPS.filter(app => 
     app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.category.includes(searchQuery) // 中文搜索支持
+    app.category.includes(searchQuery)
   );
 
   return (
