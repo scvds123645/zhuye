@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+// 1. 引入路由钩子，用于页面跳转
+import { useNavigate } from 'react-router-dom';
 import { 
   ShoppingCart, 
   Star, 
@@ -89,13 +91,20 @@ const DialogContentWrapper = ({ children, className }) => (
   -----------------------------------------------------------------
 */
 const PageLayout = ({ children, backLabel = "返回首页" }) => {
+  // 2. 使用 navigate 实现返回功能
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen w-full bg-[#f8f9fa] font-sans selection:bg-blue-100">
       {/* Adjusted padding for mobile: px-4 py-6 */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Navigation Header */}
         <header className="mb-6 sm:mb-8">
-          <Button variant="ghost" className="rounded-full pl-2 pr-4 hover:bg-white/50 text-slate-500 h-10 sm:h-12">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate('/')} // 添加点击跳转事件
+            className="rounded-full pl-2 pr-4 hover:bg-white/50 text-slate-500 h-10 sm:h-12"
+          >
             <ChevronLeft className="mr-1 h-5 w-5" />
             {backLabel}
           </Button>
@@ -144,6 +153,12 @@ const contactLinks = [1, 2, 3];
   -----------------------------------------------------------------
 */
 const ProductsPage = () => {
+  
+  // 3. SEO: 设置页面标题
+  useEffect(() => {
+    document.title = "购买账号 - 脸书(Facebook)白号/耐用号商城";
+  }, []);
+
   return (
     <PageLayout backLabel="返回首页">
       
@@ -169,6 +184,7 @@ const ProductsPage = () => {
             助您业务快速起飞。
           </p>
         </div>
+
       </section>
 
       {/* 2. Product Grid */}
@@ -209,7 +225,6 @@ const ProductsPage = () => {
           </div>
         </div>
       </section>
-
     </PageLayout>
   );
 };
