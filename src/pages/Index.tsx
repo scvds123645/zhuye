@@ -28,9 +28,9 @@ const ContactMePage = () => {
   const navigate = useNavigate();
   const [isContactOpen, setIsContactOpen] = useState(false);
 
-  // Set document title on mount
+  // Set document title on mount to match SEO-optimized title
   useEffect(() => {
-    document.title = "联系我";
+    document.title = "联系我们 - 专业脸书(Facebook)账号服务";
   }, []);
 
   // Contact list data for the modal
@@ -39,13 +39,10 @@ const ContactMePage = () => {
   return (
     <div className="min-h-screen w-full bg-[#f8f9fa] flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden font-sans">
       
-      {/* 
-        --- Background Decorative Blobs ---
-        Adjusted size/position for mobile to avoid overwhelming the screen
-      */}
+      {/* --- Background Decorative Blobs --- */}
       <div className="absolute top-[-5%] left-[-10%] w-64 h-64 sm:w-96 sm:h-96 bg-blue-100 rounded-full blur-3xl opacity-30 pointer-events-none" />
       <div className="absolute bottom-[-5%] right-[-10%] w-64 h-64 sm:w-96 sm:h-96 bg-slate-100 rounded-full blur-3xl opacity-40 pointer-events-none" />
-
+      
       {/* Main Content Container */}
       <main className="w-full max-w-md flex flex-col items-center text-center space-y-6 sm:space-y-8 z-10 animate-in fade-in zoom-in duration-500">
         
@@ -62,24 +59,25 @@ const ContactMePage = () => {
           {/* Glow Effect */}
           <div className="absolute inset-0 bg-blue-500 rounded-[1.5rem] sm:rounded-[2rem] blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
           
-          {/* Icon Box - Responsive Size: w-20 on mobile, w-24 on desktop */}
+          {/* Icon Box */}
           <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-600 to-blue-700 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center shadow-xl shadow-blue-200 transform transition-transform duration-300 hover:scale-105">
             <Mail className="w-8 h-8 sm:w-10 sm:h-10 text-white" strokeWidth={1.5} />
           </div>
         </div>
 
-        {/* 3. Typography */}
+        {/* 3. Typography (SEO Optimized) */}
         <div className="space-y-2 sm:space-y-3 px-2">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
-            联系我
+            联系我们的专业团队
           </h1>
-          <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-[260px] sm:max-w-[280px] mx-auto">
-            很高兴认识您！如有任何问题，欢迎随时与我联系。
+          <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
+            我们提供专业的Facebook账号解决方案，如有任何疑问，请立即联系我们获取一对一咨询。
           </p>
         </div>
 
         {/* 4. Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full px-2 sm:px-0 pt-2 sm:pt-4">
+          
           {/* Dialog Trigger (Primary) */}
           <Dialog open={isContactOpen} onOpenChange={setIsContactOpen}>
             <DialogTrigger asChild>
@@ -91,8 +89,8 @@ const ContactMePage = () => {
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1 opacity-80" />
               </Button>
             </DialogTrigger>
-
-            {/* Dialog Content (Modal) - Mobile Optimized Width (w-[90vw]) */}
+            
+            {/* Dialog Content (Modal) */}
             <DialogContent className="w-[90vw] max-w-[340px] sm:max-w-md bg-white/95 backdrop-blur-xl rounded-[24px] sm:rounded-[28px] p-0 gap-0 border-none shadow-2xl overflow-hidden">
               
               {/* Dialog Header Area */}
@@ -149,7 +147,6 @@ const ContactMePage = () => {
       </main>
 
       {/* 5. Footer / Floating Action */}
-      {/* Mobile: Stacked at bottom with margin | Desktop: Absolute bottom-right */}
       <div className="mt-8 sm:mt-0 sm:absolute sm:bottom-8 sm:right-8">
         <button
           onClick={() => navigate('/tools')}
@@ -163,7 +160,6 @@ const ContactMePage = () => {
           </span>
         </button>
       </div>
-
     </div>
   );
 };
